@@ -380,6 +380,66 @@ T4B es un notebook Python que demuestra el ciclo completo de MLOps sin infraestr
 <tr><td>Streamlit in Snowflake</td><td>T6, T7 &mdash; dashboards nativos</td></tr>
 </table>
 
+<h3>dbt Projects en Snowflake (capacidad adicional demostrable)</h3>
+
+<div class="callout callout-blue">
+<strong>dbt nativo en Snowflake</strong>
+Snowflake soporta dbt Projects como objetos nativos de primera clase. Se pueden crear, ejecutar y programar proyectos dbt directamente desde SQL &mdash; sin infraestructura externa, sin dbt Cloud, sin CLI local.
+</div>
+
+<table>
+<tr><th>Capacidad</th><th>C&oacute;mo demostrar</th><th>Criterio RFP</th></tr>
+<tr><td>CREATE DBT PROJECT</td><td>Crear proyecto dbt desde Git repo con modelos SQL</td><td>CI/CD, IaC, transformaciones</td></tr>
+<tr><td>EXECUTE DBT PROJECT</td><td>Ejecutar transformaciones dbt nativamente</td><td>Orquestaci&oacute;n sin herramientas externas</td></tr>
+<tr><td>Scheduling con Tasks</td><td>CREATE TASK que ejecuta EXECUTE DBT PROJECT en schedule</td><td>Automatizaci&oacute;n, pipelines productivos</td></tr>
+<tr><td>Git Integration + dbt</td><td>Modelos dbt viven en el mismo repo Git del HOL</td><td>Versionamiento, promoci&oacute;n entre ambientes</td></tr>
+</table>
+
+<p><strong>Prompt CoCo para dbt:</strong> <em>&ldquo;Crea un proyecto dbt en Snowflake que transforme la tabla AUTORIZACIONES en un modelo gold con agregados por ciudad y MCC. Programa la ejecuci&oacute;n cada hora con un Task.&rdquo;</em></p>
+
+<div class="callout callout-orange">
+<strong>Nota: dbt Projects est&aacute; en Public Preview</strong>
+Verificar disponibilidad en cada cuenta con <code>SHOW DBT PROJECTS IN ACCOUNT</code>. Si no est&aacute; habilitado, el comando retorna &ldquo;No data&rdquo; sin error &mdash; confirma que la feature est&aacute; disponible pero sin proyectos creados.
+</div>
+
+<h3>Openflow &mdash; Evaluaci&oacute;n de Riesgo para Demo en Vivo</h3>
+
+<div class="callout callout-red">
+<strong>RIESGO: ALTO para ejecuci&oacute;n en vivo durante el Hands-On</strong>
+</div>
+
+<table>
+<tr><th>Factor</th><th>Detalle</th><th>Riesgo</th></tr>
+<tr><td><strong>Deployment + Runtime</strong></td><td>Requiere crear Deployment y Runtime desde Snowsight UI &mdash; NO se puede automatizar por CLI/SQL</td><td style="color:#e5484d;font-weight:700">ALTO</td></tr>
+<tr><td><strong>Tiempo de setup</strong></td><td>~10-15 min para configurar conector + par&aacute;metros + JDBC driver + verify + start</td><td style="color:#e5484d;font-weight:700">ALTO</td></tr>
+<tr><td><strong>JDBC Driver</strong></td><td>Upload obligatorio de .jar (PostgreSQL o MariaDB) &mdash; paso manual propenso a errores</td><td style="color:#ff922b;font-weight:700">MEDIO</td></tr>
+<tr><td><strong>Dependencia de red</strong></td><td>EAI + Network Rule necesarios para conectar a fuente externa</td><td style="color:#ff922b;font-weight:700">MEDIO</td></tr>
+<tr><td><strong>Fuente externa</strong></td><td>Se necesita un PostgreSQL/MySQL/S3 accesible &mdash; si falla la red, falla todo</td><td style="color:#e5484d;font-weight:700">ALTO</td></tr>
+<tr><td><strong>Tiempo de inicio del flow</strong></td><td>El primer start del conector toma ~30-60s para snapshot inicial</td><td style="color:#ff922b;font-weight:700">MEDIO</td></tr>
+<tr><td><strong>Debugging</strong></td><td>Si algo falla, diagnosticar requiere nipyapi CLI + conocimiento NiFi</td><td style="color:#e5484d;font-weight:700">ALTO</td></tr>
+</table>
+
+<h4>Recomendaci&oacute;n por escenario</h4>
+<table>
+<tr><th>Escenario</th><th>Recomendaci&oacute;n</th></tr>
+<tr><td><strong>En el Hands-On (20 min)</strong></td><td>NO ejecutar Openflow en vivo. Usar el prompt CoCo de T2 paso 16 que pide a CoCo crear el pipeline &mdash; CoCo genera Network Rule + EAI + UDF + Task en ~60s sin Openflow.</td></tr>
+<tr><td><strong>Pre-sesi&oacute;n (jueves)</strong></td><td>Se puede pre-configurar un flujo Openflow y mostrarlo ya funcionando (screenshot + SHOW del flow activo).</td></tr>
+<tr><td><strong>Si preguntan por Openflow</strong></td><td>&ldquo;Openflow est&aacute; habilitado en la cuenta (verificable con SHOW OPENFLOW DATA PLANE INTEGRATIONS). Soporta PostgreSQL, MySQL, Kafka, Salesforce, Google Drive y 20+ conectores. Para esta demo usamos External Access Integration + UDF porque es m&aacute;s r&aacute;pido para una API REST. Openflow es ideal para CDC continuo desde bases de datos.&rdquo;</td></tr>
+</table>
+
+<h4>Prompt CoCo para Openflow S3 (si se decide ejecutar)</h4>
+<p>Este prompt pide a CoCo configurar un flujo Openflow que lea archivos Parquet desde un bucket S3 p&uacute;blico:</p>
+<p><em>&ldquo;Configura un pipeline con Openflow que ingeste datos desde el bucket S3 p&uacute;blico s3://sfquickstarts/summit_dev_day_2026_automated_intelligence_hol/parquet/customers.parquet hacia una tabla CREDIBANCO_HOL.PLATAFORMA.CUSTOMERS_S3. El bucket es p&uacute;blico (no requiere credenciales AWS). Necesito: External Access Integration y Network Rule para que Openflow acceda al S3, desplegar el flujo con InvokeHTTP o GetS3Object, configurar PutSnowpipeStreaming como destino, iniciar el flujo y validar que los datos (2M filas de customers) aparecen en la tabla.&rdquo;</em></p>
+
+<h4>Alternativa segura sin Openflow (mismo resultado, sin riesgo)</h4>
+<p>Si Openflow no est&aacute; pre-configurado, este approach carga los mismos datos desde S3 sin Openflow:</p>
+<p><em>&ldquo;Crea un external stage apuntando a s3://sfquickstarts/summit_dev_day_2026_automated_intelligence_hol/parquet/, infiere el schema de customers.parquet, crea la tabla CUSTOMERS_S3 con USING TEMPLATE, y carga los datos con COPY INTO. Verifica el conteo de filas.&rdquo;</em></p>
+
+<div class="callout callout-green">
+<strong>S3 verificado</strong>
+El bucket <code>s3://sfquickstarts/summit_dev_day_2026_automated_intelligence_hol/</code> es p&uacute;blico (no requiere AWS keys). Contiene 2M customers, 20M+ orders, 50M+ order_items en Parquet. Ya fue probado con &eacute;xito en la cuenta HOL con COPY INTO (2M filas en 10s).
+</div>
+
 </div>
 </body>
 </html>
