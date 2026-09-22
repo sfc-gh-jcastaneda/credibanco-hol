@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía del Facilitador — HOL CredibanCo V4</title>
+<style>
+:root{--sf:#11567F;--accent:#29B5E8;--green:#2fb380;--orange:#ff922b;--red:#e5484d;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:0}
+.header{background:linear-gradient(135deg,var(--sf),#0c3f5c);color:#fff;padding:40px 32px;text-align:center}
+.header h1{font-size:2rem;margin-bottom:8px}
+.header p{color:rgba(255,255,255,0.8);font-size:1.05rem}
+.container{max-width:1100px;margin:0 auto;padding:32px 24px}
+h2{color:var(--sf);font-size:1.4rem;margin:32px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+h3{color:var(--sf);font-size:1.1rem;margin:20px 0 8px}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.9rem}
+th{background:#f0f4f8;color:var(--sf);font-weight:700;text-align:left;padding:10px 12px;border:1px solid var(--border)}
+td{padding:10px 12px;border:1px solid var(--border);vertical-align:top}
+tr:nth-child(even){background:#fafbfc}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
+.callout{border-radius:8px;padding:16px 20px;margin:16px 0;border-left:4px solid}
+.callout-blue{border-color:var(--accent);background:rgba(41,181,232,0.08)}
+.callout-green{border-color:var(--green);background:rgba(47,179,128,0.08)}
+.callout-orange{border-color:var(--orange);background:rgba(255,146,43,0.08)}
+.callout-red{border-color:var(--red);background:rgba(229,72,77,0.08)}
+.callout strong{display:block;margin-bottom:4px;text-transform:uppercase;font-size:0.8rem;letter-spacing:0.03em}
+code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem;font-family:Consolas,monospace}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px}
+.card h4{color:var(--sf);margin-bottom:8px}
+.timeline{list-style:none;padding-left:0}
+.timeline li{padding:12px 0 12px 32px;position:relative;border-left:3px solid var(--accent)}
+.timeline li::before{content:'';position:absolute;left:-8px;top:16px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+.highlight{background:#fffde7;border:1px solid #fff59d;border-radius:6px;padding:12px 16px;margin:12px 0}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Gu&iacute;a del Facilitador &mdash; HOL CredibanCo V4</h1>
+<p>RFP 10010806 &middot; Hands-On Lab &middot; 29 de Septiembre 2026</p>
+<p style="margin-top:8px;opacity:0.7">Formato: Notebooks en Snowsight &middot; 15 min por participante &middot; Git sync</p>
+</div>
+
+<div class="container">
+
+<h2>1. Cambio de Formato V3 &rarr; V4</h2>
+
+<div class="grid2">
+<div class="card" style="border-left:4px solid var(--red)">
+<h4>V3 (anterior)</h4>
+<ul>
+<li>HTMLs externos (copy-paste al worksheet)</li>
+<li>Tracks de 50-75 min</li>
+<li>Context switch: browser + Snowsight</li>
+<li>~30s por bloque SQL (copiar, pegar, ejecutar)</li>
+</ul>
+</div>
+<div class="card" style="border-left:4px solid var(--green)">
+<h4>V4 (actual)</h4>
+<ul>
+<li>Notebooks DENTRO de Snowsight (zero copy-paste)</li>
+<li>15 min por persona, ~12 celdas Run</li>
+<li>Todo en una sola pesta&ntilde;a</li>
+<li>~2s por celda (click Run, ver resultado)</li>
+<li>Git sync: cambios se propagan al instante</li>
+</ul>
+</div>
+</div>
+
+<div class="callout callout-red">
+<strong>Regla de oro</strong>
+&ldquo;Si el proveedor ejecuta la tarea por el usuario, la actividad no se considera aut&oacute;noma.&rdquo; &mdash; Toda ayuda se registra. El facilitador gu&iacute;a, NO ejecuta.
+</div>
+
+<h2>2. Agenda Real (del Excel de CredibanCo)</h2>
+
+<table>
+<tr><th>Hora</th><th>Track</th><th>Turnos</th><th>Min/persona</th><th>Participantes</th></tr>
+<tr><td>8:10-8:30</td><td>Apertura</td><td>1</td><td>20</td><td>Todos</td></tr>
+<tr><td>8:35-9:45</td><td><strong>T0</strong> Arquitectura, Data Fabric</td><td>3 &times; 20min</td><td>20</td><td>13 personas</td></tr>
+<tr><td>9:25-10:35</td><td><strong>T1</strong> Gobierno, Seguridad, Zero Trust</td><td>3 &times; 20min</td><td>20</td><td>11 personas</td></tr>
+<tr><td>10:15-11:25</td><td><strong>T2</strong> Ingenier&iacute;a de Datos</td><td>3 &times; 20min</td><td>20</td><td>13 personas</td></tr>
+<tr><td>11:30-12:15</td><td><strong>T4</strong> Anal&iacute;tica, ML, IA, GenAI</td><td>2 &times; 20min</td><td>20</td><td>8 personas</td></tr>
+<tr><td>11:55-13:05</td><td><strong>T5</strong> Exposici&oacute;n y Monetizaci&oacute;n</td><td>3 &times; 20min</td><td>20</td><td>10 personas</td></tr>
+<tr><td>12:45-15:35</td><td><strong>T6</strong> Marketplace, Autoservicio, BI</td><td>5 &times; 20min</td><td>20</td><td>18 personas</td></tr>
+<tr><td>15:15-16:00</td><td><strong>T7</strong> DataOps, FinOps, Salud</td><td>2 &times; 20min</td><td>20</td><td>7 personas</td></tr>
+<tr><td>16:05-16:55</td><td><strong>T8</strong> Migraci&oacute;n Cloudera</td><td>2 &times; 25min</td><td>25</td><td>10 personas</td></tr>
+</table>
+
+<h2>3. C&oacute;mo Abrir un Notebook (instrucci&oacute;n para participantes)</h2>
+
+<div class="callout callout-blue">
+<strong>Paso a paso</strong>
+<ol style="margin-top:8px">
+<li>Abrir Snowsight &rarr; <strong>Projects</strong> &rarr; <strong>Notebooks</strong></li>
+<li>Seleccionar el notebook de su track (ej: <code>T1_GOBIERNO</code>)</li>
+<li>Ejecutar celda por celda con <strong>Shift+Enter</strong> o bot&oacute;n <strong>Run</strong></li>
+<li>Los resultados aparecen inline debajo de cada celda</li>
+<li>Las celdas Markdown tienen las instrucciones y el prompt CoCo</li>
+</ol>
+</div>
+
+<h2>4. Notebooks por Track</h2>
+
+<table>
+<tr><th>Track</th><th>Notebook</th><th>Celdas SQL</th><th>Rol</th><th>Diferenciador vs DBX</th></tr>
+<tr><td><strong>T0</strong></td><td>T0_ARQUITECTURA</td><td>9</td><td>CRB_ARQUITECTURA</td><td>Iceberg nativo, Data Fabric, GET_LINEAGE</td></tr>
+<tr><td><strong>T1</strong></td><td>T1_GOBIERNO</td><td>8</td><td>CRB_SEGURIDAD_INFO</td><td>Auto-classify PII, masking out-of-box</td></tr>
+<tr><td><strong>T2</strong></td><td>T2_INGENIERIA</td><td>8</td><td>CRB_DATA_ANALYTICS</td><td>Dynamic Tables (zero Spark), linaje nativo</td></tr>
+<tr><td><strong>T4</strong></td><td>T4_ANALITICA_IA</td><td>7</td><td>CRB_ANALITICA</td><td>AI functions en SQL, RAG sin infra</td></tr>
+<tr><td><strong>T5</strong></td><td>T5_MONETIZACION</td><td>7</td><td>CRB_NEGOCIO</td><td>Data Sharing zero-copy (DBX no tiene)</td></tr>
+<tr><td><strong>T6</strong></td><td>T6_AUTOSERVICIO_BI</td><td>6</td><td>CRB_NEGOCIO</td><td>Cortex Analyst NL&rarr;SQL, Streamlit</td></tr>
+<tr><td><strong>T7</strong></td><td>T7_DATAOPS_FINOPS</td><td>7</td><td>CRB_INFRAESTRUCTURA</td><td>Zero cluster management, cost governance</td></tr>
+<tr><td><strong>T8</strong></td><td>T8_MIGRACION_CLOUDERA</td><td>7</td><td>CRB_MIGRACION</td><td>SnowConvert + CoCo (DBX = manual)</td></tr>
+</table>
+
+<h2>5. PCs y Usuarios</h2>
+
+<table>
+<tr><th>PC</th><th>Usuario</th><th>Password</th><th>Tracks</th></tr>
+<tr><td>1</td><td><code>CRB_USER_1</code></td><td><code>Credibanco2026!</code></td><td>T0 + T1</td></tr>
+<tr><td>2</td><td><code>CRB_USER_2</code></td><td><code>Credibanco2026!</code></td><td>T2</td></tr>
+<tr><td>3</td><td><code>CRB_USER_3</code></td><td><code>Credibanco2026!</code></td><td>T4 + T5</td></tr>
+<tr><td>4</td><td><code>CRB_USER_4</code></td><td><code>Credibanco2026!</code></td><td>T6 + T7</td></tr>
+<tr><td>5</td><td><code>CRB_USER_5</code></td><td><code>Credibanco2026!</code></td><td>T8</td></tr>
+<tr><td>Exp</td><td><code>CRB_EXPERIENCIA</code></td><td><code>Credibanco2026!</code></td><td>Todos</td></tr>
+</table>
+
+<h2>6. Estructura de Cada Notebook (15 min)</h2>
+
+<div class="highlight">
+<strong>Bloque 1 (5 min) &mdash; EVIDENCIA:</strong> El participante ve con SHOW/SELECT lo que ya existe pre-creado. No crea nada, solo verifica que funciona.<br>
+<strong>Bloque 2 (5 min) &mdash; EJECUTAR:</strong> El participante crea algo real con 1-2 queries SQL.<br>
+<strong>Bloque 3 (5 min) &mdash; COCO:</strong> El participante copia un prompt a Cortex Code y ve c&oacute;mo la IA genera algo complejo en 30 segundos.<br>
+</div>
+
+<p>Esta estructura demuestra los 3 lentes de evaluaci&oacute;n: <strong>Capacidad demostrada</strong> (B1), <strong>Autonom&iacute;a del usuario</strong> (B2), <strong>UX y productividad</strong> (B3/CoCo).</p>
+
+<h2>7. Git Sync &mdash; Actualizaciones en Vivo</h2>
+
+<div class="callout callout-green">
+<strong>Flujo de actualizaci&oacute;n</strong>
+Si necesitas corregir algo durante el evento:<br>
+<code>git push</code> desde tu laptop &rarr; En Snowsight ejecutar <code>ALTER GIT REPOSITORY HOL_REPO FETCH;</code> &rarr; Los notebooks se actualizan al instante.
+</div>
+
+<p>Repo: <code>https://github.com/sfc-gh-jcastaneda/credibanco-hol</code></p>
+
+<h2>8. Troubleshooting R&aacute;pido</h2>
+
+<table>
+<tr><th>Problema</th><th>Soluci&oacute;n</th></tr>
+<tr><td>&ldquo;No veo el notebook&rdquo;</td><td>Projects &rarr; Notebooks &rarr; buscar por nombre. Si no aparece, verificar rol activo con <code>SELECT CURRENT_ROLE()</code></td></tr>
+<tr><td>&ldquo;Object does not exist&rdquo;</td><td>La primera celda del notebook ejecuta USE ROLE/DATABASE/WAREHOUSE. Ejecutarla primero.</td></tr>
+<tr><td>&ldquo;Insufficient privileges&rdquo;</td><td>Verificar que est&eacute; con el rol correcto del track. Los notebooks corren con ACCOUNTADMIN como owner.</td></tr>
+<tr><td>CoCo no responde</td><td>Verificar que el rol tenga CORTEX_USER. Todos los roles del HOL ya lo tienen.</td></tr>
+<tr><td>Notebook no carga</td><td>Fallback: abrir un SQL Worksheet y copiar las queries de la gu&iacute;a HTML V3.</td></tr>
+<tr><td>Cortex Search tarda</td><td>Normal en la primera indexaci&oacute;n (~30 seg). Ya est&aacute; pre-indexado, deber&iacute;a ser instant&aacute;neo.</td></tr>
+</table>
+
+<h2>9. Qu&eacute; Hacer y Qu&eacute; NO Hacer</h2>
+
+<div class="grid2">
+<div class="card" style="border-left:4px solid var(--green)">
+<h4 style="color:var(--green)">S&Iacute;</h4>
+<ul>
+<li>Explicar QU&Eacute; hace cada celda antes de que la ejecuten</li>
+<li>Se&ntilde;alar el prompt CoCo como alternativa</li>
+<li>Dejar que exploren libremente despu&eacute;s de los 3 bloques</li>
+<li>Tomar nota de preguntas para responder al final</li>
+<li>Si alguien termina r&aacute;pido: &ldquo;prueba el prompt CoCo del bloque 3&rdquo;</li>
+</ul>
+</div>
+<div class="card" style="border-left:4px solid var(--red)">
+<h4 style="color:var(--red)">NO</h4>
+<ul>
+<li>Ejecutar celdas en el computador del participante</li>
+<li>Saltar bloques para &ldquo;ahorrar tiempo&rdquo;</li>
+<li>Comparar expl&iacute;citamente con Databricks</li>
+<li>Decir &ldquo;esto no funciona en DBX&rdquo;</li>
+<li>Abrir HTMLs externos (todo est&aacute; en los notebooks)</li>
+</ul>
+</div>
+</div>
+
+<h2>10. Mensajes Clave para el Cierre</h2>
+
+<div class="grid3">
+<div class="card" style="border-top:4px solid var(--accent)">
+<h4>Zero Management</h4>
+<p>&ldquo;Todo lo que ejecutaron funciona sin un solo cluster, sin Spark, sin tuning. El warehouse se suspende solo.&rdquo;</p>
+</div>
+<div class="card" style="border-top:4px solid var(--green)">
+<h4>Gobierno Nativo</h4>
+<p>&ldquo;La clasificaci&oacute;n PII, el masking y el linaje que vieron en T1 protegen TODOS los tracks autom&aacute;ticamente.&rdquo;</p>
+</div>
+<div class="card" style="border-top:4px solid var(--orange)">
+<h4>IA en el Per&iacute;metro</h4>
+<p>&ldquo;AI_COMPLETE, AI_CLASSIFY, Cortex Search, Agentes &mdash; todo corri&oacute; dentro de Snowflake. Los datos nunca salieron.&rdquo;</p>
+</div>
+</div>
+
+<h2>11. Benchmarks vs Databricks (NDA &mdash; NO compartir)</h2>
+
+<div class="callout callout-orange">
+<strong>Solo para contexto interno del facilitador</strong>
+<ul style="margin-top:8px">
+<li>Analytics (TPC-DS Iceberg): Snowflake <strong>1.9-2.1x m&aacute;s r&aacute;pido</strong></li>
+<li>AI Training (XGBoost): Snowflake <strong>2.3x m&aacute;s r&aacute;pido</strong></li>
+<li>DML/MERGE: Snowflake <strong>1.9-2.2x m&aacute;s r&aacute;pido</strong></li>
+<li>Transaccional (Postgres): Snowflake <strong>4x mejor concurrencia</strong></li>
+<li>Inference: Snowflake <strong>3x menor latencia</strong>, 0% error vs 83.5% DBX</li>
+</ul>
+<p style="margin-top:8px;font-size:0.85rem">Fuente: MCG Benchmark Report 2026 (Seismic). Estos n&uacute;meros NO se mencionan al cliente &mdash; la evidencia habla sola en el HOL.</p>
+</div>
+
+</div>
+</body>
+</html>
