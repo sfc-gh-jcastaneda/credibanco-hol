@@ -35,6 +35,22 @@ code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem;font
 .timeline li::before{content:'';position:absolute;left:-8px;top:16px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
 .highlight{background:#fffde7;border:1px solid #fff59d;border-radius:6px;padding:12px 16px;margin:12px 0}
 @media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+@media print {
+  @page { size: A4; margin: 15mm 12mm 20mm 12mm; }
+  body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .header { padding: 24px 30px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .container { padding: 10px 0; max-width: 100%; }
+  .card { break-inside: avoid; page-break-inside: avoid; box-shadow: none; }
+  .callout { break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .highlight { break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .grid2, .grid3 { break-inside: avoid; }
+  table { font-size: 11px; break-inside: auto; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+  th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  tr:hover { background: inherit; }
+  a { text-decoration: none; }
+}
 </style>
 </head>
 <body>
@@ -87,7 +103,7 @@ code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem;font
 <tr><td>11:30-12:15</td><td><strong>T4</strong> Anal&iacute;tica, ML, IA, GenAI</td><td>2 &times; 20min</td><td>20</td><td>8 personas</td></tr>
 <tr><td>11:55-13:05</td><td><strong>T5</strong> Exposici&oacute;n y Monetizaci&oacute;n</td><td>3 &times; 20min</td><td>20</td><td>10 personas</td></tr>
 <tr><td>12:45-15:35</td><td><strong>T6</strong> Marketplace, Autoservicio, BI</td><td>5 &times; 20min</td><td>20</td><td>18 personas</td></tr>
-<tr><td>15:15-16:00</td><td><strong>T7</strong> DataOps, FinOps, Salud</td><td>2 &times; 20min</td><td>20</td><td>7 personas</td></tr>
+<tr><td>15:15-16:00</td><td><strong>T7</strong> FinOps, Presupuestos y Gobierno de Costos</td><td>2 &times; 20min</td><td>20</td><td>7 personas (audiencia financiera)</td></tr>
 <tr><td>16:05-16:55</td><td><strong>T8</strong> Migraci&oacute;n Cloudera</td><td>2 &times; 25min</td><td>25</td><td>10 personas</td></tr>
 </table>
 
@@ -107,15 +123,16 @@ code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85rem;font
 <h2>4. Notebooks por Track</h2>
 
 <table>
-<tr><th>Track</th><th>Notebook</th><th>Celdas SQL</th><th>Rol</th><th>Diferenciador vs DBX</th></tr>
-<tr><td><strong>T0</strong></td><td>T0_ARQUITECTURA</td><td>9</td><td>CRB_ARQUITECTURA</td><td>Iceberg nativo, Data Fabric, GET_LINEAGE</td></tr>
-<tr><td><strong>T1</strong></td><td>T1_GOBIERNO</td><td>8</td><td>CRB_SEGURIDAD_INFO</td><td>Auto-classify PII, masking out-of-box</td></tr>
-<tr><td><strong>T2</strong></td><td>T2_INGENIERIA</td><td>8</td><td>CRB_DATA_ANALYTICS</td><td>Dynamic Tables (zero Spark), linaje nativo</td></tr>
-<tr><td><strong>T4</strong></td><td>T4_ANALITICA_IA</td><td>7</td><td>CRB_ANALITICA</td><td>AI functions en SQL, RAG sin infra</td></tr>
-<tr><td><strong>T5</strong></td><td>T5_MONETIZACION</td><td>7</td><td>CRB_NEGOCIO</td><td>Data Sharing zero-copy (DBX no tiene)</td></tr>
-<tr><td><strong>T6</strong></td><td>T6_AUTOSERVICIO_BI</td><td>6</td><td>CRB_NEGOCIO</td><td>Cortex Analyst NL&rarr;SQL, Streamlit</td></tr>
-<tr><td><strong>T7</strong></td><td>T7_DATAOPS_FINOPS</td><td>7</td><td>CRB_INFRAESTRUCTURA</td><td>Zero cluster management, cost governance</td></tr>
-<tr><td><strong>T8</strong></td><td>T8_MIGRACION_CLOUDERA</td><td>7</td><td>CRB_MIGRACION</td><td>SnowConvert + CoCo (DBX = manual)</td></tr>
+<tr><th>Track</th><th>Notebook</th><th>Celdas</th><th>Rol</th><th>Diferenciador vs DBX</th><th>Estado</th></tr>
+<tr><td><strong>T0</strong></td><td>T0_ARQUITECTURA</td><td>9 SQL, 5 MD</td><td>CRB_ARQUITECTURA</td><td>Iceberg nativo, Data Fabric, GET_LINEAGE</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T1</strong></td><td>T1_GOBIERNO</td><td>8 SQL, 5 MD</td><td>CRB_SEGURIDAD_INFO</td><td>Auto-classify PII, masking out-of-box</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T2</strong></td><td>T2_INGENIERIA</td><td>8 SQL, 5 MD</td><td>CRB_DATA_ANALYTICS</td><td>Dynamic Tables (zero Spark), linaje nativo</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T4</strong></td><td>T4_ANALITICA_IA</td><td>7 SQL, 5 MD</td><td>CRB_ANALITICA</td><td>AI functions en SQL, RAG sin infra</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T4B</strong></td><td>T4B_MLOPS</td><td>4 SQL, 9 Py, 12 MD</td><td>CRB_ANALITICA</td><td>Feature Store + Registry + SHAP nativos</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T5</strong></td><td>&mdash;</td><td>&mdash;</td><td>CRB_NEGOCIO</td><td>Data Sharing zero-copy</td><td style="color:var(--orange)">Pendiente Mario</td></tr>
+<tr><td><strong>T6</strong></td><td>T6_AUTOSERVICIO_BI</td><td>6 SQL, 6 MD</td><td>CRB_NEGOCIO</td><td>Cortex Analyst NL&rarr;SQL, Streamlit</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T7</strong></td><td>T7_DATAOPS_FINOPS</td><td>11 SQL, 7 MD</td><td>CRB_INFRAESTRUCTURA</td><td>FinOps nativo, anomaly Z-score, chargeback tags</td><td style="color:var(--green)">Listo</td></tr>
+<tr><td><strong>T8</strong></td><td>&mdash;</td><td>&mdash;</td><td>CRB_MIGRACION</td><td>SnowConvert + CoCo</td><td style="color:var(--orange)">Pendiente Mario</td></tr>
 </table>
 
 <h2>5. PCs y Usuarios</h2>
@@ -217,6 +234,151 @@ Si necesitas corregir algo durante el evento:<br>
 </ul>
 <p style="margin-top:8px;font-size:0.85rem">Fuente: MCG Benchmark Report 2026 (Seismic). Estos n&uacute;meros NO se mencionan al cliente &mdash; la evidencia habla sola en el HOL.</p>
 </div>
+
+<h2>12. T7 &mdash; Notas para Audiencia Financiera</h2>
+
+<div class="callout callout-blue">
+<strong>Contexto</strong>
+El Track 7 est&aacute; dise&ntilde;ado para personas del &aacute;rea financiera (controllers, CFO, FinOps). El contenido se enfoca en gobierno de costos, NO en ingenier&iacute;a.
+</div>
+
+<table>
+<tr><th>Bloque</th><th>Qu&eacute; demuestra</th><th>Mensaje clave para finanzas</th></tr>
+<tr><td><strong>B1</strong> Visibilidad</td><td>Consumo por servicio (Compute, Cloud Svc, Serverless), tendencia diaria con promedio m&oacute;vil, queries costosas</td><td>&ldquo;100% del gasto es visible nativamente, desglosado por tipo de servicio, sin herramientas externas&rdquo;</td></tr>
+<tr><td><strong>B2</strong> Etiquetado</td><td>Tags FinOps en warehouses y tablas, reporte de chargeback cruzando tags con consumo</td><td>&ldquo;Facturaci&oacute;n interna autom&aacute;tica: cada equipo sabe exactamente cu&aacute;nto consume&rdquo;</td></tr>
+<tr><td><strong>B3</strong> Presupuestos</td><td>Resource Monitors con umbrales 75/90/100%, alertas SQL autom&aacute;ticas cada hora</td><td>&ldquo;Presupuestos con topes duros: la plataforma se suspende sola si se excede el l&iacute;mite&rdquo;</td></tr>
+<tr><td><strong>B4</strong> Anomal&iacute;as</td><td>Detecci&oacute;n estad&iacute;stica con Z-score sobre consumo diario vs promedio 90 d&iacute;as</td><td>&ldquo;Snowflake detecta picos an&oacute;malos de gasto autom&aacute;ticamente, sin Datadog ni licencias externas&rdquo;</td></tr>
+<tr><td><strong>B5</strong> Dashboard</td><td>Prompt CoCo que genera un dashboard React con KPIs, tendencia, chargeback y anomal&iacute;as</td><td>&ldquo;En 30 segundos, Cortex Code genera un dashboard FinOps completo que pueden desplegar internamente&rdquo;</td></tr>
+</table>
+
+<h2>13. T4B &mdash; Notas MLOps</h2>
+
+<div class="callout callout-blue">
+<strong>Track especial</strong>
+T4B es un notebook Python que demuestra el ciclo completo de MLOps sin infraestructura externa. Se ejecuta despu&eacute;s de T4 con el mismo rol (CRB_ANALITICA). Incluye visualizaciones (Confusion Matrix, ROC, Feature Importance, SHAP).
+</div>
+
+<table>
+<tr><th>Fase</th><th>Qu&eacute; demuestra</th></tr>
+<tr><td>Feature Store</td><td>Entity + FeatureView sobre FEATURES_RIESGO_COMERCIO</td></tr>
+<tr><td>Training</td><td>XGBoost con m&eacute;tricas de evaluaci&oacute;n</td></tr>
+<tr><td>Visualizaci&oacute;n</td><td>Confusion Matrix, ROC Curve, Feature Importance</td></tr>
+<tr><td>Registry</td><td>log_model + set_alias(&ldquo;champion&rdquo;)</td></tr>
+<tr><td>Inference</td><td>ModelVersion.run() batch sobre datos nuevos</td></tr>
+<tr><td>Observabilidad</td><td>Accuracy/Precision/Recall over time, feature drift</td></tr>
+<tr><td>Explainability</td><td>SHAP summary plot + waterfall</td></tr>
+<tr><td>Lineage</td><td>GET_LINEAGE para provenance del modelo</td></tr>
+</table>
+
+</div>
+
+<h2>14. Capacidades Snowflake Demostradas por Track</h2>
+
+<p>Esta secci&oacute;n documenta TODAS las capacidades de Snowflake que se cubren en el HOL, mapeadas a los criterios del RFP. <strong>Usa esta tabla como checklist durante el evento</strong> para asegurar que cada capacidad quede evidenciada.</p>
+
+<h3>T0 &mdash; Arquitectura, Data Fabric y Productos</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>Schemas como dominios</td><td>SHOW SCHEMAS &mdash; 13 dominios organizados</td><td>Data Fabric / Data Mesh</td></tr>
+<tr><td>Database Roles</td><td>SHOW DATABASE ROLES &mdash; aislamiento entre dominios</td><td>Gobierno federado</td></tr>
+<tr><td>Iceberg Tables</td><td>SHOW ICEBERG TABLES &mdash; interoperabilidad abierta</td><td>Portabilidad, est&aacute;ndares abiertos</td></tr>
+<tr><td>Tags de dominio</td><td>SHOW TAGS + ALTER SET TAG &mdash; metadata de negocio</td><td>Cat&aacute;logo de datos, descubrimiento</td></tr>
+<tr><td>GET_LINEAGE program&aacute;tico</td><td>Trazar origen de datos end-to-end via SQL</td><td>Trazabilidad, portabilidad</td></tr>
+<tr><td>Vistas como productos de datos</td><td>CREATE VIEW + TAG &mdash; producto gobernado</td><td>Publicaci&oacute;n de productos de datos</td></tr>
+</table>
+
+<h3>T1 &mdash; Gobierno, Seguridad y Zero Trust</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>Masking Policies din&aacute;micas</td><td>SELECT con datos enmascarados vs en claro al cambiar rol</td><td>Protecci&oacute;n de datos sensibles</td></tr>
+<tr><td>Row Access Policies</td><td>POLICY_REFERENCES &mdash; ver qu&eacute; protege qu&eacute;</td><td>Control de acceso granular</td></tr>
+<tr><td>EXTRACT_SEMANTIC_CATEGORIES</td><td>Clasificaci&oacute;n autom&aacute;tica de PII sin reglas manuales</td><td>Clasificaci&oacute;n automatizada</td></tr>
+<tr><td>SYSTEM$CLASSIFY + auto_tag</td><td>Auto-tagging en un solo paso</td><td>Gobierno sin intervenci&oacute;n humana</td></tr>
+<tr><td>Network Rules</td><td>Pre-creadas &mdash; control de acceso por IP</td><td>Zero Trust, per&iacute;metro de seguridad</td></tr>
+<tr><td>SYSTEM$GET_TAG</td><td>Verificar tags aplicados program&aacute;ticamente</td><td>Auditor&iacute;a y cumplimiento</td></tr>
+<tr><td>Time Travel + UNDROP</td><td>Borrado seguro verificable (error intencional)</td><td>Recuperaci&oacute;n ante fallas</td></tr>
+</table>
+
+<h3>T2 &mdash; Ingenier&iacute;a de Datos</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>Dynamic Tables (pipeline declarativo)</td><td>DT Silver+Gold ya refrescando, CREATE nueva DT</td><td>Pipelines sin orquestador externo</td></tr>
+<tr><td>Refresh autom&aacute;tico INCREMENTAL</td><td>INSERT + propagaci&oacute;n en 60s</td><td>Procesamiento near-real-time</td></tr>
+<tr><td>GET_LINEAGE nativo</td><td>Trazar cadena DT upstream/downstream</td><td>Observabilidad, trazabilidad</td></tr>
+<tr><td>Streams (CDC)</td><td>Stream pre-creado sobre AUTORIZACIONES</td><td>Change Data Capture</td></tr>
+<tr><td>VARIANT / JSON flatten</td><td>PARSE_JSON + LATERAL FLATTEN</td><td>Datos semi-estructurados</td></tr>
+<tr><td>Storage Lifecycle Policy</td><td>Gesti&oacute;n de retenci&oacute;n de datos</td><td>Gobierno del ciclo de vida</td></tr>
+<tr><td>Clone + Time Travel + UNDROP</td><td>Recuperaci&oacute;n ante fallas en 1 segundo</td><td>Resiliencia, promoci&oacute;n entre ambientes</td></tr>
+<tr><td>Data Metric Functions (DMFs)</td><td>Calidad embebida en el pipeline</td><td>Calidad de datos automatizada</td></tr>
+<tr><td>Openflow (ingesta externa)</td><td>Prompt CoCo: pipeline desde API Superfinanciera</td><td>Ingesta desde fuentes externas</td></tr>
+<tr><td>Git Integration</td><td>Repo sync, notebooks, COPY FILES desde Git</td><td>CI/CD, IaC, versionamiento</td></tr>
+</table>
+
+<h3>T4 &mdash; Anal&iacute;tica, ML, IA y GenAI</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>AI_COMPLETE (LLM)</td><td>Extracci&oacute;n de campos desde texto no estructurado</td><td>GenAI, procesamiento de lenguaje natural</td></tr>
+<tr><td>AI_CLASSIFY</td><td>Clasificaci&oacute;n de severidad con labels cortos</td><td>Clasificaci&oacute;n autom&aacute;tica</td></tr>
+<tr><td>Cortex Search Service</td><td>RAG sobre documentos SARLAFT</td><td>B&uacute;squeda sem&aacute;ntica, agentes</td></tr>
+<tr><td>Cortex Agents</td><td>Agente pre-creado para consultas de riesgo</td><td>Agentes aut&oacute;nomos, IA responsable</td></tr>
+<tr><td>Anomaly Detection (pre-computado)</td><td>Resultados de anomal&iacute;as en tabla</td><td>Detecci&oacute;n de fraude</td></tr>
+<tr><td>IA dentro del per&iacute;metro</td><td>TODO corre en Snowflake, datos nunca salen</td><td>Seguridad, gobierno de IA</td></tr>
+</table>
+
+<h3>T4B &mdash; MLOps End-to-End</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>Feature Store</td><td>Entity + FeatureView managed (DT)</td><td>Gobierno de features</td></tr>
+<tr><td>Training Datasets</td><td>generate_training_set con point-in-time</td><td>Reproducibilidad</td></tr>
+<tr><td>Model Training (XGBoost)</td><td>Entrenamiento con Snowpark ML</td><td>Despliegue de modelos</td></tr>
+<tr><td>Model Registry</td><td>log_model + set_alias(&ldquo;champion&rdquo;)</td><td>Versionamiento y gobernanza</td></tr>
+<tr><td>Batch Inference</td><td>ModelVersion.run() sobre datos nuevos</td><td>Inferencia en producci&oacute;n</td></tr>
+<tr><td>Model Monitor</td><td>Accuracy, Precision, Recall over time</td><td>Observabilidad ML</td></tr>
+<tr><td>Feature Drift</td><td>Distribuci&oacute;n de features por d&iacute;a</td><td>Monitoreo de drift</td></tr>
+<tr><td>Explainability (SHAP)</td><td>Summary + Waterfall plots</td><td>IA responsable, interpretabilidad</td></tr>
+<tr><td>ML Lineage</td><td>GET_LINEAGE tabla &rarr; modelo</td><td>Provenance, compliance</td></tr>
+<tr><td>Experiment Tracking</td><td>M&eacute;tricas logueadas con el modelo</td><td>Comparaci&oacute;n de experimentos</td></tr>
+</table>
+
+<h3>T6 &mdash; Marketplace, Autoservicio y BI</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>Sandbox auto-aprovisionado</td><td>CALL SOLICITAR_SANDBOX + SHOW SCHEMAS</td><td>Autonom&iacute;a del usuario</td></tr>
+<tr><td>Marketplace</td><td>Navegaci&oacute;n en Snowsight, b&uacute;squeda de datasets</td><td>Descubrimiento de datos</td></tr>
+<tr><td>Snowsight (BI nativo)</td><td>Queries ad-hoc, charts, tablas</td><td>Autoservicio anal&iacute;tico</td></tr>
+<tr><td>Streamlit in Snowflake</td><td>Dashboard BI interactivo con KPIs y charts</td><td>BI, dashboards, visualizaci&oacute;n</td></tr>
+<tr><td>Semantic View</td><td>Metadata de negocio sobre tablas</td><td>Lenguaje de negocio</td></tr>
+<tr><td>Cortex Analyst</td><td>Preguntas en espa&ntilde;ol &rarr; SQL generado</td><td>Consulta en lenguaje natural</td></tr>
+<tr><td>CoWork (Snowflake Intelligence)</td><td>Agente conversacional sobre datos</td><td>Autonom&iacute;a, experiencia de usuario</td></tr>
+<tr><td>Cortex Code (CoCo)</td><td>Prompt genera dashboard React completo</td><td>Productividad, generaci&oacute;n de c&oacute;digo</td></tr>
+</table>
+
+<h3>T7 &mdash; DataOps, FinOps y Salud</h3>
+<table>
+<tr><th>Capacidad Snowflake</th><th>C&oacute;mo se demuestra</th><th>Criterio RFP</th></tr>
+<tr><td>ACCOUNT_USAGE views</td><td>Consumo por warehouse, top queries</td><td>Observabilidad operativa</td></tr>
+<tr><td>Resource Monitors</td><td>SHOW RESOURCE MONITORS &mdash; presupuestos con topes</td><td>Control de costos</td></tr>
+<tr><td>Tags de chargeback</td><td>TAG_REFERENCES + ALTER SET TAG</td><td>Atribuci&oacute;n de costos por dominio</td></tr>
+<tr><td>Alerts</td><td>CREATE ALERT consumo elevado</td><td>Alertas autom&aacute;ticas</td></tr>
+<tr><td>Dynamic Tables (pipeline)</td><td>DT resumen diario + m&eacute;tricas MCC</td><td>Pipelines operativos</td></tr>
+<tr><td>Streamlit FinOps</td><td>Dashboard de costos con tendencias</td><td>Dashboard operativo</td></tr>
+<tr><td>Zero cluster management</td><td>Warehouse auto-suspend, auto-resume</td><td>Operaci&oacute;n sin tuning manual</td></tr>
+</table>
+
+<h3>Capacidades Transversales (cubiertas en m&uacute;ltiples tracks)</h3>
+<table>
+<tr><th>Capacidad</th><th>Tracks donde aparece</th></tr>
+<tr><td>Cortex Code (CoCo) como alternativa a SQL</td><td>TODOS &mdash; prompt alternativo en cada bloque</td></tr>
+<tr><td>Snowflake Notebooks</td><td>TODOS &mdash; ejecuci&oacute;n cell-by-cell sin copy-paste</td></tr>
+<tr><td>Git Integration</td><td>TODOS &mdash; notebooks cargados desde GitHub</td></tr>
+<tr><td>RBAC (roles por perfil)</td><td>TODOS &mdash; cada track usa su rol dedicado</td></tr>
+<tr><td>Governance nativa (tags, policies)</td><td>T0, T1, T2, T7 &mdash; gobierno transversal</td></tr>
+<tr><td>Cortex AI Functions</td><td>T4, T4B &mdash; AI_COMPLETE, AI_CLASSIFY</td></tr>
+<tr><td>Cortex Search / RAG</td><td>T4, T8 &mdash; b&uacute;squeda sem&aacute;ntica</td></tr>
+<tr><td>Data Sharing zero-copy</td><td>T5 &mdash; diferenciador vs Databricks</td></tr>
+<tr><td>Snowpark ML</td><td>T4B &mdash; training, registry, inference</td></tr>
+<tr><td>Streamlit in Snowflake</td><td>T6, T7 &mdash; dashboards nativos</td></tr>
+</table>
 
 </div>
 </body>
