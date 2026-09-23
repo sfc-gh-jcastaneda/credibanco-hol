@@ -10,6 +10,7 @@ USE ROLE ACCOUNTADMIN;
 -- 0. CONFIGURACION DE CUENTA + LIMPIEZA DE SHARES (idempotencia)
 -- ============================================================================
 ALTER ACCOUNT SET CORTEX_ENABLED_CROSS_REGION = 'ANY_REGION';
+ALTER ACCOUNT SET TIMEZONE = 'America/Bogota';
 DROP SHARE IF EXISTS SH_AUDIENCIA_ALTO_VOLUMEN_USER;
 
 -- ============================================================================
