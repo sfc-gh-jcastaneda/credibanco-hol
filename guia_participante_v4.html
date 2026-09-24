@@ -520,11 +520,13 @@ body {
         <h3>🔑 Credenciales de Acceso</h3>
         <dl class="cred-grid">
           <dt>Usuario:</dt>
-          <dd>USER## (donde ## es tu número asignado)</dd>
+          <dd><strong>USER</strong></dd>
           <dt>Contraseña:</dt>
-          <dd>Se entrega en sala</dd>
+          <dd><strong>sn0wf@ll</strong></dd>
           <dt>URL Snowsight:</dt>
           <dd>Se entrega en sala</dd>
+          <dt>Rol inicial:</dt>
+          <dd><strong>ACCOUNTADMIN</strong> (cambiar según el track)</dd>
         </dl>
       </div>
 
@@ -590,12 +592,12 @@ body {
               <tr>
                 <td class="col-num">1</td>
                 <td>Quiero navegar la arquitectura completa y ver cómo están organizados los 13 dominios de datos de CredibanCo</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T0, Bloque 1 — muestra los 13 schemas<br><span class="icon-tag icon-ui">👁️ UI</span> Explorar en <strong>Databases &gt; CREDIBANCO_HOL</strong> en el menú izquierdo</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T0, Bloque 1 — muestra los 13 schemas<br><span class="icon-tag icon-ui">👁️ UI</span> Explorar en <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL</strong> en el panel izquierdo</td>
               </tr>
               <tr>
                 <td class="col-num">2</td>
                 <td>Quiero ver que cada dominio tiene roles dedicados y que nadie accede a lo que no le corresponde</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar celda de database roles en T0<br><span class="icon-tag icon-ui">👁️ UI</span> <strong>Admin &gt; Users &amp; Roles</strong> para ver la jerarquía</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar celda de database roles en T0<br><span class="icon-tag icon-ui">👁️ UI</span> <strong>Governance &amp; security &gt; Users &amp; roles</strong> para ver la jerarquía</td>
               </tr>
               <tr>
                 <td class="col-num">3</td>
@@ -605,7 +607,7 @@ body {
               <tr>
                 <td class="col-num">4</td>
                 <td>Quiero ver de dónde vienen los datos de este producto: su linaje completo desde la fuente</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> Ir a <strong>Databases &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Views &gt; PRODUCTO_PAGOS_USER</strong> &gt; pestaña <strong>Lineage</strong> — ver diagrama visual interactivo</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> Ir a <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Views &gt; PRODUCTO_PAGOS_USER</strong> &gt; pestaña <strong>Lineage</strong> — ver diagrama visual interactivo</td>
               </tr>
               <tr>
                 <td class="col-num">5</td>
@@ -678,7 +680,7 @@ body {
               <tr>
                 <td class="col-num">4</td>
                 <td>Quiero ver el linaje del dato desde la fuente hasta el consumo en la pestaña Governance de Snowsight</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> Ir a <strong>Databases &gt; CREDIBANCO_HOL &gt; CLIENTES &gt; TARJETAHABIENTES</strong> &gt; pestaña <strong>Governance</strong> — ver políticas, tags y clasificación en un solo lugar</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> Ir a <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; CLIENTES &gt; TARJETAHABIENTES</strong> &gt; pestaña <strong>Governance</strong> — ver políticas, tags y clasificación en un solo lugar</td>
               </tr>
               <tr>
                 <td class="col-num">5</td>
@@ -693,7 +695,7 @@ body {
               <tr>
                 <td class="col-num">7</td>
                 <td>Quiero ver que cada dominio administra sus propios permisos con database roles sin depender del equipo central</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar celda de database roles en T1<br><span class="icon-tag icon-ui">👁️ UI</span> <strong>Admin &gt; Users &amp; Roles &gt; Database Roles</strong></td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar celda de database roles en T1<br><span class="icon-tag icon-ui">👁️ UI</span> <strong>Governance &amp; security &gt; Users &amp; roles</strong></td>
               </tr>
             </tbody>
           </table>
@@ -746,7 +748,7 @@ body {
               <tr>
                 <td class="col-num">3</td>
                 <td>Quiero ver el linaje visual del pipeline completo: bronce → plata → oro en Snowsight</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Databases &gt; CREDIBANCO_HOL &gt; PAGOS &gt; DT_AUTORIZACIONES_SILVER_USER</strong> &gt; pestaña <strong>Lineage</strong> — diagrama visual de la cadena</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; DT_AUTORIZACIONES_SILVER_USER</strong> &gt; pestaña <strong>Lineage</strong> — diagrama visual de la cadena</td>
               </tr>
               <tr>
                 <td class="col-num">4</td>
@@ -842,7 +844,7 @@ body {
                 <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celda 16 — log_model + set_alias("champion")</td>
               </tr>
               <tr class="note-row">
-                <td colspan="3">👁️ <strong>Ver en Snowsight:</strong> <strong>Databases &gt; CREDIBANCO_HOL &gt; ANALITICA &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO</strong> — ver versiones, métricas y alias</td>
+                <td colspan="3">👁️ <strong>Ver en Snowsight:</strong> <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ANALITICA &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO</strong> — ver versiones, métricas y alias</td>
               </tr>
               <tr>
                 <td class="col-num">7</td>
@@ -863,7 +865,7 @@ body {
           </table>
           <div class="callout callout-blue">
             <strong>💡 Tip de navegación en Snowsight</strong>
-            El Model Registry se visualiza en <strong>Databases &gt; [schema] &gt; Models</strong>. Desde ahí puedes ver versiones, métricas, alias (champion/challenger) y metadata sin escribir código.
+            El Model Registry se visualiza en <strong>Catalog &gt; Explorer &gt; [base de datos] &gt; [schema] &gt; Models</strong>. Desde ahí puedes ver versiones, métricas, alias (champion/challenger) y metadata sin escribir código.
           </div>
           <div class="callout callout-green">
             <strong>🏢 Por qué importa para CredibanCo</strong>
@@ -925,12 +927,12 @@ body {
               <tr>
                 <td class="col-num">6</td>
                 <td>Quiero publicar un producto de datos en el marketplace interno para que toda la organización lo encuentre</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Data Sharing &gt; Internal Sharing &gt; + Create Listing</strong> &gt; seleccionar CREDIBANCO_PAGOS_SHARE</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Data sharing &gt; Internal sharing &gt; + Create Listing</strong> &gt; seleccionar CREDIBANCO_PAGOS_SHARE</td>
               </tr>
               <tr>
                 <td class="col-num">7</td>
                 <td>Quiero navegar el marketplace interno y ver qué productos están disponibles</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Data Sharing &gt; Internal Marketplace</strong> — explorar productos publicados</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Catalog &gt; Internal Marketplace</strong> — explorar productos publicados</td>
               </tr>
               <tr>
                 <td class="col-num">8</td>
@@ -941,7 +943,7 @@ body {
           </table>
           <div class="callout callout-blue">
             <strong>💡 Tip de navegación en Snowsight</strong>
-            Para publicar en el marketplace interno: <strong>Data Sharing &gt; Internal Sharing &gt; + Create Listing</strong>. Para explorar lo publicado: <strong>Data Sharing &gt; Internal Marketplace</strong>.
+            Para publicar en el marketplace interno: <strong>Data sharing &gt; Internal sharing &gt; + Create Listing</strong>. Para explorar lo publicado: <strong>Catalog &gt; Internal Marketplace</strong>.
           </div>
           <div class="callout callout-green">
             <strong>🏢 Por qué importa para CredibanCo</strong>
@@ -993,7 +995,7 @@ body {
               <tr>
                 <td class="col-num">4</td>
                 <td>Quiero ver un Resource Monitor configurado con sus umbrales desde la UI</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Admin &gt; Resource Monitors</strong> — ver MONITOR_HOL con umbrales configurados</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Admin &gt; Cost Management &gt; pestaña Budgets/Resource Monitors</strong> — ver MONITOR_HOL con umbrales configurados</td>
               </tr>
               <tr>
                 <td class="col-num">5</td>
