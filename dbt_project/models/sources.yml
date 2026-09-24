@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: pagos
+    database: CREDIBANCO_HOL
+    schema: PAGOS
+    tables:
+      - name: AUTORIZACIONES
+        description: "Autorizaciones de pago CredibanCo"

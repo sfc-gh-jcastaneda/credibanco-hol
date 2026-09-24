@@ -1,0 +1,16 @@
+version: 2
+models:
+  - name: stg_autorizaciones_aprobadas
+    description: "Autorizaciones aprobadas (CODIGO_RESPUESTA=00)"
+    columns:
+      - name: AUTORIZACION_ID
+        tests:
+          - unique
+          - not_null
+  - name: mart_kpi_comercios
+    description: "KPIs por comercio"
+    columns:
+      - name: COMERCIO_ID
+        tests:
+          - unique
+          - not_null

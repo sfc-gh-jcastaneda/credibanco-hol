@@ -1,0 +1,6 @@
+name: credibanco_analytics
+version: '1.0.0'
+profile: credibanco
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target"]
