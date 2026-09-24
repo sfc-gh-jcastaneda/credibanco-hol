@@ -605,15 +605,19 @@ body {
     <!-- PARA VER FUNCIONES ADICIONALES -->
     <!-- ============================================================ -->
     <div class="callout callout-orange" id="notebooks-adicionales">
-      <strong>📓 Para ver funciones adicionales</strong>
+      <strong>⚠️ OBLIGATORIO antes del HOL — Ejecutar estos 2 notebooks</strong>
       <p style="margin-bottom:0.75rem;">
-        <strong>SETUP_prepopulate.ipynb</strong> (ejecutar <strong>UNA VEZ</strong> antes del HOL):
+        Para que la cuenta tenga <strong>todos</strong> los artefactos pre-construidos, se deben ejecutar estos notebooks <strong>UNA VEZ</strong> desde <code>Projects → Workspaces → My Workspace → notebooks/</code>:
       </p>
-      <ul style="margin-left:1.25rem;margin-bottom:0.75rem;font-size:0.85rem;">
-        <li>Registra modelos de ML en el Registry (Fraude V1+V2, Churn V1)</li>
-        <li>Genera historial de inference (predicciones batch)</li>
-        <li>Después de ejecutar: <code>AI &amp; ML</code> → <code>Models</code> muestra versiones con métricas y aliases</li>
-      </ul>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin-bottom:0.75rem;">
+        <thead><tr style="background:#11567F;color:#fff;"><th style="padding:0.5rem 0.75rem;text-align:left;">Notebook</th><th style="padding:0.5rem 0.75rem;text-align:left;">Qué crea</th><th style="padding:0.5rem 0.75rem;text-align:left;">Dónde se ve después</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:0.5rem 0.75rem;font-weight:700;">SETUP_models.ipynb</td><td style="padding:0.5rem 0.75rem;">Modelo Fraude (V1 champion + V2 challenger) + Modelo Churn (V1 champion)</td><td style="padding:0.5rem 0.75rem;">AI & ML → Models</td></tr>
+          <tr style="border-bottom:1px solid #e2e8f0;"><td style="padding:0.5rem 0.75rem;font-weight:700;">SETUP_prepopulate.ipynb</td><td style="padding:0.5rem 0.75rem;">Mismos modelos + historial de inference (predicciones batch ejecutadas 3 veces por modelo)</td><td style="padding:0.5rem 0.75rem;">AI & ML → Models (versiones, métricas, aliases)</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.82rem;color:#64748b;">Sin ejecutar estos notebooks, la sección AI & ML → Models aparecerá vacía. El resto de la cuenta funciona sin ellos.</p>
+      <hr style="margin:1rem 0;border:none;border-top:1px solid #e2e8f0;">
       <p style="margin-bottom:0.5rem;">
         <strong>Notebooks opcionales</strong> (guía paso a paso por track):
       </p>
