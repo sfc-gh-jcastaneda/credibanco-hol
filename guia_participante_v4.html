@@ -534,6 +534,10 @@ body {
         📓 <strong>Abrir notebooks:</strong> En Snowsight, ir a <strong>Projects</strong> → <strong>Workspaces</strong> → <strong>My Workspace</strong> → carpeta <strong>notebooks/</strong> — cada track tiene su notebook indicado.
       </div>
 
+      <div class="how-to" style="border-left-color: var(--orange);">
+        ⚠️ <strong>Navegación Snowsight:</strong> El explorador de bases de datos está en <strong>Catalog → Explorer</strong>. Los roles están en <strong>Governance &amp; security → Users &amp; roles</strong>. Los costos están en <strong>Admin → Cost Management</strong>. CoCo se abre con el ícono en la esquina inferior derecha.
+      </div>
+
       <div class="legend">
         <div class="legend-item"><span class="legend-icon">🖥️</span> Ejecutar en notebook (celda SQL o Python)</div>
         <div class="legend-item"><span class="legend-icon">👁️</span> Ver en Snowsight UI (navegar menú)</div>
@@ -607,7 +611,7 @@ body {
               <tr>
                 <td class="col-num">4</td>
                 <td>Quiero ver de dónde vienen los datos de este producto: su linaje completo desde la fuente</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> Ir a <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Views &gt; PRODUCTO_PAGOS_USER</strong> &gt; pestaña <strong>Lineage</strong> — ver diagrama visual interactivo</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> Ir a <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ARQUITECTURA &gt; Views &gt; PRODUCTO_PAGOS_USER</strong> &gt; pestaña <strong>Lineage</strong> — ver diagrama visual interactivo</td>
               </tr>
               <tr>
                 <td class="col-num">5</td>
@@ -695,7 +699,7 @@ body {
               <tr>
                 <td class="col-num">7</td>
                 <td>Quiero ver que cada dominio administra sus propios permisos con database roles sin depender del equipo central</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar celda de database roles en T1<br><span class="icon-tag icon-ui">👁️ UI</span> <strong>Governance &amp; security &gt; Users &amp; roles</strong></td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar celda de database roles en T0 (Bloque 1)<br><span class="icon-tag icon-ui">👁️ UI</span> <strong>Governance &amp; security &gt; Users &amp; roles</strong></td>
               </tr>
             </tbody>
           </table>
@@ -748,7 +752,7 @@ body {
               <tr>
                 <td class="col-num">3</td>
                 <td>Quiero ver el linaje visual del pipeline completo: bronce → plata → oro en Snowsight</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; DT_AUTORIZACIONES_SILVER_USER</strong> &gt; pestaña <strong>Lineage</strong> — diagrama visual de la cadena</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Dynamic Tables &gt; DT_AUTORIZACIONES_SILVER_USER</strong> &gt; pestaña <strong>Lineage</strong> — diagrama visual de la cadena</td>
               </tr>
               <tr>
                 <td class="col-num">4</td>
@@ -831,41 +835,41 @@ body {
               <tr>
                 <td class="col-num">4</td>
                 <td>Quiero crear features reutilizables en el Feature Store que alimenten el modelo de fraude</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celda 5 — Feature Store con Feature View de comportamiento transaccional</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, sección 1 (Feature Engineering) con Feature View de comportamiento transaccional</td>
               </tr>
               <tr>
                 <td class="col-num">5</td>
                 <td>Quiero entrenar un modelo de detección de fraude y ver sus métricas de performance</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celda 11 — XGBoost con scale_pos_weight, métricas accuracy/precision/recall/AUC</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, sección 3 (Entrenamiento) con scale_pos_weight, métricas accuracy/precision/recall/AUC</td>
               </tr>
               <tr>
                 <td class="col-num">6</td>
                 <td>Quiero registrar el modelo en el Registry con versión, métricas y alias champion</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celda 16 — log_model + set_alias("champion")</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, sección 5 (Model Registry) + set_alias("champion")</td>
               </tr>
               <tr class="note-row">
-                <td colspan="3">👁️ <strong>Ver en Snowsight:</strong> <strong>Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ANALITICA &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO</strong> — ver versiones, métricas y alias</td>
+                <td colspan="3">👁️ <strong>Ver en Snowsight:</strong> <strong>AI &amp; ML &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO (o Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ANALITICA &gt; Models)</strong> — ver versiones, métricas y alias</td>
               </tr>
               <tr>
                 <td class="col-num">7</td>
                 <td>Quiero ejecutar predicciones batch sobre datos nuevos usando el modelo registrado</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celda 21 — champion.run() sobre datos de scoring</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, sección 6 (Batch Inference) sobre datos de scoring</td>
               </tr>
               <tr>
                 <td class="col-num">8</td>
                 <td>Quiero monitorear si el modelo se degrada con el tiempo y ver métricas de observabilidad</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celdas 24-26 — simulación 30 días + dashboard observabilidad</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, secciones 7-8 (Observabilidad) 30 días + dashboard observabilidad</td>
               </tr>
               <tr>
                 <td class="col-num">9</td>
                 <td>Quiero entender por qué el modelo clasificó un comercio como sospechoso usando SHAP</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, celda 29 — SHAP feature importance global y por instancia</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T4B, sección 9 (Explainability) feature importance global y por instancia</td>
               </tr>
             </tbody>
           </table>
           <div class="callout callout-blue">
             <strong>💡 Tip de navegación en Snowsight</strong>
-            El Model Registry se visualiza en <strong>Catalog &gt; Explorer &gt; [base de datos] &gt; [schema] &gt; Models</strong>. Desde ahí puedes ver versiones, métricas, alias (champion/challenger) y metadata sin escribir código.
+            El Model Registry se visualiza en <strong>AI &amp; ML &gt; Models (o Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ANALITICA &gt; Models)</strong>. Desde ahí puedes ver versiones, métricas, alias (champion/challenger) y metadata sin escribir código.
           </div>
           <div class="callout callout-green">
             <strong>🏢 Por qué importa para CredibanCo</strong>
@@ -907,7 +911,7 @@ body {
               <tr>
                 <td class="col-num">2</td>
                 <td>Quiero hacerle una pregunta en español a la plataforma y que me responda con datos reales</td>
-                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T6, celdas 14-15 — Cortex Analyst con Semantic View, pregunta en español → SQL automático</td>
+                <td><span class="icon-tag icon-notebook">🖥️ Notebook</span> Ejecutar T6, Bloque 2 — Cortex Analyst (Semantic View + query) con Semantic View, pregunta en español → SQL automático</td>
               </tr>
               <tr>
                 <td class="col-num">3</td>
@@ -985,7 +989,7 @@ body {
               <tr>
                 <td class="col-num">2</td>
                 <td>Quiero ver la tendencia de consumo y si hay días con gasto anómalo detectado automáticamente</td>
-                <td><span class="icon-tag icon-ui">👁️ UI</span> En Account Overview &gt; sección <strong>Anomalies</strong> — detección estadística automática</td>
+                <td><span class="icon-tag icon-ui">👁️ UI</span> <strong>Admin &gt; Cost Management &gt; pestaña Anomalies</strong> — detección estadística automática</td>
               </tr>
               <tr>
                 <td class="col-num">3</td>
