@@ -371,8 +371,11 @@ body {
     <div class="nav-link" data-target="track-t7">
       <span class="nav-num" style="background:var(--t7);color:#fff;">T7</span> FinOps
     </div>
+    <div class="nav-link" data-target="track-t5">
+      <span class="nav-num" style="background:#8b5cf6;color:#fff;">T5</span> Monetización
+    </div>
     <div class="nav-link" data-target="track-otros">
-      <span class="nav-num" style="background:#94a3b8;color:#fff;">+</span> T5 &amp; T8
+      <span class="nav-num" style="background:#94a3b8;color:#fff;">T8</span> Migración
     </div>
   </div>
 </nav>
@@ -435,7 +438,7 @@ body {
         <tr><td>9:25 – 10:35</td><td>T1 — Gobierno y Zero Trust</td></tr>
         <tr><td>10:15 – 11:25</td><td>T2 — Ingeniería de Datos</td></tr>
         <tr><td>11:30 – 12:15</td><td>T4 — Analítica, ML y GenAI</td></tr>
-        <tr><td>11:55 – 1:05</td><td>T5 — Monetización (facilitador especializado)</td></tr>
+        <tr><td>11:55 – 1:05</td><td>T5 — Exposición y Monetización de Datos</td></tr>
         <tr><td>12:45 – 3:35</td><td>T6 — Marketplace, Autoservicio y BI</td></tr>
         <tr><td>3:15 – 4:00</td><td>T7 — FinOps y Salud de Plataforma</td></tr>
         <tr><td>4:05 – 4:55</td><td>T8 — Migración Cloudera (facilitador especializado)</td></tr>
@@ -856,13 +859,65 @@ body {
     </div>
 
     <!-- ============================================================ -->
-    <!-- T5 & T8 -->
+    <!-- T5 — Marketplace, Sharing y Clean Rooms -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t5">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:#8b5cf6;">T5</span>
+        <div class="track-title">
+          <strong>T5 — Exposición y Monetización de Datos</strong>
+          <span class="track-time">11:55 – 1:05</span>
+        </div>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="track-content">
+        <div class="track-eval">
+          <strong>Qué evalúa:</strong> Consumo de datos del Marketplace, compartición privada zero-copy entre cuentas, y análisis conjunto en Data Clean Rooms.
+        </div>
+        <table class="act-table">
+          <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Quiero buscar y consumir un producto de datos de terceros sin salir de Snowflake</td>
+              <td><span class="icon-tag ui">👁️</span> Ir a <strong>Marketplace</strong> en la barra lateral. Buscar un producto &gt; revisar descripción, tablas y preview &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query exploratorio para validar el acceso.</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Quiero crear un listing privado para compartir datos directamente con un aliado fuera de CredibanCo</td>
+              <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; Provider Studio</strong> &gt; <strong>Create Listing</strong>. Seleccionar tablas &gt; elegir <strong>Only specified consumers</strong> &gt; ingresar el account identifier del aliado &gt; publicar.</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Quiero consumir datos que otra empresa me compartió de manera privada, sin copias ni integraciones</td>
+              <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; External sharing</strong>. Localizar el listing privado &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query para validar que los datos están disponibles en tiempo real.</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Quiero ver el resultado de un análisis conjunto entre dos empresas sin que ninguna exponga sus datos crudos</td>
+              <td><span class="icon-tag ui">👁️</span> <strong>Data sharing &gt; Data Clean Rooms</strong> &gt; colaboración CredibanCo × Retailer &gt; pestaña <strong>Analysis</strong> &gt; resultados agregados: patrones de consumo, segmentos, oportunidades para comercios.</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Quiero hacerle preguntas en lenguaje natural a los resultados del Clean Room</td>
+              <td><span class="icon-tag coco">🤖</span> En <strong>Snowflake Intelligence (CoWork)</strong> &gt; preguntas en español sobre resultados: "categorías con mayor ticket promedio", "segmentos con mayor frecuencia", "qué comercios se benefician más".</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout callout-green">
+          <strong>Por qué importa para CredibanCo:</strong> Monetizar datos transaccionales y ofrecer productos de valor a comercios y aliados — sin mover datos, sin exponer información sensible, y sin que ninguna parte vea los datos crudos de la otra.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T8 -->
     <!-- ============================================================ -->
     <div id="track-otros">
       <div class="brief-card">
         <div class="brief-icon">🎤</div>
-        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:var(--text);">Tracks T5 y T8</h3>
-        <p>Estos tracks son conducidos por un facilitador especializado.</p>
+        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:var(--text);">Track T8 — Migración desde Cloudera</h3>
+        <p>Este track es conducido por un facilitador especializado.</p>
       </div>
     </div>
 
