@@ -970,6 +970,61 @@ body {
     </div>
 
     <!-- ============================================================ -->
+    <!-- T5 — Marketplace, Sharing y Clean Rooms -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t5">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:#29B5E8;">T5</span>
+        <div class="track-title">
+          <h3>T5 — Exposición y Monetización de Datos</h3>
+          <span>11:55 – 1:05</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Consumo de datos del Marketplace, compartición privada zero-copy entre cuentas, y análisis conjunto en Data Clean Rooms.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero buscar y consumir un producto de datos de terceros sin salir de Snowflake</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Marketplace</strong> en la barra lateral. Buscar un producto &gt; revisar descripción, tablas y preview &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query exploratorio para validar el acceso.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero crear un listing privado para compartir datos directamente con un aliado fuera de CredibanCo</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; Provider Studio</strong> &gt; <strong>Create Listing</strong>. Seleccionar tablas &gt; elegir <strong>Only specified consumers</strong> &gt; ingresar el account identifier del aliado &gt; publicar.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero consumir datos que otra empresa me compartió de manera privada, sin copias ni integraciones</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; External sharing</strong>. Localizar el listing privado &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query para validar que los datos están disponibles en tiempo real.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero ver el resultado de un análisis conjunto entre dos empresas sin que ninguna exponga sus datos crudos</td>
+                <td><span class="icon-tag ui">👁️</span> <strong>Data sharing &gt; Data Clean Rooms</strong> &gt; colaboración CredibanCo × Retailer &gt; pestaña <strong>Analysis</strong> &gt; resultados agregados: patrones de consumo, segmentos, oportunidades para comercios.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero hacerle preguntas en lenguaje natural a los resultados del Clean Room</td>
+                <td><span class="icon-tag coco">🤖</span> En <strong>Snowflake Intelligence (CoWork)</strong> &gt; preguntas en español sobre resultados: "categorías con mayor ticket promedio", "segmentos con mayor frecuencia", "qué comercios se benefician más".</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>Por qué importa para CredibanCo:</strong> Monetizar datos transaccionales y ofrecer productos de valor a comercios y aliados — sin mover datos, sin exponer información sensible, y sin que ninguna parte vea los datos crudos de la otra.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    
     <!-- T6 -->
     <!-- ============================================================ -->
     <div class="track-card" id="track-t6">
@@ -1108,60 +1163,6 @@ body {
           <div class="callout callout-green">
             <strong>🏢 Por qué importa para CredibanCo</strong>
             El equipo de infraestructura y finanzas tiene visibilidad total del gasto desde el día 1 — sin herramientas adicionales ni dashboards que construir.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- T5 — Marketplace, Sharing y Clean Rooms -->
-    <!-- ============================================================ -->
-    <div class="track-card" id="track-t5">
-      <div class="track-header" onclick="toggleTrack(this)">
-        <span class="track-badge" style="background:#29B5E8;">T5</span>
-        <div class="track-title">
-          <h3>T5 — Exposición y Monetización de Datos</h3>
-          <span>11:55 – 1:05</span>
-        </div>
-        <span class="track-chevron">▸</span>
-      </div>
-      <div class="track-body">
-        <div class="track-content">
-          <div class="track-eval">
-            <strong>Qué evalúa:</strong> Consumo de datos del Marketplace, compartición privada zero-copy entre cuentas, y análisis conjunto en Data Clean Rooms.
-          </div>
-          <table class="act-table">
-            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Quiero buscar y consumir un producto de datos de terceros sin salir de Snowflake</td>
-                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Marketplace</strong> en la barra lateral. Buscar un producto &gt; revisar descripción, tablas y preview &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query exploratorio para validar el acceso.</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Quiero crear un listing privado para compartir datos directamente con un aliado fuera de CredibanCo</td>
-                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; Provider Studio</strong> &gt; <strong>Create Listing</strong>. Seleccionar tablas &gt; elegir <strong>Only specified consumers</strong> &gt; ingresar el account identifier del aliado &gt; publicar.</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Quiero consumir datos que otra empresa me compartió de manera privada, sin copias ni integraciones</td>
-                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; External sharing</strong>. Localizar el listing privado &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query para validar que los datos están disponibles en tiempo real.</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Quiero ver el resultado de un análisis conjunto entre dos empresas sin que ninguna exponga sus datos crudos</td>
-                <td><span class="icon-tag ui">👁️</span> <strong>Data sharing &gt; Data Clean Rooms</strong> &gt; colaboración CredibanCo × Retailer &gt; pestaña <strong>Analysis</strong> &gt; resultados agregados: patrones de consumo, segmentos, oportunidades para comercios.</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>Quiero hacerle preguntas en lenguaje natural a los resultados del Clean Room</td>
-                <td><span class="icon-tag coco">🤖</span> En <strong>Snowflake Intelligence (CoWork)</strong> &gt; preguntas en español sobre resultados: "categorías con mayor ticket promedio", "segmentos con mayor frecuencia", "qué comercios se benefician más".</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="callout callout-green">
-            <strong>Por qué importa para CredibanCo:</strong> Monetizar datos transaccionales y ofrecer productos de valor a comercios y aliados — sin mover datos, sin exponer información sensible, y sin que ninguna parte vea los datos crudos de la otra.
           </div>
         </div>
       </div>
