@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="snowflake-source" content="cortex-agent-authored">
+<title>CredibanCo — Guía del Participante</title>
+<style>
+:root {
+  /* light theme only */
+  --primary: #29B5E8;
+  --dark: #11567F;
+  --green: #2fb380;
+  --orange: #ff922b;
+  --t0: #29B5E8;
+  --t1: #11567F;
+  --t2: #29B5E8;
+  --t4: #11567F;
+  --t6: #29B5E8;
+  --t7: #11567F;
+  --bg: #ffffff;
+  --bg-alt: #f8fafc;
+  --bg-card: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --row-alt: #f1f5f9;
+  --callout-blue-bg: #eff6ff;
+  --callout-green-bg: #f0fdf4;
+  --callout-orange-bg: #fff7ed;
+  --sidebar-bg: #f8fafc;
+  --sidebar-hover: #e2e8f0;
+  --prepop-bg: #f0f7ff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  z-index: 100;
+  padding: 1.5rem 0;
+}
+.sidebar-logo {
+  text-align: center;
+  padding: 0 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.sidebar-logo svg { width: 140px; height: auto; }
+.nav-section { padding: 0 0.75rem; }
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.nav-link:hover { background: var(--sidebar-hover); color: var(--text); }
+.nav-link.active { background: var(--primary); color: #fff; font-weight: 600; }
+.nav-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Content */
+.content {
+  margin-left: 260px;
+  flex: 1;
+  max-width: 900px;
+  padding: 2rem 2.5rem 4rem;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--dark) 0%, #1a3a5c 50%, var(--primary) 100%);
+  border-radius: 16px;
+  padding: 2.5rem;
+  color: #fff;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(41,181,232,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; position: relative; z-index: 1; }
+.hero p { font-size: 1rem; opacity: 0.9; position: relative; z-index: 1; }
+.hero-logo { position: absolute; top: 1.5rem; right: 2rem; z-index: 1; }
+.hero-logo svg { width: 100px; height: auto; }
+
+/* Credentials box */
+.cred-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.cred-box h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; }
+.cred-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 2rem;
+}
+.cred-item { display: flex; gap: 0.5rem; font-size: 0.85rem; }
+.cred-label { color: var(--text-muted); min-width: 90px; }
+.cred-value { font-weight: 600; font-family: 'SF Mono', Monaco, Consolas, monospace; }
+
+/* Callouts */
+.callout {
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.callout-orange {
+  background: var(--callout-orange-bg);
+  border-left: 4px solid var(--orange);
+}
+.callout-blue {
+  background: var(--callout-blue-bg);
+  border-left: 4px solid var(--primary);
+}
+.callout-green {
+  background: var(--callout-green-bg);
+  border-left: 4px solid var(--green);
+}
+.callout strong { display: block; margin-bottom: 0.35rem; }
+
+/* Icon legend */
+.icon-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.icon-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.icon-tag.notebook { background: #dbeafe; color: #1e40af; }
+.icon-tag.ui { background: #dcfce7; color: #166534; }
+.icon-tag.coco { background: #ffedd5; color: #9a3412; }
+
+/* Agenda */
+.agenda-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+}
+.agenda-table th {
+  background: #f0f4f8;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary);
+}
+.agenda-table td {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.agenda-table tr:nth-child(even) td { background: var(--row-alt); }
+
+/* Track cards */
+.track-card {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.track-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.track-header:hover { background: var(--bg-alt); }
+.track-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.track-title { flex: 1; }
+.track-title h3 { font-size: 1rem; font-weight: 700; }
+.track-title span { font-size: 0.8rem; color: var(--text-muted); }
+.track-chevron {
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+  color: var(--text-muted);
+}
+.track-card.open .track-chevron { transform: rotate(90deg); }
+.track-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.track-content { padding: 0 1.25rem 1.25rem; }
+.track-eval {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.track-eval strong { color: var(--text); }
+
+/* Activity tables */
+.act-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+.act-table th {
+  background: #f0f4f8;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.act-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.act-table tr:nth-child(even) td { background: var(--row-alt); }
+.act-table td:first-child { width: 30px; text-align: center; font-weight: 700; color: var(--text-muted); }
+.act-table td:last-child { font-size: 0.82rem; }
+
+/* Pre-populated activity rows */
+.act-table tr.prepop td { background: var(--prepop-bg) !important; }
+.prepop-label {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--dark);
+  background: #dbeafe;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+}
+
+/* Brief card (T5/T8) */
+.brief-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.brief-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+
+/* Section headers */
+.section-header {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary);
+}
+
+/* Sub-track label */
+.sub-track {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--bg-alt);
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Pre-populated inventory table */
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  margin-bottom: 1.25rem;
+}
+.inventory-table th {
+  background: var(--dark);
+  color: #fff;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.inventory-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.inventory-table tr:nth-child(even) td { background: var(--prepop-bg); }
+.inventory-table tr:nth-child(odd) td { background: #fff; }
+.inventory-table td:first-child { font-weight: 600; white-space: nowrap; }
+.inventory-table code {
+  font-size: 0.78rem;
+  background: #e2e8f0;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+}
+
+/* Prepop section card */
+.prepop-section {
+  background: var(--callout-blue-bg);
+  border: 2px solid var(--primary);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.prepop-section h2 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Footer */
+.footer {
+  margin-left: 260px;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* Print */
+@media print {
+  .sidebar { display: none; }
+  .content { margin-left: 0; max-width: 100%; }
+  .footer { margin-left: 0; }
+  .track-body { max-height: none !important; }
+  .hero { break-inside: avoid; }
+  .track-card { break-inside: avoid; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .content { margin-left: 0; padding: 1rem; }
+  .footer { margin-left: 0; }
+  .cred-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SIDEBAR -->
+<!-- ============================================================ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABMUAAAEXCAYAAACtYPPiAAAACXBIWXMAABYlAAAWJQFJUiTwAAAgAElEQVR4nO3dS3YTSdv2+3xqVd98LTVtmlsdmxHYdNVBjAAzAswIMCNAjAB5BGU3trrYI0DuqIvV22p9aAS1V5gri0RIspRxyDj8f2ux3uetKmwd8hBx5R13/O/ff/+tEK/+ZHFUVdXRmhf4MBv0HnL+6vqTxdmGfzWdDXo/Ar8cAAAAAACQEUKxCPUni/OqqoZVVZlQ6GDLK1xWVXVt/swGvesM3veR3rf5c/rEfz7Xex/PBr1poJcIAAAAAAAyQSgWif5k8ayqqgv92RaEbTJXQHSZ4Hs3YZh53W9a/og78/dng96t45cGAAAAAAAyRSgWgf5kYSqjRlVVHTp4NSYcO08lIOpPFiYM++Dox93ovbO0EgAAAAAAbEUo1rH+ZGHCsHceXsX72aA3ivh9m8o4E9wdO/7RZknpGUsqAQAAAADANn/x6XSnP1mMPQVixif9/Bjf94mnQKzS0tNv6ssGAAAAAACwFpViHVFg1baH1j4+zwa9i4jet68KsXVe0mcMAAAAAACsQ6VYB/qTxUWgQMx4F1nV1HWgQOzxd6mJPwAAAAAAwG8IxQLT0sFPgX/tKIZwSE31TwP+SrOUMsolpAAAAAAAoFuEYuF10fz+oKPf+x+Fcl0s4zylvxgAAAAAAFhFKBZQf7I4C1wp1fRKVWpduVQ414XLDt83AAAAAAAAQrGAjiJ5HUGDIfUT63rpZC2W7wAAAAAAAHSMUCycLnd+7FJM75tQDAAAAAAAPCIUCyeWaikAAAAAAIDiEYoBAAAAAACgOIRiAAAAAAAAKA6hGAAAAAAAAIpDKAYAAAAAAIDiEIoBAAAAAACgOIRiAAAAAAAAKA6hGAAAAAAAAIpDKAYAAAAAAIDiEIoBAAAAAACgOIRiAAAAAAAAKA6hGAAAAAAAAIpDKAYAAAAAAIDiEIoBAAAAAACgOIRiAAAAAAAAKA6hGAAAAAAAAIpDKAYAAAAAAIDi/J3iG+5PFmdVVR3pT+1HVVVT82c26P3o9hUCu+tPFic6lk9W/tJtVVUPs0HvgY8TAAAAAAC3kgjF+pPFs6qqhvrzaof/fl5V1XVVVSMCBcSoP1kMG8f0wYaX+KH6+d8udTyPZ4PeLV8oAAAAAAD2og7FFIZd6M+m4GCdw6qq3pk//cniqqqqS8IxxKA/WZyb41HH6K7Msf/G/OlPFnc6ngnHAAAAAACwEG1PMS2RnKpaZp9AbJUJE773J4tLhWxAcOZ47k8WJsj6smcgtuq0qqqv/cnimuMZAAAAAID2ogzFTIBlJv6W4cEqE649qFIHCKI/WRz1J4uxjudTh7/zlY7n1T5kAAAAAABgB9GFYgoQPnj68abi7Et/spiqEg3wRuHuVNWKvo7nW4IxAAAAAAD2F1Uo1p8sRh4DhKbjxhK0o93/GvA000S/P1k8OFj6uwuCMQAAAAAAWogmFNNufO8C/1qzBG1KvzG4YIIp9Q37x/HS36eYYIweYwAAAAAA7CGKUEyT+XFHv/5AFT1T+o2hDXP8qsrxm+O+Yfs41K6WAAAAAABgB39H8iGNAiwze8qh+o2ZYOxyNujddvx6kID+ZHGhMKrr49d4Z5YEc+wCAICcNHoBmwfp21pGmF6ut7NB74evt6/WK0P9qZm2GWYMds2Bh32pQKQ+puqVH+YYvtZx5e14BhBBKKYbS4g+Yrs6Vb+xq6qqLrgIYR0NzsaBl0nuwoR0hGIAACBJ6pM6VPh10mas5Wscr02U1m0IZuYPb/qT..." alt="Snowflake" style="width:140px;height:auto;">
+  </div>
+  <div class="nav-section">
+    <div class="nav-link active" data-target="inicio">
+      <span class="nav-num" style="background:var(--primary);color:#fff;">▲</span> Inicio
+    </div>
+    <div class="nav-link" data-target="prepoblado">
+      <span class="nav-num" style="background:var(--green);color:#fff;">✓</span> Lo que ya está listo
+    </div>
+    <div class="nav-link" data-target="agenda">
+      <span class="nav-num" style="background:var(--dark);color:#fff;">⏱</span> Agenda
+    </div>
+    <div class="nav-link" data-target="track-t0">
+      <span class="nav-num" style="background:var(--t0);color:#fff;">T0</span> Arquitectura
+    </div>
+    <div class="nav-link" data-target="track-t1">
+      <span class="nav-num" style="background:var(--t1);color:#fff;">T1</span> Gobierno
+    </div>
+    <div class="nav-link" data-target="track-t2">
+      <span class="nav-num" style="background:var(--t2);color:#fff;">T2</span> Ingeniería
+    </div>
+    <div class="nav-link" data-target="track-t4">
+      <span class="nav-num" style="background:var(--t4);color:#fff;">T4</span> IA y ML
+    </div>
+    <div class="nav-link" data-target="track-t5">
+      <span class="nav-num" style="background:#29B5E8;color:#fff;">T5</span> Monetización
+    </div>
+    <div class="nav-link" data-target="track-t6">
+      <span class="nav-num" style="background:var(--t6);color:#fff;">T6</span> Autoservicio
+    </div>
+    <div class="nav-link" data-target="track-t7">
+      <span class="nav-num" style="background:var(--t7);color:#fff;">T7</span> FinOps
+    </div>
+    <div class="nav-link" data-target="track-otros">
+      <span class="nav-num" style="background:#94a3b8;color:#fff;">T8</span> Migración
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- MAIN CONTENT -->
+<!-- ============================================================ -->
+<div class="main" style="flex:1;">
+  <div class="content">
+
+    <!-- Hero -->
+    <div class="hero" id="inicio">
+      <div class="hero-logo">
+        <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjI2cHgiIGhlaWdodD0iNTFweCIgdmlld0JveD0iMCAwIDIyNiA1MSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDx0aXRsZT5Mb2dvIC8gV2hpdGU8L3RpdGxlPgogICAgPGRlZnM+CiAgICAgICAgPHBvbHlnb24gaWQ9InBhdGgtMSIgcG9pbnRzPSIwLjAwMDEwNjczNTE4NyAwIDIyNS43ODY3ODggMCAyMjUuNzg2Nzg4IDUxLjAxNTI3NjUgMC4wMDAxMDY3MzUxODcgNTEuMDE1Mjc2NSI+PC9wb2x5Z29uPgogICAgPC9kZWZzPgogICAgPGcgaWQ9IkNvbXBvbmVudHMiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJMb2dvcyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE0MS4wMDAwMDAsIC0zMjYuMDAwMDAwKSI+CiAgICAgICAgICAgIDxnIGlkPSJMb2dvLS8tV2hpdGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0MS4wMDAwMDAsIDMyNi4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxtYXNrIGlkPSJtYXNrLTIiIGZpbGw9IndoaXRlIj4KICAgICAgICAgICAgICAgICAgICA8dXNlIHhsaW5rOmhyZWY9IiNwYXRoLTEiPjwvdXNlPgogICAgICAgICAgICAgICAgPC9tYXNrPgogICAgICAgICAgICAgICAgPGcgaWQ9IkNsaXAtMiI+PC9nPgogICAgICAgICAgICAgICAgPHBhdGggZD0iTTEzOS42NjgxOTUsMTUuOTYzMjQ3NyBMMTM5LjY2MTUzMywxNS45NTkyMTMgQzEzOS42NjE1MzMsMTUuOTU5MjEzIDEzOS42NTgyMDIsMTUuOTU2NjQ1NCAxMzkuNjUzNzYxLDE1Ljk1NjY0NTQgQzEzOS41MDA1MzEsMTUuODkwMjU1NSAxMzkuMzMyNDk3LDE1Ljg1NTc3NjggMTM5LjE3MDc1NCwxNS44NTU3NzY4IEMxMzguOTA5MDgsMTUuODU3NjEwOCAxMzguNjU4MTM4LDE1LjkzNTAwNDUgMTM4LjQzOTAyNywxNi4wNzA3MTg2IEMxMzguMjE1ODQ1LDE2LjIxMDgzNDMgMTM4LjAyNzA4NCwxNi40MTUxMzkxIDEzNy45MTg2MzksMTYuNjcwNzk1MiBMMTM3LjkxODYzOSwxNi42NzcwMzA3IEwxMzIuODA5MTM1LDMwLjUzNTY0NTUgTDEyOC44NzEwNiwyMS4yNDY1NjI2IEwxMjguODY1MTM4LDIxLjI0MjUyNzkgQzEyOC43NTQ0NzIsMjAuOTgyODM3IDEyOC41NTYwODgsMjAuNzgyMjAwMiAxMjguMzMxMDU1LDIwLjY0MjQ1MTMgQzEyOC4xMDM4MDEsMjAuNTAyMzM1NiAxMjcuODQxNzU3LDIwLjQyNTMwODcgMTI3LjU2NjAxNywyMC40MjUzMDg3IEMxMjcuMjk4MDUxLDIwLjQyNTMwODcgMTI3LjA0ODIyLDIwLjUwODU3MTEgMTI2LjgyNzYyOCwyMC42NDQyODUzIEMxMjYuNjEwMzY4LDIwLjc4NDAzNDIgMTI2LjQxNDIwNCwyMC45ODI4MzcgMTI2LjMwMzkwOSwyMS4yNDI1Mjc5IEwxMjYuMzAxNjg5LDIxLjI0NjU2MjYgTDEyMi4zNjM2MTMsMzAuNTM1NjQ1NSBMMTEzLjk4MDc2OCwxMC4wMTQ5NzY0IEMxMTMuODg3MTI1LDkuNzgyMTcyNiAxMTMuNzE2NzA2LDkuNTc2ODQ3MSAxMTMuNTExNzc0LDkuNDI1NjUzNzEgQzExMy4zMDU1MTIsOS4yNzQ0NjAzMiAxMTMuMDY2NzE2LDkuMTkzMDYxMzIgMTEyLjgwOTQ1NCw5LjE5MzA2MTMyIEMxMTIuNTUwMDQxLDkuMTkzMDYxMzIgMTEyLjMwOTAyNSw5LjI3NzM0MDU2IDExMi4wOTczMjMsOS40MzI1MDg2OCBDMTExLjg4NDk1MSw5LjU4NzY3NjggMTExLjcxNTY0Miw5Ljc5ODA3NzQzIDExMS42MjM1NSwxMC4wMzkxMzE0IEwxMTEuNjIzNTUsMTAuMDM5MTMxNCBMMTA2LjU3NjQzMiwyMy41NzU0MzI2IEwxMDEuNTA2MzE2LDEwLjA0MDMxNDggTDEwMS41MDcyMDYsMTAuMDM5MTMxNCBDMTAxLjQxNTIyNSw5Ljc5ODg1NTUgMTAxLjI0NTgwNiw5LjU4ODIxMiAxMDEuMDMzNDM0LDkuNDMyNTA4NjggQzEwMC44MjMxNzMsOS4yNzc4MjkzNiAxMDAuNTg0NTk4LDkuMTkzMDYxMzIgMTAwLjMyNTQwNyw5LjE5MzA2MTMyIEMxMDAuMDY4MTQ1LDkuMTkzMDYxMzIgOTkuODI5NTcwMyw5LjI3NDQ2MDMyIDk5LjYyMzMwODMsOS40MjU2NTM3MSBDOTkuNDE4MzAzMiw5LjU3Njg0NzEgOTkuMjQ3ODc0MSw5Ljc4MjE3MjYgOTkuMTU0MTIwNSwxMC4wMTQ5NzY0IEw5OS4xNTQxMjA1LDEwLjAxNDk3NjQgTDkwLjc3NDkzNTQsMzAuNTQyNjAyOSBMODUuNjYzMjEyNiwxNi42NzcwMzA3IEw4NS42NjMyMTI2LDE2LjY3MDc5NTIgQzg1LjU1NDc2NzcsMTYuNDE1MTM5MSA4NS4zNjYwMDY0LDE2LjIxMDgzNDMgODUuMTQyODI0MiwxNi4wNzA3MTg2IEM4NC45MjM3MTMxLDE1LjkzNTAwNDUgODQuNjcyNzcxMiwxNS44NTc2MTA4IDg0LjQxMTAyNjcsMTUuODU1Nzc2OCBDODQuMjQ5MjgzNywxNS44NTU3NzY4IDg0LjA4MTMyMDMsMTUuODkwMjU1NSA4My45MjgwOSwxNS45NTY2NDU0IEM4My45MjM2NDk3LDE1Ljk1NjY0NTQgODMuOTIwMzE4NywxNS45NTkyMTMgODMuOTIwMzE4NywxNS45NTkyMTMgTDgzLjkxMzY1NjcsMTUuOTYzMjQ3NyBDODMuNzQzNjE4MSwxNi4wNDUxMjEgODMuNjAyMDI3NSwxNi4xODI2NjkxIDgzLjUxNjAyMzIsMTYuMzU0NjkzMyBDODMuNDMyMTI4MSwxNi41MjMwNDk1IDgzLjQwMzk0MTksMTYuNzI3Mzk0MyA4My40NTEzNjg3LDE2LjkxOTM0NzIgQzgzLjQ1MzU4OCwxNi45MzE5MjYgODMuNDU4MDI4MywxNi45NDQ2MjA4IDgzLjQ2MTM1OTMsMTYuOTU2NTMxIEw4My40NjEzNTkzLDE2Ljk1NjUzMSBMOTAuMjcxNzc2MiwzNS4zNTM5NjQyIEM5MC4zNjMxMDgsMzUuNjAwMTIzNCBDOTAuNTM2MzMxNiwzNS44MTI5MzIgOTAuNzUwMjUzMiwzNS45NjIxMjg1IEM5MC45NjYzOTU0LDM2LjExMjc1NzEgOTEuMjE5NjU2NywzNi4xOTQwOTU2IDkxLjQ4NzQwMTIsMzYuMTk0MDk1NiBMOTEuNDg3NDAxMiwzNi4xOTQwOTU2IEM5MS43NTMwNzUzLDM2LjE5NDA5NTYgOTIuMDA0MDE3MSwzNi4xMTU1MjUzIDkyLjIxODQ5ODMsMzUuOTY4OTM0IEM5Mi40MzA3NjAyLDM1LjgyMjM0MjcgOTIuNjAyODczMSwzNS42MTQ1OTgxIDkyLjY5NTMxNTYsMzUuMzcxNjQyNSBMOTkuNTMwMjE0NywxNi45MjM2MjQzIEw5OS41MzAyMTQ3LDE2LjkyMzYyNDMgTDEwMC4yMjc1NjcsMTkuNjAxMjg0OSBMMTAzLjM3MjQwMSwxOS42MDEyODQ5IEwxMDAuMzI1NDA3LDI3LjA3NjU4MDUgTDEwMC4zMjU0MDcsMjcuMDc2NTgwNSBMMTA2LjAxNzk3MSwzNS4zNTM5NjQyIEMxMDYuMTEwNDEzLDM1LjYwMDEyMzQgQzEwNi4yODE5NDMsMzUuODEyOTMyIDEwNi40OTUzMDUsMzUuOTYyMTI4NSBDMTA2LjcxMTQ0NywzNi4xMTI3NTcxIDEwNi45NjMxNDksMzYuMTk0MDk1NiAxMDcuMjMxMDAzLDM2LjE5NDA5NTYgTDEwNy4yMzEwMDMsMzYuMTk0MDk1NiBDMTA3LjQ5NjU2OCwzNi4xOTQwOTU2IDEwNy43NDc1MSwzNi4xMTU1MjUzIDEwNy45NjE5OTEsMzUuOTY4OTM0IEMxMDguMTc0MjUzLDM1LjgyMjM0MjcgMTA4LjM0NjM2NiwzNS42MTQ1OTgxIDEwOC40Mzg4MDksMzUuMzcxNjQyNSBMMTE1LjI3Mzk4NywxNi45MjM2MjQzIEwxMTUuMjczOTg3LDE2LjkyMzYyNDMgTDEyMi4xMTk0NjcsMzUuMzYwMjA3IEMxMjIuMjEwNjg5LDM1LjYwMDEyMzQgQzEyMi4zODI4MDIsMzUuODEyOTMyIDEyMi41OTY4MzMsMzUuOTYyMTI4NSBDMTIyLjgxMjk3NSwzNi4xMTI3NTcxIDEyMy4wNjYyMzcsMzYuMTk0MDk1NiAxMjMuMzM0MDkxLDM2LjE5NDA5NTYgTDEyMy4zMzQwOTEsMzYuMTk0MDk1NiBDMTIzLjU5OTY1NSwzNi4xOTQwOTU2IDEyMy44NTA1OTcsMzYuMTE1NTI1MyAxMjQuMDY1MDc4LDM1Ljk2ODkzNCBDMTI0LjI3NzM0LDM1LjgyMjM0MjcgMTI0LjQ0OTQ1MywzNS42MTQ1OTgxIDEyNC41NDE4OTYsMzUuMzcxNjQyNSBMMTMxLjM3Njk5NCwxNi45MjM2MjQzIEwxMzEuMzc2OTk0LDE2LjkyMzYyNDMgTDEzOC4xMjAzNDUsMzUuMzUzOTY0MiBDMTM4LjIxMTY3NywzNS42MDAxMjM0IEMxMzguMzgzNzksMzUuODEyOTMyIDEzOC41OTc4MTEsMzUuOTYyMTI4NSBDMTM4LjgxMzk1MywzNi4xMTI3NTcxIDEzOS4wNjcyMTUsMzYuMTk0MDk1NiAxMzkuMzM0OTU5LDM2LjE5NDA5NTYgTDEzOS4zMzQ5NTksMzYuMTk0MDk1NiBDMTM5LjYwMDUyMywzNi4xOTQwOTU2IDEzOS44NTE0NjUsMzYuMTE1NTI1MyAxNDAuMDY1OTQ2LDM1Ljk2ODkzNCBDMTQwLjI3ODIwOCwzNS44MjIzNDI3IDE0MC40NTAzMjEsMzUuNjE0NTk4MSAxNDAuNTQyNzY0LDM1LjM3MTY0MjUgTDE0MC41NDI3NjQsMzUuMzcxNjQyNSBMMTQwLjU0Mjc2NCwzNS4zNzE2NDI1IEwxNDcuMzIyNjcxLDE2Ljk1NjUzMSBDMTQ3LjMyNTg5MiwxNi45NDQ2MjA4IDE0Ny4zMzAzMzMsMTYuOTMxOTI2IDE0Ny4zMzI1NTIsMTYuOTE5MzQ3MiBDMTQ3LjM3OTk3OSwxNi43MjczOTQzIDE0Ny4zNTE3OTMsMTYuNTIzMDQ5NSAxNDcuMjY3ODk4LDE2LjM1NDY5MzMgQzE0Ny4xODE4OTMsMTYuMTgyNjY5MSAxNDcuMDQwMzAzLDE2LjA0NTEyMSAxNDYuODcwMjY1LDE1Ljk2MzI0NzcgTDE0Ni44NzAyNjUsMTUuOTYzMjQ3NyBaIE0xNDkuMDcyMDk2LDkuMzQ3Njc4ODUgQzE0OC42Mzk3MDcsOC45MTc5MjkyMSAxNDguMDU5ODM3LDguNjg0NzA3MzUgMTQ3LjQxMjMxNyw4LjY4NDcwNzM1IEMxNDYuNzU3MjMxLDguNjg0NzA3MzUgMTQ2LjE3NDg0LDguOTE1NzEzNjkgMTQ1LjczOTExMiw5LjM0MDM5NjUxIEMxNDUuMzA4MTU1LDkuNzU4MjIwNTIgMTQ1LjA4MDE4MSwxMC4zMjU2MjMgMTQ1LjA4MDE4MSwxMC45NTk0MTUgQzE0NS4wODAxODEsMTEuNTkzMjA3IDE0NS4zMTAzNzYsMTIuMTY1NjY5IDE0NS43NDc5OTQsMTIuNTgzNjE4OCBDMTQuMTgwMzgzLDEyLjk5NzI3NjMgMTQ2Ljc1NzIzMSwxMy4yMjQ0MzQ2IDE0Ny40MTIzMTcsMTMuMjI0NDM0NiBDMTQ4LjA2NjA2MywxMy4yMjQ0MzQ2IDE0OC42NDUwNDMsMTIuOTk3Mjc2MyAxNDkuMDc4NjQxLDEyLjU4NjQ3NDggQzE0OS41MTQ5MjksMTIuMTcwOTIyMyAxNDkuNzQyOTAzLDExLjU5NjIxNTkgMTQ5Ljc0MjkwMywxMC45NTk0MTUgQzE0OS43NDI5MDMsMTAuMzI4MDkwNiAxNDkuNTA4MTU2LDkuNzY1MjMxMjMgMTQ5LjA3MjA5Niw5LjM0NzY3ODg1IE0xNS44NTQ0OTkzLDIxLjIyMTIzMDQgTDE1Ljg1NDQ5OTMsMjkuNzk5NTIzMiBDMTUuODU0NDk5MywzMC4yMDM4ODExIDE1LjcwMjIzNjIsMzAuNTY2ODQ3NyAxNS4zOTk4NjA4LDMwLjg2NTIwNzMgQzE1LjA5NjI5NDUsMzEuMTYzNTY2OCAxNC43MjcxMzQ4LDMxLjMxMjk1NjQgMTQuMzEzNTkxOSwzMS4zMTI5NTY0IEMxMy45MDMzODA3LDMxLjMxMjk1NjQgMTMuNTM1MzMxNiwzMS4xNjM1NjY4IDEzLjIzMjk1NjMsMzAuODY1MjA3MyBDMTIuOTI3MDMzOSwzMC41NjY4NDc3IDEyLjc3NTg4MTUsMzAuMjAzODgxMSAxMi43NzU4ODE1LDI5Ljc5OTUyMzIgTDEyLjc3NTg4MTUsMjEuMjIxMjMwNCBDMTIuNzc1ODgxNSwyMC44MTY4NzI1IDEyLjkyNzAzMzksMjAuNDU1OTYzMyAxMy4yMzI5NTYzLDIwLjE1NTQyOTggQzEzLjUzNTMzMTYsMTkuODYwMjU4NyAxMy45MDMzODA3LDE5LjcxMDk4NDYgMTQuMzEzNTkxOSwxOS43MTA5ODQ2IEMxNC43MjcxMzQ4LDE5LjcxMDk4NDYgMTUuMDk2Mjk0NSwxOS44NjAyNTg3IDE1LjM5OTg2MDgsMjAuMTU1NDI5OCBDMTUuNzAyMjM2MiwyMC40NTU5NjMzIDE1Ljg1NDQ5OTMsMjAuODE2ODcyNSAxNS44NTQ0OTkzLDIxLjIyMTIzMDQgTTYxLjczMTA5MzYsMjIuOTk4ODY4NiBDNjEuMzE5NzcxOSwyMi4yNTkxNjg3IDYwLjcwNjg3MjYsMjEuNjc5NTcwOSA1OS45NjMzMTkzLDIxLjMyNDk1NDIgQzU5LjIwMjg0MjcsMjAuOTY0MjA0NCA1OC4zMDM4MTYxLDIwLjc0MjIyMDkgNTcuMTk3Mjc0NywyMC42MjU1MjAyIEw1NC44NzUxNjk1LDIwLjM2NjY5OCBDNTQuMTk3NDkzOSwyMC4yOTg0MTM0IDUzLjY5MjY0MzIsMjAuMTE5NDE2NiA1My4zODU4MzAxLDE5Ljg0NjMzMDMgQzUzLjA3OTAxNjksMTkuNTc0NDI3NSA1Mi45Mjc4NjQ2LDE5LjI0MTMxNTggNTIuOTI3ODY0NiwxOC44NjA3NDcyIEM1Mi45Mjc4NjQ2LDE4LjM5MTI2NjEgNTMuMTA3ODQ0MSwxNy45NjI2NTE1IDUzLjQ3MDQyNjUsMTcuNjI4MTI5OSBDNTMuODI4MzQ5NiwxNy4yOTA4MjY3IDU0LjM3NDA4OTYsMTcuMTI3Njk5IDU1LjA5MDg4MDYsMTcuMTI3Njk5IEM1NS44NDI1MTQ3LDE3LjEyNzY5OSA1Ni40MzIzOTM2LDE3LjMxMTg3NDYgNTYuODMwMjAzNSwxNy42NTkxNzA5IEM1Ny4yMjQ0NDExLDE4LjAwOTI1MTggNTcuNDYxNjk2NSwxOC41MzI2MDY5IDU3LjUzMDA1NzksMTkuMjE1MDg2MiBMNTcuNTM0NjA4NSwxOS4yNTM4NjM4IEw2MC4yNDA5MjIsMTkuMjUzODYzOCBMNjAuMjM2MzcxNCwxOS4yMTUwODYyIEM2MC4xMTQ4NTIsMTcuODE4MDQxNyA1OS41NTgxNDU1LDE2LjY1Nzg1MjggNTguNjAzNzgwMywxNS44NjAyNjk5IEM1Ny42NjAyOTY0LDE1LjA3MjYzOTQgNTYuNDg2MTQ3LDE0LjY4NjE5NjcgNTUuMTIyOTQ3OCwxNC42ODYxOTY3IEM1My41OTY4NzEsMTQuNjg2MTk2NyA1Mi4zODQwODEsMTUuMTMwMTA5NCA1MS41MTkwODQ1LDE1Ljk4ODE3OTEgQzUwLjY2MTk1NTcsMTYuODMyNzg0NSA1MC4yMjg0NTY1LDE3Ljg2Mzk0NTkgNTAuMjI4NDU2NSwxOS4wMzQ3MTEyIEM1MC4yMjg0NTY1LDE5LjkwODA2MDIgNTAuNDQ4ODkyNiwyMC42MjkxMTMyIDUwLjg5MjI4OTksMjEuMTk0ODU1NSBDNTE" alt="" style="width:100px;height:auto;">
+      </div>
+      <h1>CredibanCo — Hands-On Lab</h1>
+      <p>Guía del Participante · RFP 10010806</p>
+    </div>
+
+    <!-- Credentials -->
+    <div class="cred-box">
+      <h3>🔑 Credenciales de Acceso</h3>
+      <div class="cred-grid">
+        <div class="cred-item"><span class="cred-label">Usuario:</span><span class="cred-value">USER</span></div>
+        <div class="cred-item"><span class="cred-label">Contraseña:</span><span class="cred-value">sn0wf@ll</span></div>
+        <div class="cred-item"><span class="cred-label">Rol inicial:</span><span class="cred-value">ACCOUNTADMIN</span></div>
+        <div class="cred-item"><span class="cred-label">Notebooks:</span><span class="cred-value">Projects → Workspaces → My Workspace → notebooks/</span></div>
+        <div class="cred-item"><span class="cred-label">CoCo:</span><span class="cred-value">Ícono esquina inferior derecha de Snowsight</span></div>
+      </div>
+    </div>
+
+    <!-- Navigation Callout -->
+    <div class="callout callout-orange">
+      <strong>⚠️ Navegación en Snowsight</strong>
+      El explorador de bases de datos está en <strong>Catalog → Explorer</strong>.
+      Los roles están en <strong>Governance &amp; security → Users &amp; roles</strong>.
+      Los costos están en <strong>Admin → Cost Management</strong>.
+      El marketplace interno está en <strong>Catalog → Internal Marketplace</strong>.
+      CoCo se abre con el ícono en la esquina inferior derecha.
+    </div>
+
+    <!-- Icon Legend -->
+    <div class="icon-legend">
+      <span class="icon-tag notebook">🖥️ Ejecutar en notebook</span>
+      <span class="icon-tag ui">👁️ Ver en Snowsight UI</span>
+      <span class="icon-tag coco">🤖 Copiar prompt en CoCo</span>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LO QUE YA ESTÁ LISTO -->
+    <!-- ============================================================ -->
+    <div class="prepop-section" id="prepoblado">
+      <h2>✅ Lo que ya está listo</h2>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1rem;">
+        La cuenta tiene <strong>17 categorías de artefactos pre-poblados</strong>. Todo está funcionando — solo hay que navegar para verlo.
+        Las filas marcadas con <span class="prepop-label">pre-poblado</span> en los tracks de abajo indican actividades de navegación sobre estos artefactos.
+      </p>
+      <table class="inventory-table">
+        <thead>
+          <tr><th>Categoría</th><th>Qué hay</th><th>Dónde verlo en Snowsight</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pipelines</td>
+            <td>6 Dynamic Tables (bronce→plata→oro + Gold)</td>
+            <td><code>Transformation</code> → <code>Dynamic tables</code></td>
+          </tr>
+          <tr>
+            <td>Orquestación</td>
+            <td>5 Tasks en DAG con historial de ejecución</td>
+            <td><code>Transformation</code> → <code>Tasks</code></td>
+          </tr>
+          <tr>
+            <td>CDC</td>
+            <td>1 Stream sobre autorizaciones</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → PAGOS → Streams</td>
+          </tr>
+          <tr>
+            <td>dbt</td>
+            <td>Proyecto CREDIBANCO_ANALYTICS (2 modelos, 4 tests PASS)</td>
+            <td><code>Transformation</code> → <code>dbt projects</code></td>
+          </tr>
+          <tr>
+            <td>Agentes IA</td>
+            <td>3 agentes conversacionales (SARLAFT, Transacciones, Riesgo)</td>
+            <td><code>AI &amp; ML</code> → <code>Agents</code> → o usar en CoWork</td>
+          </tr>
+          <tr>
+            <td>Preguntas NL</td>
+            <td>Semantic View sobre autorizaciones, comercios y liquidaciones</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → PAGOS → Semantic Views</td>
+          </tr>
+          <tr>
+            <td>RAG</td>
+            <td>2 Cortex Search Services (SARLAFT + Migración)</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → CUMPLIMIENTO</td>
+          </tr>
+          <tr>
+            <td>Dashboards</td>
+            <td>3 apps Streamlit (BI, Riesgo/Fraude, MLOps)</td>
+            <td><code>Projects</code> → <code>Streamlit</code> (filtrar DB=CREDIBANCO_HOL)</td>
+          </tr>
+          <tr>
+            <td>Modelos ML</td>
+            <td>2 modelos registrados: Fraude (V1+V2) + Churn (V1)</td>
+            <td><code>AI &amp; ML</code> → <code>Models</code></td>
+          </tr>
+          <tr>
+            <td>Data Sharing</td>
+            <td>2 shares zero-copy (Pagos + Riesgo)</td>
+            <td><code>Data sharing</code> → <code>External sharing</code> → <code>Shared by you</code></td>
+          </tr>
+          <tr>
+            <td>FinOps</td>
+            <td>Resource Monitor + Budget + dashboard nativo</td>
+            <td><code>Admin</code> → <code>Cost Management</code></td>
+          </tr>
+          <tr>
+            <td>Red</td>
+            <td>Network Policy para oficinas CredibanCo</td>
+            <td><code>Governance &amp; security</code> → <code>Network policies</code></td>
+          </tr>
+          <tr>
+            <td>Alertas</td>
+            <td>3 alertas proactivas activas</td>
+            <td><code>Monitoring</code> → <code>Alerts</code></td>
+          </tr>
+          <tr>
+            <td>Gobierno</td>
+            <td>Tags, masking, RAP, clasificación en todas las tablas</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → cualquier tabla → Governance</td>
+          </tr>
+          <tr>
+            <td>Calidad</td>
+            <td>DMF asociada a AUTORIZACIONES</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → PAGOS → AUTORIZACIONES → Data Quality</td>
+          </tr>
+          <tr>
+            <td>Formato abierto</td>
+            <td>1 Iceberg Table</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → PAGOS → ICE_AUTORIZACIONES_APROBADAS</td>
+          </tr>
+          <tr>
+            <td>Git</td>
+            <td>Repositorio GitHub conectado</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → PLATAFORMA → Git Repositories</td>
+          </tr>
+          <tr>
+            <td>Productos datos</td>
+            <td>3 vistas gobernadas con tags de dominio</td>
+            <td><code>Catalog</code> → <code>Explorer</code> → ARQUITECTURA → Views</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PARA VER FUNCIONES ADICIONALES -->
+    <!-- ============================================================ -->
+    <div class="callout callout-orange" id="notebooks-adicionales">
+      <strong>📓 Para ver funciones adicionales</strong>
+      <p style="margin-bottom:0.75rem;">
+        <strong>SETUP_prepopulate.ipynb</strong> (ejecutar <strong>UNA VEZ</strong> antes del HOL):
+      </p>
+      <ul style="margin-left:1.25rem;margin-bottom:0.75rem;font-size:0.85rem;">
+        <li>Registra modelos de ML en el Registry (Fraude V1+V2, Churn V1)</li>
+        <li>Genera historial de inference (predicciones batch)</li>
+        <li>Después de ejecutar: <code>AI &amp; ML</code> → <code>Models</code> muestra versiones con métricas y aliases</li>
+      </ul>
+      <p style="margin-bottom:0.5rem;">
+        <strong>Notebooks opcionales</strong> (guía paso a paso por track):
+      </p>
+      <ul style="margin-left:1.25rem;font-size:0.85rem;">
+        <li>Estos notebooks son una guía interactiva para demostrar cada funcionalidad</li>
+        <li>Todo lo que crean es <strong>ADICIONAL</strong> a lo pre-poblado</li>
+        <li>Si no se ejecutan, la cuenta sigue teniendo todos los artefactos pre-poblados</li>
+      </ul>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- AGENDA -->
+    <!-- ============================================================ -->
+    <h2 class="section-header" id="agenda">📋 Agenda del Día</h2>
+    <table class="agenda-table">
+      <thead>
+        <tr><th>Hora</th><th>Track</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>8:10 – 8:30</td><td>Apertura</td></tr>
+        <tr><td>8:35 – 9:45</td><td>T0 — Arquitectura y Data Fabric</td></tr>
+        <tr><td>9:25 – 10:35</td><td>T1 — Gobierno y Zero Trust</td></tr>
+        <tr><td>10:15 – 11:25</td><td>T2 — Ingeniería de Datos</td></tr>
+        <tr><td>11:30 – 12:15</td><td>T4 — Analítica, ML y GenAI</td></tr>
+        <tr><td>11:55 – 1:05</td><td>T5 — Exposición y Monetización de Datos</td></tr>
+        <tr><td>12:45 – 3:35</td><td>T6 — Marketplace, Autoservicio y BI</td></tr>
+        <tr><td>3:15 – 4:00</td><td>T7 — FinOps y Salud de Plataforma</td></tr>
+        <tr><td>4:05 – 4:55</td><td>T8 — Migración Cloudera (facilitador especializado)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ============================================================ -->
+    <!-- T0 -->
+    <!-- ============================================================ -->
+    <div class="track-card open" id="track-t0">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:var(--t0);">T0</span>
+        <div class="track-title">
+          <h3>Arquitectura, Data Fabric y Productos</h3>
+          <span>8:35 – 9:45 · Notebook: T0_arquitectura.ipynb</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Validar la arquitectura de dominios de negocio, productos de datos gobernados, linaje y formato abierto.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero ver cómo está organizada la plataforma de datos en dominios de negocio</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T0, Bloque 1 — SHOW SCHEMAS muestra los 13 dominios</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero ver qué objetos tiene el dominio de Pagos y cómo se relacionan</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T0, Bloque 1 — lista tablas, vistas y Dynamic Tables del dominio Pagos</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero ver que los datos están etiquetados con tags de gobierno</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T0, Bloque 1 — TAG_REFERENCES muestra tags aplicados</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero crear un producto de datos gobernado y etiquetarlo para que otros lo encuentren</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T0, Bloque 2 — CREATE VIEW + ALTER TAG de dominio</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero ver de dónde vienen los datos de este producto en un diagrama visual</td>
+                <td><span class="icon-tag ui">👁️</span> Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ARQUITECTURA &gt; Views &gt; PRODUCTO_PAGOS_USER &gt; pestaña Lineage</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Quiero ver que existen tablas en formato abierto Apache Iceberg</td>
+                <td><span class="icon-tag notebook">🖥️</span> En T2, Bloque 2A — SHOW ICEBERG TABLES muestra la tabla en formato abierto</td>
+              </tr>
+              <tr class="prepop">
+                <td>7</td>
+                <td>Quiero ver el repositorio Git conectado a la plataforma <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PLATAFORMA &gt; Git Repositories &gt; HOL_REPO</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>🏢 Por qué importa para CredibanCo</strong>
+            La arquitectura de 13 dominios refleja las áreas reales de CredibanCo. Los productos de datos gobernados permiten que cada equipo publique y descubra datasets de forma autónoma.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T1 -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t1">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:var(--t1);">T1</span>
+        <div class="track-title">
+          <h3>Gobierno, Seguridad y Zero Trust</h3>
+          <span>9:25 – 10:35 · Notebook: T1_gobierno.ipynb</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Gobierno de información sensible con clasificación automática, masking dinámico por rol y auditoría de políticas.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero consultar datos sensibles y ver que el PAN y celular están protegidos automáticamente</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T1, Bloque 1 — query con rol SEGURIDAD_INFO muestra datos protegidos</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero cambiar de rol y ver que los mismos datos se ven diferentes según quién consulta</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T1, Bloque 1 — con rol NEGOCIO el PAN aparece enmascarado</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero que la plataforma detecte automáticamente qué columnas tienen datos sensibles</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T1, Bloque 2 — EXTRACT_SEMANTIC_CATEGORIES clasifica PII sin reglas manuales</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero aplicar tags de PII y verificar que quedaron registrados</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T1, Bloque 2 — auto-tagging + TAG_REFERENCES verifica tags aplicados</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero ver todas las políticas y tags de una tabla en un solo lugar</td>
+                <td><span class="icon-tag ui">👁️</span> Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; CLIENTES &gt; TARJETAHABIENTES &gt; pestaña Governance</td>
+              </tr>
+              <tr class="prepop">
+                <td>6</td>
+                <td>Quiero ver la Network Policy configurada para la oficina <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Governance &amp; security &gt; Network policies &gt; NP_CREDIBANCO_OFICINA</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>🏢 Por qué importa para CredibanCo</strong>
+            PCI-DSS y Ley de Habeas Data exigen protección de PAN y datos personales. El masking dinámico y la clasificación automática garantizan cumplimiento sin impactar la operación.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T2 -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t2">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:var(--t2);">T2</span>
+        <div class="track-title">
+          <h3>Ingeniería de Datos</h3>
+          <span>10:15 – 11:25 · Notebook: T2_ingenieria.ipynb</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Pipelines declarativos, ingesta de APIs, propagación automática de cambios, formato abierto y transformaciones con dbt.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero pedirle a CoCo que conecte una API externa y configure ingesta mientras yo sigo trabajando</td>
+                <td><span class="icon-tag coco">🤖</span> Copiar prompt de celda 5 en CoCo — conecta API Superfinanciera + configura Openflow</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero ver un pipeline que transforma datos automáticamente sin Spark ni orquestador</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T2, Bloque 1 — Dynamic Tables pipeline bronce→plata→oro</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero insertar un dato en la fuente y ver que se propaga solo hasta la capa final</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T2, Bloque 2 — conteo ANTES, INSERT, refresh, conteo DESPUÉS</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero ver la cadena completa de transformación en un diagrama visual</td>
+                <td><span class="icon-tag ui">👁️</span> Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Dynamic Tables &gt; DT_AUTORIZACIONES_SILVER_USER &gt; pestaña Lineage</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero crear una tabla en formato abierto Iceberg</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T2, Bloque 2A — CREATE ICEBERG TABLE + SHOW ICEBERG TABLES</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Quiero que CoCo cree un proyecto dbt con modelos, tests y lo ejecute</td>
+                <td><span class="icon-tag coco">🤖</span> Copiar prompt dbt en CoCo — crea proyecto con staging, mart y tests</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Quiero verificar que CoCo creó la conexión a la API y los datos de la Superfinanciera</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T2, Bloque 3 — verifica Network Rule, UDF de TRM y tabla histórica</td>
+              </tr>
+              <tr class="prepop">
+                <td>8</td>
+                <td>Quiero ver el proyecto dbt ya ejecutado con sus modelos y tests <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Transformation &gt; dbt projects &gt; CREDIBANCO_ANALYTICS</td>
+              </tr>
+              <tr class="prepop">
+                <td>9</td>
+                <td>Quiero ver el task graph completo con historial de ejecución <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Transformation &gt; Tasks &gt; TASK_INGESTA_ROOT (click para ver DAG)</td>
+              </tr>
+              <tr class="prepop">
+                <td>10</td>
+                <td>Quiero ver el stream CDC capturando cambios <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Streams &gt; STREAM_AUTORIZACIONES</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>🏢 Por qué importa para CredibanCo</strong>
+            Los pipelines de autorizaciones y liquidaciones se actualizan solos. Cualquier cambio en la fuente se propaga automáticamente hasta los reportes — sin Spark, sin Airflow.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T4 -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t4">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:var(--t4);">T4</span>
+        <div class="track-title">
+          <h3>Analítica, ML, IA y GenAI</h3>
+          <span>11:30 – 12:15 · Notebooks: T4_analitica_ia.ipynb + T4B_mlops.ipynb</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> IA nativa en SQL, RAG sobre documentos, agentes conversacionales y ciclo completo de MLOps.
+          </div>
+
+          <div class="sub-track">T4 — IA y GenAI (T4_analitica_ia.ipynb)</div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero extraer campos de un texto no estructurado usando IA directamente en SQL</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4, Bloque 1 — AI_COMPLETE extrae campos desde texto</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero clasificar alertas por severidad automáticamente</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4, Bloque 1 — AI_CLASSIFY categoriza alertas</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero buscar en documentos SARLAFT con lenguaje natural</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4, Bloque 1 — Cortex Search RAG sobre documentos regulatorios</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero ver qué comercios tienen comportamiento anómalo y su scoring de riesgo</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4, Bloque 2 — anomalías y scoring pre-computados</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero crear un agente inteligente que responda preguntas sobre cumplimiento</td>
+                <td><span class="icon-tag coco">🤖</span> Copiar prompt de agente en CoCo — crea agente SARLAFT conversacional</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="sub-track">T4B — MLOps (T4B_mlops.ipynb)</div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero crear features reutilizables para el modelo de fraude</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 1 — Feature Store con Feature View de comportamiento transaccional</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero generar un training set desde el Feature Store</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 2 — generate_dataset con point-in-time correctness</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero entrenar un modelo de detección de fraude y ver sus métricas</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 3 — XGBoost con accuracy, precision, recall, AUC</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero ver la confusion matrix y la importancia de cada feature</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 4 — gráficos de performance del modelo</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero registrar el modelo con versión y métricas para desplegarlo</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 5 — log_model + alias champion. <span class="icon-tag ui">👁️</span> AI &amp; ML &gt; Models para ver en UI</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Quiero ejecutar predicciones sobre datos nuevos usando el modelo registrado</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 6 — champion.run() sobre datos de scoring</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Quiero ver si el modelo se degrada con el tiempo</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, secciones 7-8 — simulación 30 días + dashboard de observabilidad</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Quiero entender por qué el modelo clasificó un comercio como sospechoso</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T4B, sección 9 — SHAP feature importance global y por instancia</td>
+              </tr>
+              <tr class="prepop">
+                <td>9</td>
+                <td>Quiero ver los modelos registrados con versiones y métricas <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> AI &amp; ML &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO (V1 champion, V2 challenger)</td>
+              </tr>
+              <tr class="prepop">
+                <td>10</td>
+                <td>Quiero ver los agentes en CoWork y hacerles preguntas <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> CoWork &gt; seleccionar Agente Transacciones o Agente SARLAFT</td>
+              </tr>
+              <tr class="prepop">
+                <td>11</td>
+                <td>Quiero ver los dashboards de MLOps y Riesgo <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Projects &gt; Streamlit &gt; DASHBOARD_MLOPS / DASHBOARD_RIESGO_FRAUDE</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>🏢 Por qué importa para CredibanCo</strong>
+            El modelo de fraude se entrena, registra y ejecuta donde viven los datos — dentro del perímetro de seguridad de CredibanCo. Los documentos SARLAFT se consultan con IA sin exponerlos.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T6 -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t6">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:var(--t6);">T6</span>
+        <div class="track-title">
+          <h3>Marketplace, Autoservicio y BI</h3>
+          <span>12:45 – 3:35 · Notebook: T6_autoservicio_bi.ipynb</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Descubrimiento de datos, consultas en lenguaje natural, dashboards interactivos y marketplace interno.
+          </div>
+          <div class="callout callout-orange" style="margin-bottom:1rem;">
+            <strong>⚠️ Nota importante</strong>
+            Algunas celdas de este notebook requieren el rol ACCOUNTADMIN (por ejemplo, CREATE SEMANTIC VIEW y CREATE SHARE). Si una celda falla con error de permisos, ejecuta <code>USE ROLE ACCOUNTADMIN;</code> antes de esa celda.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero descubrir qué datos y productos existen en la plataforma sin preguntarle a nadie</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Catalog > Explorer</strong> — en Horizon Catalog ver <strong>Data Products (197)</strong> a la izquierda y usar la barra <em>"Search for anything"</em> para buscar "autorizaciones" o "comercios". A la derecha aparecen los data products disponibles del Internal Marketplace.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero ver qué datos de turismo y comercios están disponibles para análisis</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T6, Bloque 1 — catálogo de productos + datos de turismo disponibles</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero hacer una consulta de negocio cruzando regiones y categorías</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T6, Bloque 2 — query top regiones × categoría</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero hacerle una pregunta en español a la plataforma y que responda con datos</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T6, Bloque 2 — CREATE SEMANTIC VIEW + Cortex Analyst query en español</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero crear un dashboard interactivo sin escribir código</td>
+                <td><span class="icon-tag coco">🤖</span> Copiar prompt Streamlit en CoCo — crea app con filtros, KPIs y gráficos</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Quiero compartir tablas con otra área sin copiar datos</td>
+                <td><span class="icon-tag notebook">🖥️</span> Ejecutar T6, Bloque 2B — CREATE SHARE con 3 tablas + DESCRIBE SHARE</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Quiero publicar un producto en el marketplace interno</td>
+                <td><span class="icon-tag ui">👁️</span> Data sharing &gt; Internal sharing &gt; + Create Listing &gt; seleccionar CREDIBANCO_PAGOS_SHARE</td>
+              </tr>
+              <tr class="prepop">
+                <td>8</td>
+                <td>Quiero ver el dashboard BI interactivo ya desplegado <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Projects &gt; Streamlit &gt; DASHBOARD_BI_CREDIBANCO</td>
+              </tr>
+              <tr class="prepop">
+                <td>9</td>
+                <td>Quiero ver los shares creados para compartir datos <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Data sharing &gt; External sharing &gt; Shared by you</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>🏢 Por qué importa para CredibanCo</strong>
+            Los analistas de negocio hacen preguntas en español, ven dashboards interactivos y publican datos — todo sin depender del equipo de datos.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T7 -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t7">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:var(--t7);">T7</span>
+        <div class="track-title">
+          <h3>Administración, DataOps, FinOps y Salud</h3>
+          <span>3:15 – 4:00 · Notebook: T7_dataops_finops.ipynb</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Dashboard nativo de costos, detección de anomalías, presupuestos y optimización.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero ver cuánto se gasta por servicio y la tendencia de consumo</td>
+                <td><span class="icon-tag ui">👁️</span> Admin &gt; Cost Management &gt; Account Overview — KPIs, tendencia y desglose por servicio</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero ver si hay días con gasto anómalo detectado automáticamente</td>
+                <td><span class="icon-tag ui">👁️</span> Admin &gt; Cost Management &gt; pestaña Anomalies — detección estadística automática</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero configurar un límite de créditos con alertas escalonadas</td>
+                <td><span class="icon-tag ui">👁️</span> <strong>Admin &gt; Cost Management &gt; Budgets</strong> &gt; seleccionar el budget de la cuenta &gt; configurar límite mensual y alertas. También en <strong>Admin &gt; Cost Management &gt; Resource Monitors</strong> para crear un monitor con umbrales al 75%, 90% y suspensión al 100%</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero ver las recomendaciones de optimización y ahorro</td>
+                <td><span class="icon-tag ui">👁️</span> Admin &gt; Cost Management &gt; Account Overview &gt; sección Optimization Insights</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero identificar las queries más costosas de la semana</td>
+                <td><span class="icon-tag coco">🤖</span> Copiar prompt en CoCo: "¿Cuáles son las 10 queries más costosas de la última semana?"</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Quiero un dashboard FinOps ejecutivo generado sin código</td>
+                <td><span class="icon-tag coco">🤖</span> Copiar prompt en CoCo: "Crea un dashboard Streamlit de FinOps con KPIs y gráficos"</td>
+              </tr>
+              <tr class="prepop">
+                <td>7</td>
+                <td>Quiero ver las alertas proactivas configuradas <span class="prepop-label">pre-poblado</span></td>
+                <td><span class="icon-tag ui">👁️</span> Monitoring &gt; Alerts (ALERTA_CONSUMO_ANOMALO, ALERTA_FRESCURA_DATOS)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>🏢 Por qué importa para CredibanCo</strong>
+            El equipo de infraestructura y finanzas tiene visibilidad total del gasto desde el día 1 — sin herramientas adicionales ni dashboards que construir.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T5 — Marketplace, Sharing y Clean Rooms -->
+    <!-- ============================================================ -->
+    <div class="track-card" id="track-t5">
+      <div class="track-header" onclick="toggleTrack(this)">
+        <span class="track-badge" style="background:#29B5E8;">T5</span>
+        <div class="track-title">
+          <h3>T5 — Exposición y Monetización de Datos</h3>
+          <span>11:55 – 1:05</span>
+        </div>
+        <span class="track-chevron">▸</span>
+      </div>
+      <div class="track-body">
+        <div class="track-content">
+          <div class="track-eval">
+            <strong>Qué evalúa:</strong> Consumo de datos del Marketplace, compartición privada zero-copy entre cuentas, y análisis conjunto en Data Clean Rooms.
+          </div>
+          <table class="act-table">
+            <thead><tr><th>#</th><th>Actividad</th><th>Cómo</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Quiero buscar y consumir un producto de datos de terceros sin salir de Snowflake</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Marketplace</strong> en la barra lateral. Buscar un producto &gt; revisar descripción, tablas y preview &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query exploratorio para validar el acceso.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Quiero crear un listing privado para compartir datos directamente con un aliado fuera de CredibanCo</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; Provider Studio</strong> &gt; <strong>Create Listing</strong>. Seleccionar tablas &gt; elegir <strong>Only specified consumers</strong> &gt; ingresar el account identifier del aliado &gt; publicar.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Quiero consumir datos que otra empresa me compartió de manera privada, sin copias ni integraciones</td>
+                <td><span class="icon-tag ui">👁️</span> Ir a <strong>Data sharing &gt; External sharing</strong>. Localizar el listing privado &gt; clic en <strong>Get</strong> &gt; asignar base de datos &gt; ejecutar un query para validar que los datos están disponibles en tiempo real.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Quiero ver el resultado de un análisis conjunto entre dos empresas sin que ninguna exponga sus datos crudos</td>
+                <td><span class="icon-tag ui">👁️</span> <strong>Data sharing &gt; Data Clean Rooms</strong> &gt; colaboración CredibanCo × Retailer &gt; pestaña <strong>Analysis</strong> &gt; resultados agregados: patrones de consumo, segmentos, oportunidades para comercios.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Quiero hacerle preguntas en lenguaje natural a los resultados del Clean Room</td>
+                <td><span class="icon-tag coco">🤖</span> En <strong>Snowflake Intelligence (CoWork)</strong> &gt; preguntas en español sobre resultados: "categorías con mayor ticket promedio", "segmentos con mayor frecuencia", "qué comercios se benefician más".</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout-green">
+            <strong>Por qué importa para CredibanCo:</strong> Monetizar datos transaccionales y ofrecer productos de valor a comercios y aliados — sin mover datos, sin exponer información sensible, y sin que ninguna parte vea los datos crudos de la otra.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- T8 -->
+    <!-- ============================================================ -->
+    <div id="track-otros">
+      <div class="brief-card">
+        <div class="brief-icon">🎤</div>
+        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:var(--text);">Track T8 — Migración desde Cloudera</h3>
+        <p>Este track es conducido por un facilitador especializado.</p>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Footer -->
+  <footer class="footer">
+    CredibanCo Hands-On Lab · RFP 10010806 · Snowflake 2026
+  </footer>
+
+</div><!-- /main -->
+
+<script>
+function toggleTrack(header) {
+  const card = header.closest('.track-card');
+  const body = card.querySelector('.track-body');
+  if (card.classList.contains('open')) {
+    body.style.maxHeight = '0';
+    card.classList.remove('open');
+  } else {
+    card.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+// Sidebar navigation
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    const target = document.getElementById(link.dataset.target);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Open track if collapsed
+    if (target.classList.contains('track-card') && !target.classList.contains('open')) {
+      const header = target.querySelector('.track-header');
+      if (header) toggleTrack(header);
+    }
+
+    // Update active nav
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Initialize: open first track, set correct max-height
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.track-card.open').forEach(card => {
+    const body = card.querySelector('.track-body');
+    if (body) body.style.maxHeight = body.scrollHeight + 'px';
+  });
+});
+
+// Scroll spy for sidebar
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.target === id);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('[id^="track-"], #inicio, #agenda, #prepoblado').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
