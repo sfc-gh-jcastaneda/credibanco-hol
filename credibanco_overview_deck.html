@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="snowflake-source" content="cortex-agent-authored">
+<title>CredibanCo — Overview por Track</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sf-blue: #29B5E8;
+    --sf-dark: #11567F;
+    --green: #22A06B;
+    --green-bg: #E3FCEF;
+    --orange: #E67E22;
+    --orange-bg: #FFF4E6;
+    --red: #DE350B;
+    --red-bg: #FFEBE6;
+    --blue-bg: #E6F7FF;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-800: #1F2937;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+    --radius: 8px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--sf-dark) 0%, #1a7ba5 50%, var(--sf-blue) 100%);
+    color: #fff;
+    padding: 32px 0;
+    margin-bottom: 0;
+  }
+  .header-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 15px; opacity: 0.85; margin-bottom: 16px; }
+  .cred-box {
+    display: inline-flex; gap: 24px; background: rgba(255,255,255,0.15);
+    border-radius: 6px; padding: 8px 16px; font-size: 13px; font-family: monospace;
+  }
+  .cred-box span { opacity: 0.9; }
+
+  /* Tabs */
+  .tab-bar {
+    background: #fff;
+    border-bottom: 2px solid var(--gray-200);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .tab-bar-inner {
+    max-width: 1000px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 4px; overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 12px 18px; border: none; background: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--gray-600);
+    border-bottom: 3px solid transparent; white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .tab-btn:hover { color: var(--sf-dark); background: var(--gray-50); }
+  .tab-btn.active {
+    color: var(--sf-dark); border-bottom-color: var(--sf-blue);
+    background: var(--blue-bg);
+    border-radius: 6px 6px 0 0;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Track header */
+  .track-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 28px 0 8px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--sf-blue);
+  }
+  .track-header h2 { font-size: 22px; color: var(--sf-dark); }
+  .timer-badge {
+    background: var(--sf-blue); color: #fff; font-size: 12px; font-weight: 700;
+    padding: 4px 12px; border-radius: 20px; white-space: nowrap;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 16px; font-weight: 700; margin: 24px 0 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .icon { font-size: 18px; }
+
+  /* Cards */
+  .card {
+    background: #fff; border-radius: var(--radius); padding: 16px 18px;
+    margin-bottom: 10px; box-shadow: var(--shadow); border-left: 4px solid var(--gray-200);
+  }
+  .card-green  { border-left-color: var(--green); background: #fff; }
+  .card-blue   { border-left-color: var(--sf-blue); background: #fff; }
+  .card-orange { border-left-color: var(--orange); background: #fff; }
+  .card-red    { border-left-color: var(--red); background: var(--red-bg); }
+
+  .card h4 { font-size: 14px; margin-bottom: 6px; color: var(--gray-800); }
+  .card p, .card li { font-size: 13px; color: var(--gray-600); }
+  .card ul { padding-left: 18px; margin-top: 4px; }
+  .card li { margin-bottom: 3px; }
+
+  /* Breadcrumb paths */
+  .path {
+    display: inline; background: #EBF5FB; color: var(--sf-dark);
+    font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px;
+    padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+  }
+  .path-block {
+    display: inline-block; background: #EBF5FB; color: var(--sf-dark);
+    font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px;
+    padding: 4px 10px; border-radius: 4px; margin: 4px 0;
+    line-height: 1.8;
+  }
+
+  /* H-ID badge */
+  .h-badge {
+    display: inline-block; background: var(--sf-dark); color: #fff;
+    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+    margin-right: 6px; vertical-align: middle;
+  }
+
+  /* Labels */
+  .label-ir { font-weight: 700; color: var(--sf-dark); font-size: 13px; }
+  .label-res { font-weight: 700; color: var(--green); font-size: 13px; }
+  .label-tambien { font-weight: 600; color: var(--gray-600); font-size: 13px; }
+
+  /* Nav tree */
+  .nav-tree {
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: var(--radius); padding: 16px 20px;
+    font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px;
+    line-height: 2; color: var(--gray-800); overflow-x: auto;
+    margin-bottom: 10px;
+  }
+  .nav-tree .branch { color: var(--sf-dark); font-weight: 600; }
+  .nav-tree .note { color: var(--gray-400); font-weight: 400; }
+
+  /* Prerequisites */
+  .prereq {
+    background: var(--red-bg); border-left: 4px solid var(--red);
+    border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .prereq strong { color: var(--red); }
+
+  /* Grid for green cards */
+  .card-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 700px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* Footer */
+  .footer {
+    text-align: center; padding: 24px; color: var(--gray-400);
+    font-size: 12px; border-top: 1px solid var(--gray-200); margin-top: 40px;
+  }
+
+  /* Print */
+  @media print {
+    .tab-bar { position: static; box-shadow: none; }
+    .tab-content { display: block !important; page-break-before: always; }
+    .tab-btn.active { border-bottom-color: var(--sf-blue); }
+    body { background: #fff; }
+    .card { box-shadow: none; border: 1px solid var(--gray-200); }
+    .header { -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>CredibanCo — Overview por Track</h1>
+    <div class="subtitle">RFP 10010806 · Guía del Facilitador · 15 min por track</div>
+    <div class="cred-box">
+      <span><b>User:</b> USER</span>
+      <span><b>Password:</b> sn0wf@ll</span>
+      <span><b>Role:</b> ACCOUNTADMIN</span>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" onclick="showTab('t0')">T0 — Arquitectura</button>
+    <button class="tab-btn" onclick="showTab('t1')">T1 — Gobierno</button>
+    <button class="tab-btn" onclick="showTab('t2')">T2 — Ingeniería</button>
+    <button class="tab-btn" onclick="showTab('t4')">T4 — IA &amp; ML</button>
+    <button class="tab-btn" onclick="showTab('t6')">T6 — Marketplace &amp; BI</button>
+    <button class="tab-btn" onclick="showTab('t7')">T7 — Admin &amp; FinOps</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- T0 — Arquitectura y Data Fabric                              -->
+<!-- ============================================================ -->
+<div id="t0" class="tab-content active">
+  <div class="track-header">
+    <h2>T0 — Arquitectura y Data Fabric</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>16 schemas por dominio</h4>
+      <p>PAGOS, CLIENTES, COMERCIOS, RIESGO, TURISMO, ARQUITECTURA, etc.</p>
+      <p><span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL</span></p>
+    </div>
+    <div class="card card-green">
+      <h4>3 vistas de arquitectura</h4>
+      <p>Documentan la arquitectura del Data Fabric</p>
+      <p><span class="path">ARQUITECTURA &gt; Views</span></p>
+    </div>
+    <div class="card card-green">
+      <h4>Tags aplicados en todas las tablas</h4>
+      <p>TAG_DOMINIO, TAG_PII, TAG_CONFIDENCIAL</p>
+      <p><span class="path">Cualquier tabla &gt; Governance tab</span></p>
+    </div>
+    <div class="card card-green">
+      <h4>Git repo + Iceberg table</h4>
+      <p>HOL_REPO conectado a GitHub · ICE_AUTORIZACIONES_APROBADAS</p>
+      <p><span class="path">PLATAFORMA &gt; Git Repositories</span></p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; <span class="branch">CREDIBANCO_HOL</span><br>
+    &nbsp;&nbsp;├── Schemas <span class="note">(16 dominios de negocio)</span><br>
+    &nbsp;&nbsp;├── ARQUITECTURA &gt; Views <span class="note">(3 vistas de producto)</span><br>
+    &nbsp;&nbsp;├── PAGOS &gt; Tables / Dynamic Tables / Streams<br>
+    &nbsp;&nbsp;├── Cualquier tabla &gt; <b>Governance</b> tab <span class="note">→ ver tags aplicados</span><br>
+    &nbsp;&nbsp;├── Cualquier DT &gt; <b>Lineage</b> tab <span class="note">→ diagrama de flujo</span><br>
+    &nbsp;&nbsp;└── PLATAFORMA &gt; Git Repositories &gt; HOL_REPO
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H01</span> Navegar el flujo end-to-end</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL</span> → Click en cada schema</p>
+    <p><span class="label-res">Resultado esperado:</span> 16 dominios organizados (PAGOS, CLIENTES, COMERCIOS, RIESGO, TURISMO…)</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H02</span> Mostrar arquitectura fundacional</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ARQUITECTURA &gt; Views</span></p>
+    <p><span class="label-res">Resultado esperado:</span> 3 vistas documentando la arquitectura de datos</p>
+    <p><span class="label-tambien">También:</span> Click en cualquier Dynamic Table &gt; <b>Lineage</b> tab = flujo visual de datos</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Tags y gobernanza</h4>
+    <p>Click en cualquier tabla &gt; <b>Governance</b> tab → ver tags, masking, RAPs aplicados</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Tabla Iceberg</h4>
+    <p><span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; ICE_AUTORIZACIONES_APROBADAS</span> → formato abierto Apache Iceberg</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- T1 — Gobierno, Seguridad y Zero Trust                        -->
+<!-- ============================================================ -->
+<div id="t1" class="tab-content">
+  <div class="track-header">
+    <h2>T1 — Gobierno, Seguridad y Zero Trust</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <div class="prereq">
+    <strong>⚠️ Prerequisito:</strong> Para ver diferencias de masking, usar role <span class="path">CRB_SEGURIDAD_INFO</span> o <span class="path">ACCOUNTADMIN</span> en SQL Worksheet.
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>6 Masking Policies</h4>
+      <p>MASK_PAN, MASK_CEDULA, MASK_CELULAR, MASK_EMAIL, MASK_FECHA_NAC, MASK_NOMBRE</p>
+    </div>
+    <div class="card card-green">
+      <h4>2 Row Access Policies</h4>
+      <p>RAP_AUTORIZACIONES, RAP_TARJETAHABIENTES</p>
+    </div>
+    <div class="card card-green">
+      <h4>11 Tags de gobernanza</h4>
+      <p>TAG_PII, TAG_PAN, TAG_CONFIDENCIAL, TAG_DOMINIO, TAG_OWNER, etc.</p>
+    </div>
+    <div class="card card-green">
+      <h4>Network + Auth + DMF</h4>
+      <p>1 Network Policy · 1 Auth Policy · 1 DMF (DMF_MONTO_VALIDO)</p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Governance &amp; security</span><br>
+    &nbsp;&nbsp;├── Policies &gt; Masking <span class="note">(6 políticas)</span><br>
+    &nbsp;&nbsp;├── Policies &gt; Row access <span class="note">(2 políticas)</span><br>
+    &nbsp;&nbsp;├── Tags <span class="note">(11 tags en todas las tablas)</span><br>
+    &nbsp;&nbsp;├── Network policies <span class="note">(1 política)</span><br>
+    &nbsp;&nbsp;└── Authentication policies <span class="note">(1 política)</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; cualquier tabla &gt; <b>Governance</b> tab<br>
+    &nbsp;&nbsp;└── Muestra tags, masking, RAPs aplicados a esa tabla
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H03</span> Aplicar políticas como código</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Governance &amp; security &gt; Policies</span></p>
+    <p><span class="label-res">Resultado esperado:</span> 6 masking policies + 2 RAPs ya aplicadas</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Governance tab</span> → tags + policies visibles</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H04</span> Gobernar datos sensibles E2E</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Governance tab</span></p>
+    <p><span class="label-res">Resultado esperado:</span> PAN_SINTETICO, CEDULA, CELULAR taggeados como PII con masking</p>
+    <p><span class="label-tambien">Prueba en SQL Worksheet:</span></p>
+    <ul>
+      <li><code>USE ROLE CRB_NEGOCIO;</code> → <code>SELECT * FROM CREDIBANCO_HOL.CLIENTES.TARJETAHABIENTES LIMIT 5;</code> → PAN = TOKEN-xxx (masked)</li>
+      <li><code>USE ROLE ACCOUNTADMIN;</code> → misma query → datos completos visibles</li>
+    </ul>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H05</span> Validar linaje y calidad</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; DT_AUTORIZACIONES_SILVER_USER &gt; Lineage tab</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Grafo visual del flujo de datos desde tablas fuente hasta este DT</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; AUTORIZACIONES &gt; Data Quality tab</span> → DMF_MONTO_VALIDO</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H06</span> Gobernanza federada / multicloud</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; ICE_AUTORIZACIONES_APROBADAS</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Tabla Iceberg en formato abierto — accesible desde Spark/Trino/Databricks sin copiar datos</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Data sharing &gt; External sharing &gt; Shared by you</span> → 2 shares con gobernanza aplicada</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Network Policies</h4>
+    <p><span class="path">Governance &amp; security &gt; Network policies</span> → control de acceso por IP</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Comparar roles</h4>
+    <p>En un SQL Worksheet, cambiar entre roles para ver diferentes niveles de masking</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- T2 — Ingeniería de Datos                                     -->
+<!-- ============================================================ -->
+<div id="t2" class="tab-content">
+  <div class="track-header">
+    <h2>T2 — Ingeniería de Datos</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>5 Dynamic Tables</h4>
+      <p>Pipeline bronze → silver → gold con auto-refresh</p>
+    </div>
+    <div class="card card-green">
+      <h4>5 Tasks en DAG</h4>
+      <p>TASK_INGESTA_ROOT → LIMPIEZA → ENRIQUECIMIENTO → NOTIFICACION</p>
+    </div>
+    <div class="card card-green">
+      <h4>1 Stream CDC + Streaming</h4>
+      <p>STREAM_AUTORIZACIONES · KAFKA_EVENTOS_STREAMING (104K+ rows)</p>
+    </div>
+    <div class="card card-green">
+      <h4>dbt + Git repo</h4>
+      <p>CREDIBANCO_ANALYTICS · HOL_REPO conectado a GitHub</p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Transformation</span><br>
+    &nbsp;&nbsp;├── Dynamic tables <span class="note">(5 DTs: silver + gold layers)</span><br>
+    &nbsp;&nbsp;├── Tasks <span class="note">(5 tasks en DAG — click TASK_INGESTA_ROOT para ver grafo)</span><br>
+    &nbsp;&nbsp;└── dbt projects &gt; CREDIBANCO_ANALYTICS<br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; <span class="branch">CREDIBANCO_HOL</span><br>
+    &nbsp;&nbsp;├── PAGOS &gt; Streams &gt; STREAM_AUTORIZACIONES <span class="note">(CDC)</span><br>
+    &nbsp;&nbsp;├── PAGOS &gt; Dynamic Tables &gt; click any &gt; <b>Lineage</b> tab<br>
+    &nbsp;&nbsp;└── STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING <span class="note">(real-time Kafka)</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Data Engineering</span> &gt; <span class="branch">Openflow</span> <span class="note">(⚠️ default role = OPENFLOW_ADMIN_RL)</span>
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H07</span> Pipeline representativo</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Transformation &gt; Tasks</span> → Click <span class="path">TASK_INGESTA_ROOT</span></p>
+    <p><span class="label-res">Resultado esperado:</span> DAG visual: ROOT → LIMPIEZA → ENRIQUECIMIENTO → NOTIFICACION</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Transformation &gt; Dynamic tables</span> → 5 DTs con auto-refresh</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H08</span> Diagnosticar y recuperar fallas</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Transformation &gt; Tasks &gt; TASK_INGESTA_ROOT &gt; Run History</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Historial de ejecución con status SUCCESS/FAILED por corrida</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Monitoring &gt; Alerts</span> → 3 alertas proactivas configuradas</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H09</span> Promover cambios entre ambientes</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PLATAFORMA &gt; Git Repositories &gt; HOL_REPO</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Repo GitHub conectado con notebooks y SQL versionados</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Transformation &gt; dbt projects &gt; CREDIBANCO_ANALYTICS</span> → transformaciones versionadas</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Kafka Streaming real-time</h4>
+    <p><span class="path">STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING</span> → datos en tiempo real desde Kafka MSK</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Openflow (NiFi)</h4>
+    <p>Abrir Openflow UI para ver conector Kafka. Primero cambiar default role a <span class="path">OPENFLOW_ADMIN_RL</span></p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- T4 — Analítica, ML, IA y GenAI                               -->
+<!-- ============================================================ -->
+<div id="t4" class="tab-content">
+  <div class="track-header">
+    <h2>T4 — Analítica, ML, IA y GenAI</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>3 Cortex Agents</h4>
+      <p>AGENTE_RIESGO, AGENTE_SARLAFT, AGENTE_TRANSACCIONES</p>
+    </div>
+    <div class="card card-green">
+      <h4>2 Cortex Search + 2 Semantic Views</h4>
+      <p>RAG sobre docs SARLAFT y migración · SQL en lenguaje natural</p>
+    </div>
+    <div class="card card-green">
+      <h4>2 ML Models</h4>
+      <p>MODELO_FRAUDE (V1 champion + V2 challenger) · MODELO_CHURN</p>
+    </div>
+    <div class="card card-green">
+      <h4>3 Streamlit Dashboards</h4>
+      <p>DASHBOARD_BI · DASHBOARD_RIESGO_FRAUDE · DASHBOARD_MLOPS</p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">AI &amp; ML</span><br>
+    &nbsp;&nbsp;├── Agents <span class="note">(3 agentes conversacionales)</span><br>
+    &nbsp;&nbsp;├── Models <span class="note">(2 modelos ML con versiones)</span><br>
+    &nbsp;&nbsp;└── Cortex Search <span class="note">(2 servicios de búsqueda para RAG)</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Snowflake Intelligence (CoWork)</span><br>
+    &nbsp;&nbsp;└── Seleccionar agente → preguntar en español<br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Projects</span> &gt; <span class="branch">Streamlit</span><br>
+    &nbsp;&nbsp;├── DASHBOARD_BI_CREDIBANCO<br>
+    &nbsp;&nbsp;├── DASHBOARD_RIESGO_FRAUDE<br>
+    &nbsp;&nbsp;└── DASHBOARD_MLOPS
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H13</span> Construir/desplegar modelo</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">AI &amp; ML &gt; Models</span></p>
+    <p><span class="label-res">Resultado esperado:</span> MODELO_FRAUDE_CREDIBANCO (V1 champion + V2 challenger) + MODELO_CHURN_COMERCIOS</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H14</span> Gobernar ciclo de vida AI</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">AI &amp; ML &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Versiones, métricas, aliases (champion/challenger). Click en versión para detalles.</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H15</span> Operar agente/RAG</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Snowflake Intelligence (CoWork)</span> → Seleccionar <b>AGENTE_SARLAFT</b></p>
+    <p><span class="label-res">Resultado esperado:</span> Preguntar "¿Cuáles son los requisitos SARLAFT para comercios de alto riesgo?" → Responde con contexto de documentos</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H16</span> Gobernar datos y features para AI</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; ANALITICA &gt; FEATURES_RIESGO_COMERCIO &gt; Governance tab</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Tags SNOWML_FEATURE_* rastreando qué columnas alimentan modelos ML</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H17</span> Ejecutar pipeline MLOps</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Projects &gt; Streamlit &gt; DASHBOARD_MLOPS</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Dashboard con métricas de performance, historial de entrenamiento</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H18</span> Monitorear modelo en producción</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Projects &gt; Streamlit &gt; DASHBOARD_MLOPS</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Métricas Accuracy/Precision/Recall, detección de drift</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H19</span> Gestionar GenAI y agentes</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">AI &amp; ML &gt; Agents</span> → Ver 3 agentes con sus configuraciones</p>
+    <p><span class="label-res">Resultado esperado:</span> Configuración de cada agente visible</p>
+    <p><span class="label-tambien">Prueba:</span> <span class="path">CoWork</span> → Probar cada agente con diferentes preguntas</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H20</span> Validar AI responsable</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">CoWork &gt; AGENTE_SARLAFT</span> → agente alineado a compliance</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Governance</span> → masking PII previene entrenar sobre datos sensibles</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Agente Transacciones</h4>
+    <p><span class="path">CoWork &gt; AGENTE_TRANSACCIONES</span>: "¿Cuántas transacciones hubo ayer por encima de 5 millones?"</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Dashboard de Fraude</h4>
+    <p><span class="path">Projects &gt; Streamlit &gt; DASHBOARD_RIESGO_FRAUDE</span> → analítica visual de fraude</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- T6 — Marketplace, Autoservicio y BI                          -->
+<!-- ============================================================ -->
+<div id="t6" class="tab-content">
+  <div class="track-header">
+    <h2>T6 — Marketplace, Autoservicio y BI</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>3 Streamlit Dashboards</h4>
+      <p>BI, Riesgo/Fraude, MLOps — listos para interactuar</p>
+    </div>
+    <div class="card card-green">
+      <h4>2 Semantic Views</h4>
+      <p>SV_AUTORIZACIONES · SV_RIESGO_COMERCIOS para queries en lenguaje natural</p>
+    </div>
+    <div class="card card-green">
+      <h4>2 Outbound Shares</h4>
+      <p>Zero-copy data sharing con gobernanza aplicada</p>
+    </div>
+    <div class="card card-green">
+      <h4>Horizon Catalog + Resource Monitors</h4>
+      <p>Tags, data products y auto-provisioning configurados</p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span><br>
+    &nbsp;&nbsp;└── Buscar "autorizaciones" o "comercios" <span class="note">→ descubrir data products</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Snowflake Intelligence (CoWork)</span><br>
+    &nbsp;&nbsp;└── Seleccionar semantic view → preguntar en español<br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Projects</span> &gt; <span class="branch">Streamlit</span><br>
+    &nbsp;&nbsp;├── DASHBOARD_BI_CREDIBANCO<br>
+    &nbsp;&nbsp;└── DASHBOARD_RIESGO_FRAUDE<br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Data sharing</span><br>
+    &nbsp;&nbsp;├── External sharing &gt; Shared by you <span class="note">(2 shares)</span><br>
+    &nbsp;&nbsp;└── Internal Marketplace <span class="note">(si disponible)</span>
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H24</span> Descubrir y solicitar acceso por perfil</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer</span> → Buscar "autorizaciones" en la barra</p>
+    <p><span class="label-res">Resultado esperado:</span> Tablas, vistas, DTs taggeados por dominio con metadata de gobernanza visible</p>
+    <p><span class="label-tambien">También:</span> Click en cualquier tabla &gt; <b>Governance</b> tab → ver quién tiene acceso vía tags</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H25</span> Auto-provisionar capacidad</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors</span></p>
+    <p><span class="label-res">Resultado esperado:</span> RM_HOL_CREDIBANCO con umbrales en 75%/90%/100%</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Admin &gt; Warehouses &gt; CREDIBANCO_HOL_WH</span> → AUTO_SUSPEND=60s, AUTO_RESUME=TRUE</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H26</span> Query y reporteo self-service</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Projects &gt; Streamlit &gt; DASHBOARD_BI_CREDIBANCO</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Dashboard interactivo con KPIs, tendencias, filtros</p>
+    <p><span class="label-tambien">También:</span> <span class="path">CoWork</span> → Seleccionar AGENTE_TRANSACCIONES → preguntas de negocio en español</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Zero-copy sharing</h4>
+    <p><span class="path">Data sharing &gt; External sharing &gt; Shared by you</span> → shares sin copiar datos</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Cortex Analyst</h4>
+    <p>Usar Semantic Views con Cortex Analyst para SQL generado desde lenguaje natural</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- T7 — Administración, DataOps, FinOps                         -->
+<!-- ============================================================ -->
+<div id="t7" class="tab-content">
+  <div class="track-header">
+    <h2>T7 — Administración, DataOps, FinOps</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>Resource Monitor</h4>
+      <p>RM_HOL_CREDIBANCO con 75/90/100% thresholds</p>
+    </div>
+    <div class="card card-green">
+      <h4>3 Alertas proactivas</h4>
+      <p>ALERTA_CONSUMO_ANOMALO, ALERTA_FRESCURA_DATOS, etc.</p>
+    </div>
+    <div class="card card-green">
+      <h4>Cost Management nativo</h4>
+      <p>Dashboard de costos integrado en Admin</p>
+    </div>
+    <div class="card card-green">
+      <h4>Git + dbt para CI/CD</h4>
+      <p>HOL_REPO + CREDIBANCO_ANALYTICS para mejora continua</p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Admin</span> &gt; <span class="branch">Cost Management</span><br>
+    &nbsp;&nbsp;├── Account Overview <span class="note">(KPIs, tendencias, desglose por servicio)</span><br>
+    &nbsp;&nbsp;├── Anomalies tab <span class="note">(detección estadística de anomalías)</span><br>
+    &nbsp;&nbsp;├── Budgets <span class="note">(si configurado)</span><br>
+    &nbsp;&nbsp;└── Resource Monitors &gt; RM_HOL_CREDIBANCO<br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Monitoring</span><br>
+    &nbsp;&nbsp;└── Alerts <span class="note">(3 alertas proactivas)</span>
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H27</span> Observar salud integral</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Account Overview</span></p>
+    <p><span class="label-res">Resultado esperado:</span> KPIs, tendencia de consumo, desglose por tipo de servicio (Compute, Cloud Services, Serverless)</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H28</span> Ejecutar assessment de optimización de costos</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Account Overview</span> → scroll a "Optimization Insights"</p>
+    <p><span class="label-res">Resultado esperado:</span> Recomendaciones automáticas para ahorro de costos</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H29</span> Configurar control FinOps</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors &gt; RM_HOL_CREDIBANCO</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Umbrales en 75% (notificar), 90% (notificar), 100% (suspender) — control automático de costos</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H30</span> Mostrar modelo de mejora continua</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Monitoring &gt; Alerts</span> → ver alertas proactivas</p>
+    <p><span class="label-res">Resultado esperado:</span> ALERTA_CONSUMO_ANOMALO + ALERTA_FRESCURA_DATOS = feedback loop automatizado</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PLATAFORMA &gt; Git Repositories &gt; HOL_REPO</span> → código versionado para CI/CD</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Detección de anomalías</h4>
+    <p><span class="path">Admin &gt; Cost Management &gt; Anomalies tab</span> → detección estadística de gastos inusuales</p>
+  </div>
+  <div class="card card-orange">
+    <h4>CoCo para FinOps</h4>
+    <p>Probar CoCo: "¿Cuáles son las 10 queries más costosas de la última semana?"</p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  CredibanCo HOL V4 — RFP 10010806 — Septiembre 2026
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    if (b.getAttribute('onclick') === "showTab('" + id + "')") b.classList.add('active');
+  });
+}
+</script>
+</body>
+</html>
