@@ -254,7 +254,7 @@
     &nbsp;&nbsp;├── ARQUITECTURA &gt; Views <span class="note">(3 vistas de producto)</span><br>
     &nbsp;&nbsp;├── PAGOS &gt; Tables / Dynamic Tables / Streams<br>
     &nbsp;&nbsp;├── Cualquier tabla &gt; <b>Governance</b> tab <span class="note">→ ver tags aplicados</span><br>
-    &nbsp;&nbsp;├── Cualquier DT &gt; <b>Lineage</b> tab <span class="note">→ diagrama de flujo</span><br>
+    &nbsp;&nbsp;├── Cualquier <b>Dynamic Table</b> &gt; <b>Lineage</b> tab <span class="note">→ diagrama de flujo (no funciona en tablas base)</span><br>
     &nbsp;&nbsp;└── PLATAFORMA &gt; Git Repositories &gt; HOL_REPO
   </div>
 
@@ -357,9 +357,10 @@
 
   <div class="card card-blue">
     <h4><span class="h-badge">H05</span> Validar linaje y calidad</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; DT_AUTORIZACIONES_SILVER_USER &gt; Lineage tab</span></p>
-    <p><span class="label-res">Resultado esperado:</span> Grafo visual del flujo de datos desde tablas fuente hasta este DT</p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Dynamic Tables &gt; DT_GOLD_FRAUDE_DIARIO &gt; Lineage tab</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Grafo visual mostrando: AUTORIZACIONES → DT_AUTORIZACIONES_SILVER → DT_GOLD_FRAUDE_DIARIO (cadena completa)</p>
     <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; AUTORIZACIONES &gt; Data Quality tab</span> → DMF_MONTO_VALIDO</p>
+    <p style="font-size:12px;color:var(--gray-400);margin-top:4px;">⚠️ El linaje solo se ve en Dynamic Tables y Views con transformaciones. Las tablas base no muestran grafo.</p>
   </div>
 
   <div class="card card-blue">
