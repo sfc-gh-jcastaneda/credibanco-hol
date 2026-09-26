@@ -254,7 +254,7 @@
     &nbsp;&nbsp;├── ARQUITECTURA &gt; Views <span class="note">(3 vistas de producto)</span><br>
     &nbsp;&nbsp;├── PAGOS &gt; Tables / Dynamic Tables / Streams<br>
     &nbsp;&nbsp;├── Cualquier tabla &gt; <b>Access</b> tab (tags se ven arriba del nombre) <span class="note">→ ver tags aplicados</span><br>
-    &nbsp;&nbsp;├── Cualquier <b>Dynamic Table</b> &gt; <b>Lineage</b> tab <span class="note">→ diagrama de flujo (no funciona en tablas base)</span><br>
+    &nbsp;&nbsp;├── PAGOS &gt; AUTORIZACIONES &gt; <b>Lineage</b> tab <span class="note">→ ver objetos downstream (DTs, views). Las DTs NO tienen Lineage tab propio.</span><br>
     &nbsp;&nbsp;└── PLATAFORMA &gt; Git Repositories &gt; HOL_REPO
   </div>
 
@@ -324,8 +324,8 @@
   <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
   <div class="nav-tree">
     <span class="branch">Sidebar</span> &gt; <span class="branch">Governance &amp; security</span><br>
-    &nbsp;&nbsp;├── Policies &gt; Masking <span class="note">(6 políticas)</span><br>
-    &nbsp;&nbsp;├── Policies &gt; Row access <span class="note">(2 políticas)</span><br>
+    &nbsp;&nbsp;├── Tags &amp; policies &gt; Masking <span class="note">(6 políticas)</span><br>
+    &nbsp;&nbsp;├── Tags &amp; policies &gt; Row access <span class="note">(2 políticas)</span><br>
     &nbsp;&nbsp;├── Tags <span class="note">(11 tags en todas las tablas)</span><br>
     &nbsp;&nbsp;├── Network policies <span class="note">(1 política)</span><br>
     &nbsp;&nbsp;└── Authentication policies <span class="note">(1 política)</span><br>
@@ -339,7 +339,7 @@
 
   <div class="card card-blue">
     <h4><span class="h-badge">H03</span> Aplicar políticas como código</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Governance &amp; security &gt; Policies</span></p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Governance &amp; security &gt; Tags &amp; policies</span></p>
     <p><span class="label-res">Resultado esperado:</span> 6 masking policies + 2 RAPs ya aplicadas</p>
     <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Access tab</span> (tags se ven arriba del nombre) → tags + policies visibles</p>
   </div>
@@ -357,10 +357,10 @@
 
   <div class="card card-blue">
     <h4><span class="h-badge">H05</span> Validar linaje y calidad</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; Dynamic Tables &gt; DT_GOLD_FRAUDE_DIARIO &gt; Lineage tab</span></p>
-    <p><span class="label-res">Resultado esperado:</span> Grafo visual mostrando: AUTORIZACIONES → DT_AUTORIZACIONES_SILVER → DT_GOLD_FRAUDE_DIARIO (cadena completa)</p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; PAGOS &gt; AUTORIZACIONES &gt; Lineage tab</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Grafo visual mostrando objetos downstream: AUTORIZACIONES → DTs Silver → DTs Gold → Views (cadena completa de transformación)</p>
     <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; AUTORIZACIONES &gt; Data Quality tab</span> → DMF_MONTO_VALIDO</p>
-    <p style="font-size:12px;color:var(--gray-400);margin-top:4px;">⚠️ El linaje solo se ve en Dynamic Tables y Views con transformaciones. Las tablas base no muestran grafo.</p>
+    <p style="font-size:12px;color:var(--gray-400);margin-top:4px;">⚠️ El tab Lineage muestra objetos downstream desde tablas base. Las Dynamic Tables NO tienen tab Lineage propio — aparecen en el grafo de otros objetos.</p>
   </div>
 
   <div class="card card-blue">
@@ -422,10 +422,10 @@
     <br>
     <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; <span class="branch">CREDIBANCO_HOL</span><br>
     &nbsp;&nbsp;├── PAGOS &gt; Streams &gt; STREAM_AUTORIZACIONES <span class="note">(CDC)</span><br>
-    &nbsp;&nbsp;├── PAGOS &gt; Dynamic Tables &gt; click any &gt; <b>Lineage</b> tab<br>
+    &nbsp;&nbsp;├── PAGOS &gt; AUTORIZACIONES &gt; <b>Lineage</b> tab <span class="note">(ver downstream DTs desde la tabla base)</span><br>
     &nbsp;&nbsp;└── STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING <span class="note">(real-time Kafka)</span><br>
     <br>
-    <span class="branch">Sidebar</span> &gt; <span class="branch">Data Engineering</span> &gt; <span class="branch">Openflow</span> <span class="note">(⚠️ default role = OPENFLOW_ADMIN_RL)</span>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Ingestion</span> &gt; <span class="branch">Openflow</span> <span class="note">(⚠️ default role = OPENFLOW_ADMIN_RL)</span>
   </div>
 
   <!-- Section C -->
@@ -620,7 +620,7 @@
     <br>
     <span class="branch">Sidebar</span> &gt; <span class="branch">Data sharing</span><br>
     &nbsp;&nbsp;├── External sharing &gt; Shared by you <span class="note">(2 shares)</span><br>
-    &nbsp;&nbsp;└── Internal Marketplace <span class="note">(si disponible)</span>
+    &nbsp;&nbsp;└── Internal Marketplace <span class="note">(Catalog &gt; Internal Marketplace)</span>
   </div>
 
   <!-- Section C -->
@@ -637,7 +637,7 @@
     <h4><span class="h-badge">H25</span> Auto-provisionar capacidad</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors</span></p>
     <p><span class="label-res">Resultado esperado:</span> RM_HOL_CREDIBANCO con umbrales en 75%/90%/100%</p>
-    <p><span class="label-tambien">También:</span> <span class="path">Admin &gt; Warehouses &gt; CREDIBANCO_HOL_WH</span> → AUTO_SUSPEND=60s, AUTO_RESUME=TRUE</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Compute &gt; Warehouses &gt; CREDIBANCO_HOL_WH</span> → AUTO_SUSPEND=60s, AUTO_RESUME=TRUE</p>
   </div>
 
   <div class="card card-blue">
