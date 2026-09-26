@@ -204,6 +204,7 @@
     <button class="tab-btn active" onclick="showTab('t0')">T0 — Arquitectura</button>
     <button class="tab-btn" onclick="showTab('t1')">T1 — Gobierno</button>
     <button class="tab-btn" onclick="showTab('t2')">T2 — Ingeniería</button>
+    <button class="tab-btn" onclick="showTab('t3')">T3 — Data Products</button>
     <button class="tab-btn" onclick="showTab('t4')">T4 — IA &amp; ML</button>
     <button class="tab-btn" onclick="showTab('t6')">T6 — Marketplace &amp; BI</button>
     <button class="tab-btn" onclick="showTab('t7')">T7 — Admin &amp; FinOps</button>
@@ -465,6 +466,91 @@
 </div>
 
 <!-- ============================================================ -->
+<!-- T3 — Arquitectura, Data Fabric y Productos de Datos           -->
+<!-- ============================================================ -->
+<div id="t3" class="tab-content">
+  <div class="track-header">
+    <h2>T3 — Data Fabric y Productos de Datos</h2>
+    <span class="timer-badge">⏱ 15 min</span>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-title"><span class="icon">✅</span> Ya está listo</div>
+  <div class="card-grid">
+    <div class="card card-green">
+      <h4>2 Shares outbound</h4>
+      <p>Datos de pagos y riesgo compartidos zero-copy con otras cuentas</p>
+      <p><span class="path">Data sharing &gt; External sharing &gt; Shared by you</span></p>
+    </div>
+    <div class="card card-green">
+      <h4>2 Semantic Views</h4>
+      <p>SV_AUTORIZACIONES · SV_RIESGO_COMERCIOS — contratos semánticos</p>
+      <p><span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; Semantic Views</span></p>
+    </div>
+    <div class="card card-green">
+      <h4>6 Iceberg Tables</h4>
+      <p>Formato abierto Apache Iceberg — interoperable con Spark/Trino/Databricks</p>
+      <p><span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; ICE_AUTORIZACIONES_APROBADAS</span></p>
+    </div>
+    <div class="card card-green">
+      <h4>Streaming table con Schema Evolution</h4>
+      <p>KAFKA_EVENTOS_STREAMING acepta nuevas columnas sin romper consumidores</p>
+      <p><span class="path">Catalog &gt; Explorer &gt; STREAMING_DEMO</span></p>
+    </div>
+  </div>
+
+  <!-- Section B -->
+  <div class="section-title"><span class="icon">🗺️</span> Mapa de Navegación</div>
+  <div class="nav-tree">
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Data sharing</span><br>
+    &nbsp;&nbsp;├── External sharing &gt; Shared by you <span class="note">(2 shares zero-copy)</span><br>
+    &nbsp;&nbsp;├── Internal sharing <span class="note">(publicar listing interno)</span><br>
+    &nbsp;&nbsp;└── Provider Studio <span class="note">(crear/editar listings)</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; <span class="branch">CREDIBANCO_HOL</span><br>
+    &nbsp;&nbsp;├── PAGOS &gt; Semantic Views <span class="note">(SV_AUTORIZACIONES, SV_RIESGO_COMERCIOS)</span><br>
+    &nbsp;&nbsp;├── PAGOS &gt; ICE_AUTORIZACIONES_APROBADAS <span class="note">(tipo ICEBERG visible en propiedades)</span><br>
+    &nbsp;&nbsp;├── MONETIZACION &gt; Views <span class="note">(vista monetizable AUD_ALTO_VOLUMEN)</span><br>
+    &nbsp;&nbsp;└── STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING <span class="note">(Schema Evolution activo)</span>
+  </div>
+
+  <!-- Section C -->
+  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H10</span> Crear y publicar producto de datos</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Data sharing &gt; External sharing &gt; Shared by you</span></p>
+    <p><span class="label-res">Resultado esperado:</span> 2 shares outbound activos (datos de pagos y riesgo compartidos sin copiar)</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; Semantic Views</span> → SV_AUTORIZACIONES = contrato semántico del producto</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H11</span> Gestionar cambio de contrato</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING &gt; Overview</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Tabla con SCHEMA_EVOLUTION habilitado — acepta nuevas columnas sin romper consumidores downstream</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; Semantic Views &gt; SV_AUTORIZACIONES</span> → el contrato semántico define qué métricas están disponibles</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H12</span> Demostrar interoperabilidad</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; ICE_AUTORIZACIONES_APROBADAS &gt; Overview</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Tabla tipo ICEBERG — formato abierto legible desde Spark, Trino, Databricks sin copiar datos</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Ingestion &gt; Openflow</span> → Kafka MSK connector = interop con ecosistema AWS</p>
+  </div>
+
+  <!-- Section D -->
+  <div class="section-title"><span class="icon">🔍</span> Explora más</div>
+  <div class="card card-orange">
+    <h4>Internal Marketplace</h4>
+    <p><span class="path">Catalog &gt; Internal Marketplace</span> → descubrir productos publicados dentro de la organización</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Provider Studio</h4>
+    <p><span class="path">Data sharing &gt; Provider Studio</span> → crear y gestionar listings para consumidores externos</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
 <!-- T4 — Analítica, ML, IA y GenAI                               -->
 <!-- ============================================================ -->
 <div id="t4" class="tab-content">
@@ -541,13 +627,15 @@
   <div class="card card-blue">
     <h4><span class="h-badge">H17</span> Ejecutar pipeline MLOps</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Projects &gt; Streamlit &gt; DASHBOARD_MLOPS</span></p>
-    <p><span class="label-res">Resultado esperado:</span> Dashboard con métricas de performance, historial de entrenamiento</p>
+    <p><span class="label-res">Resultado esperado:</span> Sección superior: pipeline de entrenamiento, features usadas, modelo registrado</p>
+    <p><span class="label-tambien">También:</span> <span class="path">AI &amp; ML &gt; Models &gt; MODELO_FRAUDE_CREDIBANCO</span> → versiones V1 (champion) y V2 (challenger)</p>
   </div>
 
   <div class="card card-blue">
     <h4><span class="h-badge">H18</span> Monitorear modelo en producción</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Projects &gt; Streamlit &gt; DASHBOARD_MLOPS</span></p>
-    <p><span class="label-res">Resultado esperado:</span> Métricas Accuracy/Precision/Recall, detección de drift</p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Projects &gt; Streamlit &gt; DASHBOARD_MLOPS</span> → sección inferior: Observabilidad</p>
+    <p><span class="label-res">Resultado esperado:</span> Gráficos de Accuracy/Precision/Recall por día, detección de drift, alertas de degradación</p>
+    <p style="font-size:12px;color:var(--gray-400);margin-top:4px;">H17 = pipeline y registro del modelo. H18 = monitoreo y drift en producción. Mismo dashboard, secciones distintas.</p>
   </div>
 
   <div class="card card-blue">
