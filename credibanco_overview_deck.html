@@ -237,7 +237,7 @@
     <div class="card card-green">
       <h4>Tags aplicados en todas las tablas</h4>
       <p>TAG_DOMINIO, TAG_PII, TAG_CONFIDENCIAL</p>
-      <p><span class="path">Cualquier tabla &gt; Governance tab</span></p>
+      <p><span class="path">Cualquier tabla &gt; Access tab</span> (tags se ven arriba del nombre)</p>
     </div>
     <div class="card card-green">
       <h4>Git repo + Iceberg table</h4>
@@ -253,7 +253,7 @@
     &nbsp;&nbsp;├── Schemas <span class="note">(16 dominios de negocio)</span><br>
     &nbsp;&nbsp;├── ARQUITECTURA &gt; Views <span class="note">(3 vistas de producto)</span><br>
     &nbsp;&nbsp;├── PAGOS &gt; Tables / Dynamic Tables / Streams<br>
-    &nbsp;&nbsp;├── Cualquier tabla &gt; <b>Governance</b> tab <span class="note">→ ver tags aplicados</span><br>
+    &nbsp;&nbsp;├── Cualquier tabla &gt; <b>Access</b> tab (tags se ven arriba del nombre) <span class="note">→ ver tags aplicados</span><br>
     &nbsp;&nbsp;├── Cualquier <b>Dynamic Table</b> &gt; <b>Lineage</b> tab <span class="note">→ diagrama de flujo (no funciona en tablas base)</span><br>
     &nbsp;&nbsp;└── PLATAFORMA &gt; Git Repositories &gt; HOL_REPO
   </div>
@@ -278,7 +278,7 @@
   <div class="section-title"><span class="icon">🔍</span> Explora más</div>
   <div class="card card-orange">
     <h4>Tags y gobernanza</h4>
-    <p>Click en cualquier tabla &gt; <b>Governance</b> tab → ver tags, masking, RAPs aplicados</p>
+    <p>Click en cualquier tabla &gt; <b>Access</b> tab (tags se ven arriba del nombre) → ver tags, masking, RAPs aplicados</p>
   </div>
   <div class="card card-orange">
     <h4>Tabla Iceberg</h4>
@@ -330,8 +330,8 @@
     &nbsp;&nbsp;├── Network policies <span class="note">(1 política)</span><br>
     &nbsp;&nbsp;└── Authentication policies <span class="note">(1 política)</span><br>
     <br>
-    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; cualquier tabla &gt; <b>Governance</b> tab<br>
-    &nbsp;&nbsp;└── Muestra tags, masking, RAPs aplicados a esa tabla
+    <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; cualquier tabla &gt; <b>Access</b> tab (tags se ven arriba del nombre)<br>
+    &nbsp;&nbsp;└── Muestra masking policies y RAPs. Tags aparecen arriba del nombre de la tabla.
   </div>
 
   <!-- Section C -->
@@ -341,12 +341,12 @@
     <h4><span class="h-badge">H03</span> Aplicar políticas como código</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Governance &amp; security &gt; Policies</span></p>
     <p><span class="label-res">Resultado esperado:</span> 6 masking policies + 2 RAPs ya aplicadas</p>
-    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Governance tab</span> → tags + policies visibles</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Access tab</span> (tags se ven arriba del nombre) → tags + policies visibles</p>
   </div>
 
   <div class="card card-blue">
     <h4><span class="h-badge">H04</span> Gobernar datos sensibles E2E</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Governance tab</span></p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Access tab</span> (tags se ven arriba del nombre)</p>
     <p><span class="label-res">Resultado esperado:</span> PAN_SINTETICO, CEDULA, CELULAR taggeados como PII con masking</p>
     <p><span class="label-tambien">Prueba en SQL Worksheet:</span></p>
     <ul>
@@ -534,7 +534,7 @@
 
   <div class="card card-blue">
     <h4><span class="h-badge">H16</span> Gobernar datos y features para AI</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; ANALITICA &gt; FEATURES_RIESGO_COMERCIO &gt; Governance tab</span></p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; ANALITICA &gt; FEATURES_RIESGO_COMERCIO &gt; Access tab</span> (tags se ven arriba del nombre)</p>
     <p><span class="label-res">Resultado esperado:</span> Tags SNOWML_FEATURE_* rastreando qué columnas alimentan modelos ML</p>
   </div>
 
@@ -560,7 +560,7 @@
   <div class="card card-blue">
     <h4><span class="h-badge">H20</span> Validar AI responsable</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">CoWork &gt; AGENTE_SARLAFT</span> → agente alineado a compliance</p>
-    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Governance</span> → masking PII previene entrenar sobre datos sensibles</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Access tab</span> → masking PII previene entrenar sobre datos sensibles</p>
   </div>
 
   <!-- Section D -->
@@ -630,7 +630,7 @@
     <h4><span class="h-badge">H24</span> Descubrir y solicitar acceso por perfil</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer</span> → Buscar "autorizaciones" en la barra</p>
     <p><span class="label-res">Resultado esperado:</span> Tablas, vistas, DTs taggeados por dominio con metadata de gobernanza visible</p>
-    <p><span class="label-tambien">También:</span> Click en cualquier tabla &gt; <b>Governance</b> tab → ver quién tiene acceso vía tags</p>
+    <p><span class="label-tambien">También:</span> Click en cualquier tabla &gt; <b>Access</b> tab (tags se ven arriba del nombre) → ver quién tiene acceso vía tags</p>
   </div>
 
   <div class="card card-blue">
