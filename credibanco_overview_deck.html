@@ -272,7 +272,7 @@
     <h4><span class="h-badge">H02</span> Mostrar arquitectura fundacional</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; CREDIBANCO_HOL &gt; ARQUITECTURA &gt; Views</span></p>
     <p><span class="label-res">Resultado esperado:</span> 3 vistas documentando la arquitectura de datos</p>
-    <p><span class="label-tambien">También:</span> Click en cualquier Dynamic Table &gt; <b>Lineage</b> tab = flujo visual de datos</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; AUTORIZACIONES &gt; Lineage tab</span> → ver flujo visual de datos hacia DTs downstream</p>
   </div>
 
   <!-- Section D -->
@@ -548,6 +548,10 @@
     <h4>Provider Studio</h4>
     <p><span class="path">Data sharing &gt; Provider Studio</span> → crear y gestionar listings para consumidores externos</p>
   </div>
+  <div class="card card-orange">
+    <h4>Ejercicios de Monetización (CRB_VIP_COMERCIOS)</h4>
+    <p>La base de datos <span class="path">CRB_VIP_COMERCIOS</span> ya está desplegada con benchmark transaccional por categoría y ciudad. Incluye función <code>FN_COMPARAR_COMERCIO</code> para que un comercio se compare contra su segmento. Ver <code>ejercicios_monetizacion_snowflake.md</code> en el repo Git.</p>
+  </div>
 </div>
 
 <!-- ============================================================ -->
@@ -725,6 +729,7 @@
     <h4><span class="h-badge">H25</span> Auto-provisionar capacidad</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors</span></p>
     <p><span class="label-res">Resultado esperado:</span> RM_HOL_CREDIBANCO con umbrales en 75%/90%/100%</p>
+    <p style="font-size:12px;color:var(--red);margin-top:4px;">⚠️ Si la página muestra "Page not found" (bug conocido), usar Plan B: abrir SQL Worksheet → <code>SHOW RESOURCE MONITORS;</code></p>
     <p><span class="label-tambien">También:</span> <span class="path">Compute &gt; Warehouses &gt; CREDIBANCO_HOL_WH</span> → AUTO_SUSPEND=60s, AUTO_RESUME=TRUE</p>
   </div>
 
@@ -744,6 +749,10 @@
   <div class="card card-orange">
     <h4>Cortex Analyst</h4>
     <p>Usar Semantic Views con Cortex Analyst para SQL generado desde lenguaje natural</p>
+  </div>
+  <div class="card card-orange">
+    <h4>Benchmark Comercios (CRB_VIP_COMERCIOS)</h4>
+    <p><span class="path">CRB_VIP_COMERCIOS.ANALYTICS.BENCHMARK_CATEGORIA</span> → benchmark por ciudad y categoría. Probar: <code>SELECT * FROM TABLE(FN_COMPARAR_COMERCIO('Bogotá','Restaurantes',18000000));</code></p>
   </div>
 </div>
 
@@ -784,7 +793,7 @@
     &nbsp;&nbsp;├── Account Overview <span class="note">(KPIs, tendencias, desglose por servicio)</span><br>
     &nbsp;&nbsp;├── Anomalies tab <span class="note">(detección estadística de anomalías)</span><br>
     &nbsp;&nbsp;├── Budgets <span class="note">(si configurado)</span><br>
-    &nbsp;&nbsp;└── Resource Monitors &gt; RM_HOL_CREDIBANCO<br>
+    &nbsp;&nbsp;└── Resource Monitors &gt; RM_HOL_CREDIBANCO <span class="note">(⚠️ puede dar "Page not found" — Plan B: SHOW RESOURCE MONITORS; en Worksheet)</span><br>
     <br>
     <span class="branch">Sidebar</span> &gt; <span class="branch">Monitoring</span><br>
     &nbsp;&nbsp;└── Alerts <span class="note">(3 alertas proactivas)</span>
@@ -809,6 +818,7 @@
     <h4><span class="h-badge">H29</span> Configurar control FinOps</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors &gt; RM_HOL_CREDIBANCO</span></p>
     <p><span class="label-res">Resultado esperado:</span> Umbrales en 75% (notificar), 90% (notificar), 100% (suspender) — control automático de costos</p>
+    <p style="font-size:12px;color:var(--red);margin-top:4px;">⚠️ Si la página muestra "Page not found", usar Plan B: <code>SHOW RESOURCE MONITORS;</code> en SQL Worksheet</p>
   </div>
 
   <div class="card card-blue">
