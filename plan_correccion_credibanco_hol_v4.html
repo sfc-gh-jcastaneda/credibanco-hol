@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="snowflake-source" content="cortex-agent-authored" />
+<title>Plan de corrección detallado — CredibanCo HOL V4</title>
+<script type="application/json" id="snowflake-report-metadata">
+{
+  "generated": "2026-09-26",
+  "intent": "Plan de remediación técnico, punto por punto, para los hallazgos de la evaluación UX en vivo del HOL CredibanCo V4 (RFP 10010806). Cada item incluye evidencia, causa raíz, fix exacto (SQL o edición de archivo) y cómo verificar.",
+  "dataSources": [
+    { "type": "manual", "sql": "Basado en evaluacion_ux_maria_gonzalez_v4_live.md, secciones 0, 2, 4, 5 y 7" },
+    { "type": "query", "warehouse": "CREDIBANCO_HOL_WH", "sql": "DESCRIBE USER \"USER\"; SHOW RESOURCE MONITORS; SHOW PARAMETERS IN TABLE CREDIBANCO_HOL.PAGOS.AUTORIZACIONES;" }
+  ],
+  "sections": [
+    { "id": "item-1", "title": "Fix 1 — Resource Monitors Page not found",
+      "producerNotes": "SHOW RESOURCE MONITORS confirma que el dato existe y está bien configurado; el bug es de routing de Snowsight, no de datos/permisos." },
+    { "id": "item-2", "title": "Fix 2 — Rol default incorrecto en cuenta LEDZYD",
+      "dataSources": [{ "type": "query", "sql": "DESCRIBE USER \"USER\";" }],
+      "producerNotes": "Se verificó el default_role en las 9 cuentas HOL disponibles vía snow sql; solo LEDZYD tiene OPENFLOW_ADMIN_RL. 8 de 9 usan CRB_HOL_ADMIN (rol propósito-específico), 1 usa ACCOUNTADMIN directo." },
+    { "id": "item-3", "title": "Fix 3 — DMF sin ejecución reciente",
+      "producerNotes": "DATA_METRIC_SCHEDULE confirmado en 60 MINUTES sobre AUTORIZACIONES; el DMF está asociado pero sin resultados recientes visibles en el tab." }
+  ]
+}
+</script>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    max-width: 980px; width: 100%; box-sizing: border-box;
+    margin: 0 auto; padding: clamp(16px, 4vw, 28px);
+    color: light-dark(#1f2937, #e5e7eb);
+    background: light-dark(#ffffff, #0b1220);
+    line-height: 1.55;
+  }
+  h1, h2, h3, h4 { color: light-dark(#0f172a, #f1f5f9); line-height: 1.25; }
+  h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  h2 { font-size: 1.2rem; margin-top: 8px; }
+  h3 { font-size: 1.02rem; margin: 0 0 6px; }
+  a { color: light-dark(#2563eb, #60a5fa); }
+  code { background: light-dark(#f1f5f9, #1e293b); padding: 2px 5px; border-radius: 4px; font-size: 0.9em; }
+  pre { background: light-dark(#0f172a, #0a0f1a); color: #e5e7eb; padding: 12px 14px; border-radius: 8px; overflow-x: auto; font-size: 0.87rem; }
+  pre code { background: none; padding: 0; color: inherit; }
+  .subtitle { color: light-dark(#475569, #94a3b8); font-size: 0.95rem; margin-bottom: 20px; }
+
+  .toc { background: light-dark(#f8fafc, #111827); border: 1px solid light-dark(#e2e8f0, #1f2937); border-radius: 10px; padding: 14px 20px; margin: 20px 0 32px; }
+  .toc ul { margin: 6px 0 0; padding-left: 20px; list-style: none; }
+  .toc li { margin: 4px 0; }
+  .toc a { text-decoration: none; }
+
+  .fix-card {
+    border: 1px solid light-dark(#e2e8f0, #1f2937); border-radius: 12px;
+    padding: 18px 22px; margin: 22px 0;
+    background: light-dark(#ffffff, #0f172a);
+  }
+  .fix-card.p0 { border-left: 6px solid light-dark(#dc2626, #f87171); }
+  .fix-card.p1 { border-left: 6px solid light-dark(#d97706, #fbbf24); }
+  .fix-card.p2 { border-left: 6px solid light-dark(#2563eb, #60a5fa); }
+
+  .fix-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .prio-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .prio-badge.p0 { background: light-dark(#fee2e2, #7f1d1d); color: light-dark(#991b1b, #fecaca); }
+  .prio-badge.p1 { background: light-dark(#fef3c7, #78350f); color: light-dark(#92400e, #fde68a); }
+  .prio-badge.p2 { background: light-dark(#dbeafe, #1e3a8a); color: light-dark(#1e40af, #bfdbfe); }
+  .owner-badge { font-size: 0.75rem; color: light-dark(#64748b, #94a3b8); }
+
+  .label { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: light-dark(#64748b, #94a3b8); margin: 14px 0 4px; }
+  .label:first-of-type { margin-top: 10px; }
+
+  .callout { border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: 0.92rem; }
+  .callout.evidence { background: light-dark(#f1f5f9, #111827); border-left: 4px solid light-dark(#64748b, #475569); }
+  .callout.result { background: light-dark(#f0fdf4, #0f2417); border-left: 4px solid light-dark(#16a34a, #4ade80); }
+
+  .table-wrap { overflow-x: auto; margin: 10px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { border: 1px solid light-dark(#d1d5db, #374151); padding: 6px 9px; text-align: left; vertical-align: top; }
+  th { background: light-dark(#f3f4f6, #1f2937); font-weight: 600; }
+
+  ol.steps { padding-left: 22px; }
+  ol.steps li { margin: 6px 0; }
+
+  footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid light-dark(#e2e8f0, #1f2937); font-size: 0.85rem; color: light-dark(#64748b, #94a3b8); }
+</style>
+</head>
+<body>
+
+<h1>Plan de corrección detallado — CredibanCo HOL V4</h1>
+<p class="subtitle">RFP 10010806 · Cada item: evidencia, causa raíz, fix exacto (SQL o edición de archivo) y cómo verificar que quedó resuelto. Basado en la evaluación UX en vivo del 2026‑09‑25/26.</p>
+
+<div class="toc">
+  <strong>Índice — 7 correcciones</strong>
+  <ul>
+    <li><a href="#fix1">🔴 P0-1 · Resource Monitors devuelve "Page not found"</a></li>
+    <li><a href="#fix2">🔴 P0-2 · Rol default incorrecto en la cuenta LEDZYD (y verificación en las otras 8 cuentas)</a></li>
+    <li><a href="#fix3">🔴 P0-3 · Data Metric Function sin resultados recientes</a></li>
+    <li><a href="#fix4">🟡 P1-4 · Etiqueta del deck desalineada con el sidebar real</a></li>
+    <li><a href="#fix5">🟡 P1-5 · Ruta a CoWork con salto no documentado</a></li>
+    <li><a href="#fix6">🟡 P1-6 · Advertencia de inestabilidad de refresh para facilitadores</a></li>
+    <li><a href="#fix7">🔵 P2-7 · Dos puntos finos pendientes de confirmar en browser</a></li>
+  </ul>
+</div>
+
+<!-- FIX 1 -->
+<div class="fix-card p0" id="fix1">
+  <div class="fix-head">
+    <h3>1. Resource Monitors devuelve "Page not found"</h3>
+    <span class="prio-badge p0">P0 — antes del evento</span>
+  </div>
+  <span class="owner-badge">Bloquea: H25, H29 · Afecta a cualquier perfil de usuario, no solo no técnicos</span>
+
+  <div class="label">Evidencia</div>
+  <div class="callout evidence">
+    En la sesión de browser, <code>Admin &gt; Cost Management &gt; Resource Monitors</code> devuelve <strong>"Page not found"</strong> de forma reproducible, tanto navegando por URL directa como haciendo clic desde el menú lateral (esto último descarta que sea solo un problema de "refresh").
+  </div>
+
+  <div class="label">Causa raíz confirmada</div>
+  <p>No es un problema de datos ni de permisos. Verificación vía SQL directa (rol ACCOUNTADMIN, sin pasar por la UI):</p>
+  <pre><code>SHOW RESOURCE MONITORS;</code></pre>
+  <div class="callout result">
+    <strong>Resultado:</strong> existen 2 resource monitors, ambos bien configurados:<br>
+    <code>MONITOR_CREDIBANCO</code> — credit_quota=100, notify_at 75%/90%, frequency MONTHLY<br>
+    <code>RM_HOL_CREDIBANCO</code> — credit_quota=100, notify_at 75%/90%, frequency MONTHLY (coincide exactamente con lo que promete el deck para H25/H29)
+  </div>
+  <p>Conclusión: es un <strong>bug de routing/SPA de Snowsight en esta build</strong>, no algo que se arregle regenerando el HOL ni cambiando permisos.</p>
+
+  <div class="label">Fix recomendado (pasos)</div>
+  <ol class="steps">
+    <li>Reproducir el error en una ventana de incógnito / sesión nueva, para descartar caché de browser como causa.</li>
+    <li>Reproducir explícitamente con el rol <code>ACCOUNTADMIN</code> ya seleccionado (no con el default actual) para descartar que sea un tema de rol.</li>
+    <li>Abrir la consola de desarrollador (F12) al momento del error y capturar la URL exacta que falla (ej. algo como <code>.../resource_monitors?preset=...</code>) y el mensaje de red/consola — esto es lo que necesita soporte de Snowflake para diagnosticar.</li>
+    <li>Si persiste, abrir un caso de soporte / reportarlo al equipo de Snowsight, referenciando: cuenta <code>otc03722</code> (región <code>us-east-1</code>, alias LEDZYD), página <code>Cost Management &gt; Resource Monitors</code>, error "Page not found" reproducible por menú y por URL.</li>
+    <li><strong>Plan B para el día del evento</strong> si no se resuelve a tiempo: tener listo un worksheet con <code>SHOW RESOURCE MONITORS;</code> para mostrar los thresholds 75%/90%/100% vía SQL como respaldo de H25/H29, y avisar al facilitador de antemano.</li>
+  </ol>
+
+  <div class="label">Cómo verificar que quedó resuelto</div>
+  <p>Navegar a <code>Admin &gt; Cost Management &gt; Resource Monitors</code> desde el menú lateral (no por URL pegada) y confirmar que se listan <code>MONITOR_CREDIBANCO</code> y <code>RM_HOL_CREDIBANCO</code> con sus thresholds visibles en la UI, no solo por SQL.</p>
+</div>
+
+<!-- FIX 2 -->
+<div class="fix-card p0" id="fix2">
+  <div class="fix-head">
+    <h3>2. Rol default incorrecto en la cuenta LEDZYD</h3>
+    <span class="prio-badge p0">P0 — antes del evento</span>
+  </div>
+  <span class="owner-badge">Afecta el primer minuto de cualquier evaluación en esta cuenta específica</span>
+
+  <div class="label">Evidencia</div>
+  <div class="callout evidence">
+    Al iniciar sesión en <code>credibanco-hol</code> (LEDZYD), el rol activo por defecto es <code>OPENFLOW_ADMIN_RL</code>, no <code>ACCOUNTADMIN</code>. El deck y la guía asumen ACCOUNTADMIN desde el inicio. Con OPENFLOW_ADMIN_RL, varias vistas (Catalog, AI &amp; ML, Governance) pueden aparecer vacías o incompletas, y una usuaria no técnica no sabrá que debe cambiar de rol.
+  </div>
+
+  <div class="label">Causa raíz + alcance real (verificado en las 9 cuentas disponibles)</div>
+  <p>Se ejecutó <code>DESCRIBE USER "USER";</code> vía SQL en las 9 cuentas HOL configuradas para este RFP. Resultado:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Cuenta (alias)</th><th>default_role de USER</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LEDZYD</strong> (entregada para esta evaluación)</td><td><code>OPENFLOW_ADMIN_RL</code></td><td>❌ Incorrecto — probable residuo de una prueba de Openflow</td></tr>
+        <tr><td>erflec</td><td><code>CRB_HOL_ADMIN</code></td><td>✅ Rol propósito-específico (ver nota abajo)</td></tr>
+        <tr><td>lmhrlk</td><td><code>CRB_HOL_ADMIN</code></td><td>✅</td></tr>
+        <tr><td>tgdhmk</td><td><code>CRB_HOL_ADMIN</code></td><td>✅</td></tr>
+        <tr><td>dwcagr</td><td><code>CRB_HOL_ADMIN</code></td><td>✅</td></tr>
+        <tr><td>fezwlc</td><td><code>ACCOUNTADMIN</code></td><td>✅ Correcto directo</td></tr>
+        <tr><td>xmfvmb</td><td><code>CRB_HOL_ADMIN</code></td><td>✅</td></tr>
+        <tr><td>zbbalw</td><td><code>CRB_HOL_ADMIN</code></td><td>✅</td></tr>
+        <tr><td>acnlgf</td><td><code>CRB_HOL_ADMIN</code></td><td>✅</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:0.88rem;color:light-dark(#64748b,#94a3b8)">Nota: <code>CRB_HOL_ADMIN</code> es un rol construido específicamente para el HOL (tiene <code>CREATE ORGANIZATION LISTING</code>, <code>CREATE SHARE</code>, <code>APPLYBUDGET</code> sobre CREDIBANCO_HOL, entre otros) y está asignado a usuarios nombrados como <code>CRB_EXPERIENCIA</code>, <code>CRB_USER_5</code>. Si este rol tiene todos los privilegios que necesita el deck (lectura de Catalog, Governance, AI &amp; ML, Cost Management), es una alternativa válida a ACCOUNTADMIN y <strong>no requiere cambio</strong>. <strong>El único problema real y confirmado es la cuenta LEDZYD.</strong></p>
+
+  <div class="label">Fix exacto (SQL)</div>
+  <pre><code>-- Ejecutar en la cuenta credibanco-hol (LEDZYD) con un rol que tenga permiso para alterar el usuario:
+USE ROLE ACCOUNTADMIN;
+ALTER USER "USER" SET DEFAULT_ROLE = ACCOUNTADMIN;
+
+-- Verificación inmediata:
+DESCRIBE USER "USER";
+-- Confirmar que la fila DEFAULT_ROLE ahora dice ACCOUNTADMIN</code></pre>
+
+  <div class="label">Fix complementario (guía, si no se puede tocar la cuenta a tiempo)</div>
+  <p>Agregar un "Paso 0" explícito en <code>guia_participante_v4.html</code> y <code>guia_facilitador_v4.html</code>: <em>"Antes de empezar, verifica que el rol activo (esquina superior derecha) diga ACCOUNTADMIN. Si dice otra cosa, haz clic ahí y selecciónalo."</em></p>
+
+  <div class="label">Cómo verificar que quedó resuelto</div>
+  <p>Cerrar sesión y volver a entrar con <code>USER</code> / <code>sn0wf@ll</code> en LEDZYD; el rol mostrado en la esquina superior derecha debe decir <code>ACCOUNTADMIN</code> sin necesidad de cambiarlo manualmente.</p>
+</div>
+
+<!-- FIX 3 -->
+<div class="fix-card p0" id="fix3">
+  <div class="fix-head">
+    <h3>3. Data Metric Function sin resultados recientes (H05)</h3>
+    <span class="prio-badge p0">P0 — antes del evento</span>
+  </div>
+  <span class="owner-badge">Afecta: Data Quality tab de PAGOS.AUTORIZACIONES</span>
+
+  <div class="label">Evidencia</div>
+  <div class="callout evidence">
+    El Data Quality tab de <code>PAGOS.AUTORIZACIONES</code> muestra la asociación <code>DMF_MONTO_VALIDO</code> ↔ columna <code>MONTO</code>, pero reporta <strong>"0/1 association passing"</strong> y <strong>"1 with no checks"</strong> — el DMF está bien asociado pero no tiene evaluaciones recientes que mostrar. Para una evaluadora esto puede parecer que la feature "está rota".
+  </div>
+
+  <div class="label">Causa raíz</div>
+  <p>El schedule de evaluación del DMF sobre esta tabla está en <code>DATA_METRIC_SCHEDULE = 60 MINUTES</code> (confirmado vía <code>SHOW PARAMETERS IN TABLE</code>). Si no ha pasado un ciclo completo desde que se asoció el DMF, o si no hubo cambios en los datos, no hay resultados que mostrar todavía.</p>
+
+  <div class="label">Fix recomendado (dos opciones)</div>
+  <ol class="steps">
+    <li><strong>Opción rápida — forzar una evaluación inmediata:</strong> cambiar temporalmente el schedule a evaluación por cambios y generar un DML trivial para dispararlo:
+      <pre><code>ALTER TABLE CREDIBANCO_HOL.PAGOS.AUTORIZACIONES
+  SET DATA_METRIC_SCHEDULE = 'TRIGGER_ON_CHANGES';
+
+-- Disparar una evaluación con un cambio mínimo (ejemplo, ajustar a un ID real que no altere el demo):
+UPDATE CREDIBANCO_HOL.PAGOS.AUTORIZACIONES
+  SET MONTO = MONTO
+  WHERE FALSE; -- reemplazar por una condición que sí afecte al menos 1 fila si no dispara
+
+-- Volver al schedule original si se prefiere mantenerlo en 60 minutos:
+ALTER TABLE CREDIBANCO_HOL.PAGOS.AUTORIZACIONES
+  SET DATA_METRIC_SCHEDULE = '60 MINUTES';</code></pre>
+    </li>
+    <li><strong>Opción simple — esperar el schedule:</strong> si se hace la preparación con suficiente margen antes del evento (más de 60 minutos), no se necesita ninguna acción — el schedule existente eventualmente genera al menos una evaluación.</li>
+  </ol>
+
+  <div class="label">Cómo verificar que quedó resuelto</div>
+  <p>Ir a <code>Catalog &gt; Explorer &gt; PAGOS &gt; AUTORIZACIONES &gt; Data Quality tab</code> y confirmar que <code>DMF_MONTO_VALIDO</code> muestra al menos 1 evaluación con resultado (pass o fail), en vez de "no checks".</p>
+</div>
+
+<!-- FIX 4 -->
+<div class="fix-card p1" id="fix4">
+  <div class="fix-head">
+    <h3>4. Etiqueta del deck desalineada con el sidebar real</h3>
+    <span class="prio-badge p1">P1 — importante</span>
+  </div>
+  <span class="owner-badge">Archivo: credibanco_overview_deck.html</span>
+
+  <div class="label">Evidencia</div>
+  <div class="callout evidence">
+    El deck dice ir a <code>Governance &amp; security &gt; Tags &amp; policies</code>. En la UI real de Snowsight actual, ese ítem del sidebar ya no existe con ese nombre — ahora aparece como <strong>"Data protection policies (Preview)"</strong> y "Tags" como secciones separadas. Fricción de 5-10 segundos buscando la etiqueta correcta, no bloqueante pero sí de findability.
+  </div>
+
+  <div class="label">Fix exacto</div>
+  <p>Buscar y reemplazar en <code>credibanco_overview_deck.html</code> (afecta las tarjetas de H03, H04, H24 y cualquier otra referencia a la ruta de gobernanza):</p>
+  <ul>
+    <li>Buscar: <code>Governance &amp; security &gt; Tags &amp; policies</code></li>
+    <li>Reemplazar por: <code>Governance &amp; security &gt; Data protection policies</code></li>
+  </ul>
+
+  <div class="label">Cómo verificar que quedó resuelto</div>
+  <p>Abrir el deck actualizado y confirmar que el texto coincide exactamente con la etiqueta visible en el sidebar de Snowsight al día del evento (los nombres de features en Preview pueden cambiar entre releases, así que vale la pena revisar de nuevo justo antes del evento).</p>
+</div>
+
+<!-- FIX 5 -->
+<div class="fix-card p1" id="fix5">
+  <div class="fix-head">
+    <h3>5. Ruta a CoWork con salto adicional no documentado</h3>
+    <span class="prio-badge p1">P1 — importante</span>
+  </div>
+  <span class="owner-badge">Archivo: credibanco_overview_deck.html · Sección T4</span>
+
+  <div class="label">Evidencia</div>
+  <div class="callout evidence">
+    El deck dice ir a "AI &amp; ML" / "Snowflake Intelligence (CoWork)" como si fuera un único ítem de sidebar. En la UI real, el ítem "AI &amp; ML" del sidebar lleva directamente a <strong>"Agent Studio"</strong> (página de administración de agentes). Para <em>usar</em> un agente (hacerle una pregunta) hace falta un paso adicional: un enlace/botón separado "Snowflake CoWork" que abre una app distinta (<code>ai.snowflake.com</code>). Riesgo: una evaluadora se queda en la vista de administración sin darse cuenta de que debe cruzar a otra URL.
+  </div>
+
+  <div class="label">Fix exacto (texto sugerido para el deck)</div>
+  <pre><code>Ir a: AI &amp; ML &gt; Agent Studio (para ver y administrar los agentes)
+Para conversar con un agente: buscar el enlace/botón "Snowflake CoWork"
+(abre una app separada en ai.snowflake.com) y seleccionar el agente ahí.</code></pre>
+  <p>Aplicar este texto en las tarjetas H15, H19 y H20 del tab T4, donde actualmente se asume un solo paso.</p>
+
+  <div class="label">Cómo verificar que quedó resuelto</div>
+  <p>Seguir el texto actualizado del deck sin conocimiento previo de la UI y confirmar que efectivamente se llega a poder chatear con un agente sin quedarse atascado en Agent Studio.</p>
+</div>
+
+<!-- FIX 6 -->
+<div class="fix-card p1" id="fix6">
+  <div class="fix-head">
+    <h3>6. Advertir a facilitadores sobre inestabilidad de refresh/URL directa</h3>
+    <span class="prio-badge p1">P1 — importante</span>
+  </div>
+  <span class="owner-badge">Archivo: guia_facilitador_v4.html</span>
+
+  <div class="label">Evidencia</div>
+  <div class="callout evidence">
+    Además de Resource Monitors (Fix 1, no se resuelve solo con refresh), otras páginas fallan en la <em>primera carga</em> pero se resuelven con un refresh o con navegación por clic: <code>Data sharing &gt; Shared by your account</code>, <code>AI &amp; ML &gt; Models</code>, <code>Governance &amp; security &gt; Data protection policies</code>. Es un patrón transversal de esta build de Snowsight, no específico de un track.
+  </div>
+
+  <div class="label">Fix exacto (texto sugerido para la guía del facilitador)</div>
+  <pre><code>⚠️ Nota para facilitadores: en esta build de Snowsight, algunas páginas
+pueden mostrar "Page not found" o "An unknown error occurred" en la
+primera carga. Si esto pasa:
+  1. NO recargar la página con F5 / botón de refrescar del navegador.
+  2. Usar el menú lateral para volver a hacer clic en la misma sección.
+  3. Si el error persiste después de 2 intentos por menú, es la excepción
+     conocida de Resource Monitors (ver Fix 1) — usar el plan B de SQL.</code></pre>
+
+  <div class="label">Cómo verificar que quedó resuelto</div>
+  <p>Confirmar que el texto está agregado y visible en un lugar destacado de la guía (idealmente antes del inicio del primer track), y hacer una lectura rápida con un facilitador real para confirmar que el mensaje es claro.</p>
+</div>
+
+<!-- FIX 7 -->
+<div class="fix-card p2" id="fix7">
+  <div class="fix-head">
+    <h3>7. Dos puntos finos pendientes de confirmar en browser</h3>
+    <span class="prio-badge p2">P2 — nice to have</span>
+  </div>
+  <span class="owner-badge">No bloqueante — objetos subyacentes ya confirmados por SQL</span>
+
+  <div class="label">Punto 7.1 — Schema Evolution en KAFKA_EVENTOS_STREAMING (H11)</div>
+  <div class="callout evidence">
+    Se confirmó por SQL que <code>STREAMING_DEMO.KAFKA_EVENTOS_STREAMING</code> es una tabla Iceberg activa (parámetros <code>EXTERNAL_VOLUME</code>, <code>CATALOG</code>, <code>ICEBERG_MERGE_ON_READ_BEHAVIOR</code> presentes), pero <code>SHOW PARAMETERS IN TABLE</code> no expone directamente un flag <code>ENABLE_SCHEMA_EVOLUTION</code> consultable por SQL de forma simple.
+  </div>
+  <p><strong>Acción sugerida:</strong> abrir <code>Catalog &gt; Explorer &gt; STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING &gt; Overview</code> en el browser y confirmar visualmente si el indicador de "Schema Evolution" aparece habilitado, tal como promete la tarjeta H11 del deck.</p>
+
+  <div class="label">Punto 7.2 — Tags SNOWML_FEATURE_* en FEATURES_RIESGO_COMERCIO (H16)</div>
+  <div class="callout evidence">
+    Se confirmó por SQL que la tabla <code>ANALITICA.FEATURES_RIESGO_COMERCIO</code> existe, pero no se llegó a confirmar la presencia de tags <code>SNOWML_FEATURE_*</code> sobre sus columnas antes de que la sesión cerrara.
+  </div>
+  <p><strong>Acción sugerida:</strong> abrir <code>Catalog &gt; Explorer &gt; ANALITICA &gt; FEATURES_RIESGO_COMERCIO &gt; Access tab</code> y confirmar visualmente los tags esperados por H16.</p>
+</div>
+
+<footer>
+  Generado por Cortex Code · Fuente: evaluación UX en vivo + verificación SQL sobre las 9 cuentas <code>credibanco-*</code> · 2026-09-26
+</footer>
+
+</body>
+</html>

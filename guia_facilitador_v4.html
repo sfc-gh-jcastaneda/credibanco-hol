@@ -157,6 +157,14 @@ Si necesitas corregir algo durante el evento:<br>
 
 <h2>8. Troubleshooting R&aacute;pido</h2>
 
+<div class="callout callout-red">
+<strong>⚠️ Nota sobre inestabilidad de Snowsight</strong>
+En esta build de Snowsight, algunas p&aacute;ginas pueden mostrar &ldquo;Page not found&rdquo; o &ldquo;An unknown error occurred&rdquo; en la primera carga. Si esto pasa:<br>
+1. <strong>NO</strong> recargar con F5 / bot&oacute;n de refrescar del navegador.<br>
+2. Usar el men&uacute; lateral para volver a hacer clic en la misma secci&oacute;n.<br>
+3. Si persiste despu&eacute;s de 2 intentos por men&uacute;: Resource Monitors tiene un bug conocido de routing &mdash; usar <code>SHOW RESOURCE MONITORS;</code> en un Worksheet como plan B para H25/H29.
+</div>
+
 <table>
 <tr><th>Problema</th><th>Soluci&oacute;n</th></tr>
 <tr><td>&ldquo;No veo el notebook&rdquo;</td><td>Projects &rarr; Notebooks &rarr; buscar por nombre. Si no aparece, verificar rol activo con <code>SELECT CURRENT_ROLE()</code></td></tr>
