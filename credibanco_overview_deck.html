@@ -461,7 +461,10 @@
   </div>
   <div class="card card-orange">
     <h4>Openflow (NiFi)</h4>
-    <p>Abrir Openflow UI para ver conector Kafka. Primero cambiar default role a <span class="path">OPENFLOW_ADMIN_RL</span></p>
+    <p><strong>Para ver Openflow:</strong> Abrir un SQL Worksheet y ejecutar:<br>
+    <code>USE ROLE ACCOUNTADMIN; ALTER USER USER SET DEFAULT_ROLE = 'OPENFLOW_ADMIN_RL';</code><br>
+    Luego cerrar sesión y volver a entrar. Ir a <span class="path">Ingestion &gt; Openflow</span> → ver conector Kafka corriendo.<br>
+    <strong>Al terminar, restaurar:</strong> <code>ALTER USER USER SET DEFAULT_ROLE = 'ACCOUNTADMIN';</code> y cerrar/abrir sesión.</p>
   </div>
 </div>
 
