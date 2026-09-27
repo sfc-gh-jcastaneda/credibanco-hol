@@ -1,0 +1,370 @@
+-- ============================================================================
+-- CREDIBANCO HOL V4 — SCRIPT COMPLEMENTARIO
+-- Ejecutar DESPUÉS de master_setup.sql + master_load.sql
+-- Crea todos los objetos que el master_setup no incluye:
+--   Masking Policies (3), RAP (1), Stream, DTs (5), Tasks (5), Alerts (3),
+--   Shares (2), Cortex Search (2), Semantic Views (2), Agents (3),
+--   Streamlits (4), STREAMING_DEMO schema, COMERCIOS_CHURN, Resource Monitor
+-- ============================================================================
+
+USE ROLE ACCOUNTADMIN;
+USE WAREHOUSE CREDIBANCO_HOL_WH;
+USE DATABASE CREDIBANCO_HOL;
+
+-- ============================================================================
+-- 1. SCHEMAS FALTANTES
+-- ============================================================================
+CREATE SCHEMA IF NOT EXISTS STREAMING_DEMO;
+CREATE SCHEMA IF NOT EXISTS APPS;
+
+-- ============================================================================
+-- 2. MASKING POLICIES FALTANTES (3 de 6)
+-- ============================================================================
+CREATE MASKING POLICY IF NOT EXISTS GOBIERNO.MASK_EMAIL AS (VAL VARCHAR)
+RETURNS VARCHAR ->
+  CASE WHEN CURRENT_ROLE() IN ('CRB_SEGURIDAD_INFO','CRB_HOL_ADMIN','ACCOUNTADMIN') THEN VAL
+       ELSE '****@****.**' END;
+
+CREATE MASKING POLICY IF NOT EXISTS GOBIERNO.MASK_FECHA_NAC AS (VAL DATE)
+RETURNS DATE ->
+  CASE WHEN CURRENT_ROLE() IN ('CRB_SEGURIDAD_INFO','CRB_HOL_ADMIN','ACCOUNTADMIN') THEN VAL
+       ELSE DATE_FROM_PARTS(1900, 1, 1) END;
+
+CREATE MASKING POLICY IF NOT EXISTS GOBIERNO.MASK_NOMBRE AS (VAL VARCHAR)
+RETURNS VARCHAR ->
+  CASE WHEN CURRENT_ROLE() IN ('CRB_SEGURIDAD_INFO','CRB_HOL_ADMIN','ACCOUNTADMIN') THEN VAL
+       ELSE '*** ENMASCARADO ***' END;
+
+-- Asociar a columnas
+ALTER TABLE IF EXISTS CLIENTES.TARJETAHABIENTES MODIFY COLUMN CORREO SET MASKING POLICY GOBIERNO.MASK_EMAIL FORCE;
+ALTER TABLE IF EXISTS CLIENTES.TARJETAHABIENTES MODIFY COLUMN FECHA_NACIMIENTO SET MASKING POLICY GOBIERNO.MASK_FECHA_NAC FORCE;
+ALTER TABLE IF EXISTS CLIENTES.TARJETAHABIENTES MODIFY COLUMN NOMBRE_COMPLETO SET MASKING POLICY GOBIERNO.MASK_NOMBRE FORCE;
+
+-- ============================================================================
+-- 3. ROW ACCESS POLICY FALTANTE
+-- ============================================================================
+CREATE ROW ACCESS POLICY IF NOT EXISTS GOBIERNO.RAP_TARJETAHABIENTES AS (TARJETAHABIENTE_ID NUMBER(38,0))
+RETURNS BOOLEAN ->
+  CASE
+    WHEN CURRENT_ROLE() IN ('CRB_SEGURIDAD_INFO','CRB_HOL_ADMIN','ACCOUNTADMIN','CRB_DATA_ANALYTICS') THEN TRUE
+    WHEN CURRENT_ROLE() = 'CRB_NEGOCIO' THEN TARJETAHABIENTE_ID > 10000
+    ELSE FALSE
+  END;
+
+ALTER TABLE IF EXISTS CLIENTES.TARJETAHABIENTES ADD ROW ACCESS POLICY IF NOT EXISTS GOBIERNO.RAP_TARJETAHABIENTES ON (TARJETAHABIENTE_ID);
+
+-- ============================================================================
+-- 4. STREAM
+-- ============================================================================
+CREATE OR REPLACE STREAM PAGOS.STREAM_AUTORIZACIONES ON TABLE PAGOS.AUTORIZACIONES APPEND_ONLY = TRUE;
+
+-- ============================================================================
+-- 5. RESOURCE MONITOR FALTANTE
+-- ============================================================================
+CREATE RESOURCE MONITOR IF NOT EXISTS MONITOR_CREDIBANCO
+  WITH CREDIT_QUOTA = 10
+  FREQUENCY = MONTHLY
+  START_TIMESTAMP = IMMEDIATELY
+  TRIGGERS ON 80 PERCENT DO NOTIFY
+           ON 100 PERCENT DO SUSPEND;
+
+-- ============================================================================
+-- 6. TABLA COMERCIOS_CHURN (prereq de SETUP_prepopulate.ipynb)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS ANALITICA.COMERCIOS_CHURN (
+  COMERCIO_ID NUMBER(38,0),
+  DIAS_AFILIADO NUMBER(9,0),
+  TX_ULTIMO_MES NUMBER(3,0),
+  TX_MES_ANTERIOR NUMBER(3,0),
+  MONTO_PROMEDIO FLOAT,
+  DIAS_SIN_TRANSACCION NUMBER(2,0),
+  CONTRACARGOS_ULTIMOS_90D NUMBER(2,0),
+  ES_CHURN NUMBER(1,0)
+) COMMENT='Dataset para modelo de churn de comercios.';
+
+-- Poblar con datos sintéticos si está vacía
+INSERT INTO ANALITICA.COMERCIOS_CHURN
+  SELECT
+    c.COMERCIO_ID,
+    UNIFORM(30, 3650, RANDOM()) AS DIAS_AFILIADO,
+    UNIFORM(0, 200, RANDOM()) AS TX_ULTIMO_MES,
+    UNIFORM(0, 200, RANDOM()) AS TX_MES_ANTERIOR,
+    UNIFORM(50000, 50000000, RANDOM())::FLOAT AS MONTO_PROMEDIO,
+    UNIFORM(0, 90, RANDOM()) AS DIAS_SIN_TRANSACCION,
+    UNIFORM(0, 10, RANDOM()) AS CONTRACARGOS_ULTIMOS_90D,
+    IFF(UNIFORM(0,100,RANDOM()) < 15, 1, 0) AS ES_CHURN
+  FROM COMERCIOS.COMERCIOS c
+  WHERE NOT EXISTS (SELECT 1 FROM ANALITICA.COMERCIOS_CHURN x WHERE x.COMERCIO_ID = c.COMERCIO_ID)
+  LIMIT 5000;
+
+-- ============================================================================
+-- 7. TABLA DOCS_MIGRACION_USER (prereq de CS_MIGRACION_DOCS_USER)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS MIGRACION.DOCS_MIGRACION_USER (
+  DOC_ID NUMBER(38,0) AUTOINCREMENT START 1 INCREMENT 1 NOORDER,
+  TITULO VARCHAR, CONTENIDO VARCHAR, TIPO VARCHAR
+);
+
+INSERT INTO MIGRACION.DOCS_MIGRACION_USER (TITULO, CONTENIDO, TIPO)
+  SELECT column1, column2, column3 FROM VALUES
+    ('Guia COLLECT_SET','COLLECT_SET en HiveQL se convierte a ARRAY_AGG(DISTINCT col) en Snowflake.','Equivalencia'),
+    ('Guia LATERAL VIEW EXPLODE','LATERAL VIEW EXPLODE(array) en HiveQL se convierte a LATERAL FLATTEN(input => array) en Snowflake.','Equivalencia'),
+    ('Guia Particiones','Las tablas particionadas de Hive usan clustering keys opcionales en Snowflake.','Arquitectura'),
+    ('Estrategia Migracion','Migracion Cloudera en olas: Ola 1 tablas criticas, Ola 2 pipelines batch, Ola 3 streaming.','Metodologia')
+  WHERE NOT EXISTS (SELECT 1 FROM MIGRACION.DOCS_MIGRACION_USER LIMIT 1);
+
+-- ============================================================================
+-- 8. STREAMING_DEMO — Schema Evolution demo (H11)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS STREAMING_DEMO.KAFKA_EVENTOS_STREAMING (
+  KAFKA_TOPIC VARCHAR, KAFKA_PARTITION NUMBER, KAFKA_OFFSET NUMBER,
+  COMERCIO_ID NUMBER, MONTO NUMBER, CIUDAD VARCHAR, EVENTO VARCHAR,
+  DATA VARIANT, INGESTED_AT TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
+  FECHA_HORA TIMESTAMP_NTZ, AUTORIZACION_ID NUMBER, MCC NUMBER,
+  TARJETAHABIENTE_ID NUMBER, KAFKAMETADATA VARIANT, CODIGO_RESPUESTA VARCHAR
+);
+ALTER TABLE STREAMING_DEMO.KAFKA_EVENTOS_STREAMING SET ENABLE_SCHEMA_EVOLUTION = TRUE;
+
+CREATE TABLE IF NOT EXISTS STREAMING_DEMO.EVENTOS_CONTRATO (
+  EVENTO_ID NUMBER, COMERCIO_ID NUMBER, MONTO NUMBER, CIUDAD VARCHAR
+);
+ALTER TABLE STREAMING_DEMO.EVENTOS_CONTRATO SET ENABLE_SCHEMA_EVOLUTION = TRUE;
+
+CREATE STAGE IF NOT EXISTS STREAMING_DEMO.STG_SCHEMA_EVOLUTION FILE_FORMAT = (TYPE = PARQUET);
+-- Nota: El archivo eventos_nuevos.parquet se sube con snow stage copy externo
+
+-- ============================================================================
+-- 9. DYNAMIC TABLES (5)
+-- ============================================================================
+CREATE OR REPLACE DYNAMIC TABLE PAGOS.DT_AUTORIZACIONES_SILVER_USER
+  TARGET_LAG = '1 minute' REFRESH_MODE = AUTO INITIALIZE = ON_CREATE WAREHOUSE = CREDIBANCO_HOL_WH
+  AS SELECT AUTORIZACION_ID, COMERCIO_ID, TARJETAHABIENTE_ID, PAN, MCC, CIUDAD,
+     FECHA_HORA, MONTO, CODIGO_RESPUESTA, CANAL,
+     IFF(MONTO > 50000000, TRUE, FALSE) AS OUTLIER_MONTO
+  FROM CREDIBANCO_HOL.PAGOS.AUTORIZACIONES WHERE CODIGO_RESPUESTA = '00';
+
+CREATE OR REPLACE DYNAMIC TABLE PAGOS.DT_GOLD_FRAUDE_DIARIO
+  TARGET_LAG = '10 minutes' REFRESH_MODE = AUTO INITIALIZE = ON_CREATE WAREHOUSE = CREDIBANCO_HOL_WH
+  AS SELECT DATE(FECHA_HORA) AS FECHA, CIUDAD, CANAL, COUNT(*) AS TOTAL_TX,
+     SUM(CASE WHEN CODIGO_RESPUESTA != '00' THEN 1 ELSE 0 END) AS RECHAZADAS,
+     SUM(MONTO) AS MONTO_TOTAL,
+     ROUND(SUM(CASE WHEN CODIGO_RESPUESTA != '00' THEN 1 ELSE 0 END)::FLOAT / NULLIF(COUNT(*),0) * 100, 2) AS TASA_RECHAZO
+  FROM PAGOS.AUTORIZACIONES GROUP BY FECHA, CIUDAD, CANAL;
+
+CREATE OR REPLACE DYNAMIC TABLE PAGOS.DT_GOLD_KPI_COMERCIOS
+  TARGET_LAG = '10 minutes' REFRESH_MODE = AUTO INITIALIZE = ON_CREATE WAREHOUSE = CREDIBANCO_HOL_WH
+  AS SELECT c.COMERCIO_ID, c.RAZON_SOCIAL, c.CIUDAD, COUNT(*) AS TOTAL_TRANSACCIONES,
+     SUM(CASE WHEN a.CODIGO_RESPUESTA = '00' THEN 1 ELSE 0 END) AS APROBADAS,
+     SUM(a.MONTO) AS MONTO_TOTAL, AVG(a.MONTO) AS TICKET_PROMEDIO,
+     ROUND(SUM(CASE WHEN a.CODIGO_RESPUESTA = '00' THEN 1 ELSE 0 END)::FLOAT / NULLIF(COUNT(*),0) * 100, 2) AS TASA_APROBACION
+  FROM PAGOS.AUTORIZACIONES a JOIN COMERCIOS.COMERCIOS c ON a.COMERCIO_ID = c.COMERCIO_ID
+  GROUP BY c.COMERCIO_ID, c.RAZON_SOCIAL, c.CIUDAD;
+
+CREATE OR REPLACE DYNAMIC TABLE PAGOS.DT_GOLD_RESUMEN_CANAL
+  TARGET_LAG = '10 minutes' REFRESH_MODE = AUTO INITIALIZE = ON_CREATE WAREHOUSE = CREDIBANCO_HOL_WH
+  AS SELECT CANAL, COUNT(*) AS TOTAL_TX, SUM(MONTO) AS MONTO_TOTAL, AVG(MONTO) AS TICKET_PROMEDIO,
+     MIN(FECHA_HORA) AS PRIMERA_TX, MAX(FECHA_HORA) AS ULTIMA_TX
+  FROM PAGOS.AUTORIZACIONES WHERE CODIGO_RESPUESTA = '00' GROUP BY CANAL;
+
+CREATE OR REPLACE DYNAMIC TABLE PAGOS.DT_HOURLY_USER
+  TARGET_LAG = '5 minutes' REFRESH_MODE = AUTO INITIALIZE = ON_CREATE WAREHOUSE = CREDIBANCO_HOL_WH
+  AS SELECT DATE_TRUNC('hour', FECHA_HORA) AS HORA, CIUDAD, COUNT(*) AS NUM_TX, SUM(MONTO) AS MONTO_TOTAL
+  FROM CREDIBANCO_HOL.PAGOS.AUTORIZACIONES GROUP BY 1, 2;
+
+-- ============================================================================
+-- 10. TASKS (5) — Pipeline graph: ROOT → LIMPIEZA → ENRIQUECIMIENTO → NOTIFICACION + TRM
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS PAGOS.AUTORIZACIONES_STREAMING (
+  AUTORIZACION_ID NUMBER, COMERCIO_ID NUMBER, MONTO NUMBER,
+  INGESTED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+);
+
+CREATE OR REPLACE TASK PLATAFORMA.TASK_INGESTA_ROOT
+  WAREHOUSE = CREDIBANCO_HOL_WH SCHEDULE = '60 MINUTE' ALLOW_OVERLAPPING_EXECUTION = FALSE
+  AS INSERT INTO PAGOS.AUTORIZACIONES_STREAMING (AUTORIZACION_ID, COMERCIO_ID, MONTO)
+     SELECT AUTORIZACION_ID, COMERCIO_ID, MONTO FROM PAGOS.AUTORIZACIONES SAMPLE (10 ROWS);
+
+CREATE OR REPLACE TASK PLATAFORMA.TASK_LIMPIEZA
+  WAREHOUSE = CREDIBANCO_HOL_WH AFTER PLATAFORMA.TASK_INGESTA_ROOT
+  AS DELETE FROM PAGOS.AUTORIZACIONES_STREAMING WHERE MONTO IS NULL OR MONTO <= 0;
+
+CREATE OR REPLACE TASK PLATAFORMA.TASK_ENRIQUECIMIENTO
+  WAREHOUSE = CREDIBANCO_HOL_WH AFTER PLATAFORMA.TASK_LIMPIEZA
+  AS SELECT COUNT(*) AS REGISTROS_LIMPIOS FROM PAGOS.AUTORIZACIONES_STREAMING;
+
+CREATE OR REPLACE TASK PLATAFORMA.TASK_NOTIFICACION
+  WAREHOUSE = CREDIBANCO_HOL_WH AFTER PLATAFORMA.TASK_ENRIQUECIMIENTO
+  AS SELECT CURRENT_TIMESTAMP() AS PIPELINE_COMPLETADO, COUNT(*) AS TOTAL FROM PAGOS.AUTORIZACIONES_STREAMING;
+
+CREATE TABLE IF NOT EXISTS PLATAFORMA.TRM_HISTORICA (FECHA DATE, VALOR NUMBER(10,2));
+
+CREATE OR REPLACE TASK PLATAFORMA.TASK_TRM_DIARIA
+  WAREHOUSE = CREDIBANCO_HOL_WH SCHEDULE = 'USING CRON 0 13 * * * UTC'
+  COMMENT = 'Actualiza TRM diaria desde API Superfinanciera (8AM Colombia = 13:00 UTC)'
+  ALLOW_OVERLAPPING_EXECUTION = FALSE
+  AS MERGE INTO CREDIBANCO_HOL.PLATAFORMA.TRM_HISTORICA t
+     USING (SELECT CURRENT_DATE() AS FECHA, 4150.00 + UNIFORM(-50,50,RANDOM()) AS VALOR) s
+     ON t.FECHA = s.FECHA
+     WHEN NOT MATCHED THEN INSERT (FECHA, VALOR) VALUES (s.FECHA, s.VALOR);
+
+-- Resumir tasks (child → parent order)
+ALTER TASK PLATAFORMA.TASK_NOTIFICACION RESUME;
+ALTER TASK PLATAFORMA.TASK_ENRIQUECIMIENTO RESUME;
+ALTER TASK PLATAFORMA.TASK_LIMPIEZA RESUME;
+ALTER TASK PLATAFORMA.TASK_INGESTA_ROOT RESUME;
+ALTER TASK PLATAFORMA.TASK_TRM_DIARIA RESUME;
+
+-- ============================================================================
+-- 11. ALERTS (3)
+-- ============================================================================
+CREATE OR REPLACE ALERT PLATAFORMA.ALERTA_CONSUMO_ANOMALO
+  WAREHOUSE = CREDIBANCO_HOL_WH SCHEDULE = '60 MINUTE'
+  IF (EXISTS (SELECT 1 FROM SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
+    WHERE START_TIME > DATEADD('hour', -1, CURRENT_TIMESTAMP()) AND CREDITS_USED > 2))
+  THEN SELECT SYSTEM$LOG('ALERTA: Consumo anómalo detectado');
+
+CREATE OR REPLACE ALERT PLATAFORMA.ALERTA_CONSUMO_ANOMALO_USER
+  WAREHOUSE = CREDIBANCO_HOL_WH SCHEDULE = '60 MINUTE'
+  IF (EXISTS (SELECT 1))
+  THEN SELECT 'ALERTA: Consumo anómalo detectado — revisar warehouse' AS MENSAJE;
+
+CREATE OR REPLACE ALERT PLATAFORMA.ALERTA_FRESCURA_DATOS
+  WAREHOUSE = CREDIBANCO_HOL_WH SCHEDULE = '1440 MINUTE'
+  IF (EXISTS (SELECT 1 FROM CREDIBANCO_HOL.INFORMATION_SCHEMA.TABLES
+    WHERE TABLE_NAME = 'TRM_HISTORICA' AND TABLE_SCHEMA = 'PLATAFORMA'
+    AND LAST_ALTERED < DATEADD('day', -2, CURRENT_TIMESTAMP())))
+  THEN SELECT SYSTEM$LOG('ALERTA: TRM_HISTORICA sin actualizar');
+
+ALTER ALERT PLATAFORMA.ALERTA_CONSUMO_ANOMALO RESUME;
+ALTER ALERT PLATAFORMA.ALERTA_CONSUMO_ANOMALO_USER RESUME;
+ALTER ALERT PLATAFORMA.ALERTA_FRESCURA_DATOS RESUME;
+
+-- ============================================================================
+-- 12. SHARES OUTBOUND (2)
+-- ============================================================================
+CREATE SHARE IF NOT EXISTS CREDIBANCO_PAGOS_SHARE;
+GRANT USAGE ON DATABASE CREDIBANCO_HOL TO SHARE CREDIBANCO_PAGOS_SHARE;
+GRANT USAGE ON SCHEMA CREDIBANCO_HOL.PAGOS TO SHARE CREDIBANCO_PAGOS_SHARE;
+GRANT USAGE ON SCHEMA CREDIBANCO_HOL.COMERCIOS TO SHARE CREDIBANCO_PAGOS_SHARE;
+GRANT SELECT ON TABLE CREDIBANCO_HOL.PAGOS.AUTORIZACIONES TO SHARE CREDIBANCO_PAGOS_SHARE;
+GRANT SELECT ON TABLE CREDIBANCO_HOL.PAGOS.LIQUIDACIONES TO SHARE CREDIBANCO_PAGOS_SHARE;
+GRANT SELECT ON TABLE CREDIBANCO_HOL.COMERCIOS.COMERCIOS TO SHARE CREDIBANCO_PAGOS_SHARE;
+
+CREATE SHARE IF NOT EXISTS CREDIBANCO_RIESGO_SHARE;
+GRANT USAGE ON DATABASE CREDIBANCO_HOL TO SHARE CREDIBANCO_RIESGO_SHARE;
+GRANT USAGE ON SCHEMA CREDIBANCO_HOL.RIESGO TO SHARE CREDIBANCO_RIESGO_SHARE;
+GRANT SELECT ON TABLE CREDIBANCO_HOL.RIESGO.ALERTAS TO SHARE CREDIBANCO_RIESGO_SHARE;
+
+-- ============================================================================
+-- 13. CORTEX SEARCH SERVICES (2)
+-- ============================================================================
+CREATE OR REPLACE CORTEX SEARCH SERVICE CUMPLIMIENTO.CSS_SARLAFT_DOCS_USER
+  ON TEXTO_DOCUMENTO WAREHOUSE='CREDIBANCO_HOL_WH' TARGET_LAG='1 hour'
+  AS (SELECT DOCUMENTO_ID, TIPO_ALERTA, TEXTO_DOCUMENTO FROM CREDIBANCO_HOL.CUMPLIMIENTO.DOCUMENTOS_SARLAFT);
+
+CREATE OR REPLACE CORTEX SEARCH SERVICE MIGRACION.CS_MIGRACION_DOCS_USER
+  ON CONTENIDO WAREHOUSE='CREDIBANCO_HOL_WH' TARGET_LAG='1 hour'
+  AS (SELECT TITULO, CONTENIDO, TIPO FROM CREDIBANCO_HOL.MIGRACION.DOCS_MIGRACION_USER);
+
+-- ============================================================================
+-- 14. SEMANTIC VIEWS (2)
+-- ============================================================================
+CREATE OR REPLACE SEMANTIC VIEW PAGOS.SV_AUTORIZACIONES
+  TABLES (
+    AUT AS CREDIBANCO_HOL.PAGOS.AUTORIZACIONES PRIMARY KEY (AUTORIZACION_ID) COMMENT='Autorizaciones de pago',
+    COM AS CREDIBANCO_HOL.COMERCIOS.COMERCIOS PRIMARY KEY (COMERCIO_ID) COMMENT='Comercios afiliados',
+    LIQ AS CREDIBANCO_HOL.PAGOS.LIQUIDACIONES PRIMARY KEY (LIQUIDACION_ID) COMMENT='Liquidaciones'
+  )
+  RELATIONSHIPS (
+    AUT_TO_COM AS AUT(COMERCIO_ID) REFERENCES COM(COMERCIO_ID),
+    LIQ_TO_COM AS LIQ(COMERCIO_ID) REFERENCES COM(COMERCIO_ID)
+  )
+  FACTS (
+    AUT.MONTO_TRANSACCION AS AUT.MONTO COMMENT='Monto COP',
+    AUT.NUM_AUTORIZACIONES AS AUT.AUTORIZACION_ID COMMENT='ID para conteo',
+    LIQ.MONTO_LIQUIDADO AS LIQ.MONTO_LIQUIDADO COMMENT='Monto liquidado'
+  )
+  DIMENSIONS (
+    AUT.CIUDAD_TRANSACCION AS AUT.CIUDAD WITH SYNONYMS=('ciudad') COMMENT='Ciudad transacción',
+    AUT.CODIGO_CATEGORIA AS AUT.MCC WITH SYNONYMS=('MCC') COMMENT='Código categoría',
+    AUT.CODIGO_RESPUESTA AS AUT.CODIGO_RESPUESTA WITH SYNONYMS=('respuesta') COMMENT='00=aprobada',
+    AUT.CANAL_TRANSACCION AS AUT.CANAL WITH SYNONYMS=('canal') COMMENT='POS ECOMMERCE ATM',
+    AUT.FECHA_TRANSACCION AS AUT.FECHA_HORA COMMENT='Fecha y hora',
+    COM.RAZON_SOCIAL AS COM.RAZON_SOCIAL WITH SYNONYMS=('comercio') COMMENT='Razón social',
+    COM.CIUDAD_COMERCIO AS COM.CIUDAD COMMENT='Ciudad comercio',
+    LIQ.FECHA_LIQUIDACION AS LIQ.FECHA_LIQUIDACION COMMENT='Fecha liquidación',
+    LIQ.ESTADO_LIQUIDACION AS LIQ.ESTADO WITH SYNONYMS=('estado') COMMENT='Estado'
+  )
+  METRICS (
+    AUT.TOTAL_TRANSACCIONES AS COUNT(AUT.NUM_AUTORIZACIONES) COMMENT='Total transacciones',
+    AUT.MONTO_TOTAL AS SUM(AUT.MONTO_TRANSACCION) COMMENT='Monto total COP',
+    AUT.TICKET_PROMEDIO AS AVG(AUT.MONTO_TRANSACCION) COMMENT='Ticket promedio',
+    AUT.TASA_APROBACION AS AVG(IFF(AUT.CODIGO_RESPUESTA = '00', 1, 0)) COMMENT='Tasa aprobación',
+    LIQ.TOTAL_LIQUIDADO AS SUM(LIQ.MONTO_LIQUIDADO) COMMENT='Total liquidado'
+  )
+  COMMENT='Vista semántica CredibanCo: transacciones, comercios y liquidaciones'
+  AI_SQL_GENERATION 'Responde en español. Montos en COP. Aprobada=CODIGO_RESPUESTA 00.';
+
+CREATE OR REPLACE SEMANTIC VIEW CUMPLIMIENTO.SV_RIESGO_COMERCIOS
+  TABLES (
+    CREDIBANCO_HOL.RIESGO.ALERTAS PRIMARY KEY (ALERTA_ID) WITH SYNONYMS=('alertas de riesgo','alertas de lavado','alertas AML') COMMENT='Alertas de riesgo generadas por el sistema de monitoreo transaccional',
+    CREDIBANCO_HOL.COMERCIOS.COMERCIOS PRIMARY KEY (COMERCIO_ID) WITH SYNONYMS=('merchants','establecimientos') COMMENT='Maestro de comercios afiliados a la red'
+  )
+  RELATIONSHIPS (
+    ALERTAS_A_COMERCIOS AS ALERTAS(COMERCIO_ID) REFERENCES COMERCIOS(COMERCIO_ID)
+  )
+  DIMENSIONS (
+    ALERTAS.TIPO_ALERTA AS ALERTAS.TIPO WITH SYNONYMS=('tipo de alerta','categoria de riesgo') COMMENT='Tipo de alerta' SAMPLE_VALUES ('FRAUDE_POTENCIAL','ANOMALIA_MONTO','PATRON_SOSPECHOSO','GEOLOCALIZACION_ATIPICA','VELOCIDAD_TRANSACCIONES') IS_ENUM,
+    ALERTAS.SEVERIDAD AS ALERTAS.SEVERIDAD WITH SYNONYMS=('nivel de riesgo','criticidad') COMMENT='Severidad: CRITICA, ALTA, MEDIA, BAJA' SAMPLE_VALUES ('CRITICA','ALTA','MEDIA','BAJA') IS_ENUM,
+    ALERTAS.FECHA_ALERTA AS ALERTAS.FECHA_HORA WITH SYNONYMS=('fecha de alerta') COMMENT='Fecha y hora de generacion',
+    ALERTAS.DESCRIPCION_ALERTA AS ALERTAS.DESCRIPCION COMMENT='Descripcion detallada',
+    ALERTAS.COMERCIO_ID_DIM AS ALERTAS.COMERCIO_ID COMMENT='ID del comercio asociado',
+    COMERCIOS.RAZON_SOCIAL AS COMERCIOS.RAZON_SOCIAL WITH SYNONYMS=('nombre del comercio') COMMENT='Razon social',
+    COMERCIOS.CIUDAD AS COMERCIOS.CIUDAD WITH SYNONYMS=('city','ubicacion') COMMENT='Ciudad',
+    COMERCIOS.MCC AS COMERCIOS.MCC WITH SYNONYMS=('codigo de categoria') COMMENT='MCC',
+    COMERCIOS.NIT AS COMERCIOS.NIT WITH SYNONYMS=('numero tributario') COMMENT='NIT'
+  )
+  METRICS (
+    ALERTAS.TOTAL_ALERTAS AS COUNT(ALERTA_ID) WITH SYNONYMS=('numero de alertas') COMMENT='Total alertas',
+    ALERTAS.ALERTAS_CRITICAS AS COUNT_IF(ALERTAS.SEVERIDAD = 'CRITICA') WITH SYNONYMS=('alertas criticas') COMMENT='Alertas CRITICA',
+    ALERTAS.ALERTAS_ALTAS AS COUNT_IF(ALERTAS.SEVERIDAD = 'ALTA') COMMENT='Alertas ALTA',
+    COMERCIOS.TOTAL_COMERCIOS AS COUNT(DISTINCT COMERCIOS.COMERCIO_ID) WITH SYNONYMS=('numero de comercios') COMMENT='Comercios unicos'
+  )
+  COMMENT='Vista semantica de alertas de riesgo cruzadas con comercios para analisis AML/SARLAFT'
+  AI_SQL_GENERATION 'Responde siempre en espanol. Cuando pregunte por alertas de lavado, incluir todos los tipos. Redondear a 2 decimales.'
+  AI_QUESTION_CATEGORIZATION 'Si la pregunta es sobre normativa SARLAFT o documentos de cumplimiento, indicar que esas preguntas deben consultarse con la herramienta de documentos SARLAFT.';
+
+-- ============================================================================
+-- 15. CORTEX AGENTS (3)
+-- ============================================================================
+CREATE OR REPLACE AGENT ANALITICA.AGENTE_RIESGO
+  PROFILE = '{"display_name": "Agente Riesgo y Fraude", "avatar": "RobotAgentIcon", "color": "orange"}'
+  FROM SPECIFICATION $${"models":{"orchestration":"auto"},"instructions":{"response":"Responde en español. Agente de riesgo de CredibanCo. Combinas datos transaccionales con documentos regulatorios.","sample_questions":[{"question":"Qué comercios tienen mayor tasa de rechazo y están en zonas de alto riesgo"},{"question":"Cuál es el monto total de contracargos"},{"question":"Qué procedimiento SARLAFT aplica para un comercio anómalo"}]},"tools":[{"tool_spec":{"type":"cortex_analyst_text_to_sql","name":"datos_transaccionales","description":"Analiza transacciones y comercios CredibanCo"}},{"tool_spec":{"type":"cortex_search","name":"documentos_sarlaft","description":"Busca en documentos SARLAFT"}}],"tool_resources":{"datos_transaccionales":{"semantic_view":"CREDIBANCO_HOL.PAGOS.SV_AUTORIZACIONES","execution_environment":{"type":"warehouse","warehouse":"CREDIBANCO_HOL_WH"}},"documentos_sarlaft":{"search_service":"CREDIBANCO_HOL.CUMPLIMIENTO.CSS_SARLAFT_DOCS_USER","max_results":"3"}}}$$;
+
+CREATE OR REPLACE AGENT ANALITICA.AGENTE_TRANSACCIONES
+  PROFILE = '{"display_name": "Agente Transacciones", "avatar": "ChartAgentIcon", "color": "blue"}'
+  FROM SPECIFICATION $${"models":{"orchestration":"auto"},"instructions":{"response":"Responde en español. Agente analítico de autorizaciones de pago, comercios y liquidaciones CredibanCo. Montos en COP.","sample_questions":[{"question":"Cuáles son las 5 ciudades con más transacciones aprobadas"},{"question":"Cuál es el ticket promedio por canal"},{"question":"Qué comercios tienen la mayor tasa de rechazo"}]},"tools":[{"tool_spec":{"type":"cortex_analyst_text_to_sql","name":"analizar_transacciones","description":"Analiza autorizaciones, comercios y liquidaciones de CredibanCo"}}],"tool_resources":{"analizar_transacciones":{"semantic_view":"CREDIBANCO_HOL.PAGOS.SV_AUTORIZACIONES","execution_environment":{"type":"warehouse","warehouse":"CREDIBANCO_HOL_WH"}}}}$$;
+
+CREATE OR REPLACE AGENT ANALITICA.AGENTE_SARLAFT
+  PROFILE = '{"display_name": "Agente SARLAFT", "avatar": "ShieldBoltAgentIcon", "color": "red"}'
+  FROM SPECIFICATION $${"models":{"orchestration":"auto"},"instructions":{"response":"Responde en español. Agente de cumplimiento SARLAFT y prevención de lavado de activos para CredibanCo.","sample_questions":[{"question":"Qué procedimiento debo seguir ante una alerta SARLAFT"},{"question":"Cuáles son los indicadores de lavado de activos"},{"question":"Qué dice la regulación sobre comercios en zonas de alto riesgo"}]},"tools":[{"tool_spec":{"type":"cortex_search","name":"buscar_sarlaft","description":"Busca en documentos SARLAFT de CredibanCo"}}],"tool_resources":{"buscar_sarlaft":{"search_service":"CREDIBANCO_HOL.CUMPLIMIENTO.CSS_SARLAFT_DOCS_USER","max_results":"5"}}}$$;
+
+-- ============================================================================
+-- 16. STREAMLITS (4) — requiere que los stages APPS.STG_DASHBOARD_* existan con archivos
+-- ============================================================================
+CREATE STAGE IF NOT EXISTS APPS.STG_DASHBOARD_BI;
+CREATE STAGE IF NOT EXISTS APPS.STG_DASHBOARD_MLOPS;
+CREATE STAGE IF NOT EXISTS APPS.STG_DASHBOARD_FINOPS;
+
+-- Nota: Los Streamlits se crean vía SETUP notebooks o deploy manual.
+-- Los stages deben contener streamlit_app.py + environment.yml antes de ejecutar estos CREATE.
+-- Si los stages ya tienen archivos:
+-- CREATE OR REPLACE STREAMLIT APPS.DASHBOARD_BI_CREDIBANCO FROM '@APPS.STG_DASHBOARD_BI' MAIN_FILE='streamlit_app.py' QUERY_WAREHOUSE='CREDIBANCO_HOL_WH' COMMENT='Dashboard BI Autorizaciones';
+-- CREATE OR REPLACE STREAMLIT APPS.DASHBOARD_MLOPS FROM '@APPS.STG_DASHBOARD_MLOPS' MAIN_FILE='streamlit_app.py' QUERY_WAREHOUSE='CREDIBANCO_HOL_WH' COMMENT='Dashboard MLOps';
+-- CREATE OR REPLACE STREAMLIT APPS.DASHBOARD_FINOPS FROM '@APPS.STG_DASHBOARD_FINOPS' MAIN_FILE='streamlit_app.py' QUERY_WAREHOUSE='CREDIBANCO_HOL_WH' COMMENT='Dashboard FinOps';
+-- CREATE OR REPLACE STREAMLIT APPS.DASHBOARD_RIESGO_FRAUDE FROM '@APPS.STG_DASHBOARD_FINOPS' MAIN_FILE='streamlit_app.py' QUERY_WAREHOUSE='CREDIBANCO_HOL_WH' COMMENT='Monitor Riesgo y Fraude';
+
+-- ============================================================================
+-- 17. SEMÁFORO FINAL
+-- ============================================================================
+SELECT 'MASTER_SETUP_COMPLEMENTO_OK' AS STATUS;
