@@ -529,8 +529,15 @@
 
   <div class="card card-blue">
     <h4><span class="h-badge">H11</span> Gestionar cambio de contrato</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Catalog &gt; Explorer &gt; STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING &gt; Overview</span></p>
-    <p><span class="label-res">Resultado esperado:</span> Tabla con SCHEMA_EVOLUTION habilitado — acepta nuevas columnas sin romper consumidores downstream</p>
+    <p><span class="label-ir">Ir a:</span> Abrir un <span class="path">SQL Worksheet</span> y ejecutar:</p>
+    <pre style="background:#0f172a;color:#e5e7eb;padding:10px 14px;border-radius:6px;font-size:12px;overflow-x:auto;margin:6px 0;">-- Ver que Schema Evolution está activo
+SHOW TABLES LIKE 'KAFKA_EVENTOS_STREAMING' IN SCHEMA CREDIBANCO_HOL.STREAMING_DEMO;
+-- Buscar columna enable_schema_evolution = Y
+
+-- Ver qué columnas fueron agregadas AUTOMÁTICAMENTE por Kafka
+DESCRIBE TABLE CREDIBANCO_HOL.STREAMING_DEMO.KAFKA_EVENTOS_STREAMING;
+-- Las columnas con "schema evolution record" fueron agregadas sin ALTER TABLE</pre>
+    <p><span class="label-res">Resultado esperado:</span> <code>enable_schema_evolution = Y</code>. En DESCRIBE, las columnas FECHA_HORA, AUTORIZACION_ID, MCC, TARJETAHABIENTE_ID, CODIGO_RESPUESTA muestran <code>evolutionType: ADD_COLUMN</code> + <code>evolutionMode: SNOWPIPE_STREAMING</code> — fueron agregadas automáticamente por el conector Kafka sin intervención manual.</p>
     <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; PAGOS &gt; Semantic Views &gt; SV_AUTORIZACIONES</span> → el contrato semántico define qué métricas están disponibles</p>
   </div>
 
