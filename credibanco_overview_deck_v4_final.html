@@ -1192,7 +1192,9 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
     <div style="background:#1a1a2e;color:#e0e0e0;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:0.82rem;margin:8px 0;white-space:pre-wrap;">CALL TEST_CLOUDERA_CONNECTION();
 -- Esperado: {"status": "ok", "databases": ["default", "information_schema", ...]}</div>
     <p style="margin-top:12px;"><b>Luego pedir a CoCo:</b></p>
-    <div style="background:#1a1a2e;color:#e0e0e0;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:0.82rem;margin:8px 0;white-space:pre-wrap;">¿Qué bases de datos hay en el Cloudera?
+    <div style="background:#1a1a2e;color:#e0e0e0;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:0.82rem;margin:8px 0;white-space:pre-wrap;">Basado en mi access integration de cloudera y la conexion pre establecida ayudame a contestar estas preguntas:
+
+¿Qué bases de datos hay en el Cloudera?
 Lista las tablas de la base default en Cloudera
 Genérame un reporte HTML del assessment de Cloudera</div>
     <p><span class="label-res">Resultado esperado:</span> CoCo usa los stored procedures (<code>CLOUDERA_LIST_TABLES</code>, <code>CLOUDERA_DESCRIBE_TABLE</code>, <code>CLOUDERA_SAMPLE_ROWS</code>) para explorar el ambiente Cloudera en lenguaje natural y genera un reporte HTML completo del assessment</p>
