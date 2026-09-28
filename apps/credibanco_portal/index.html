@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CredibanCo - Portal de Inteligencia</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, system-ui, sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); min-height: 100vh; color: #e2e8f0; }
+  .header { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 32px; display: flex; align-items: center; gap: 16px; }
+  .header img { height: 32px; }
+  .header h1 { font-size: 20px; font-weight: 600; }
+  .header .badge { background: #22c55e; color: white; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+  .hero { text-align: center; margin-bottom: 48px; }
+  .hero h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 16px; color: #94a3b8; max-width: 600px; margin: 0 auto; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+  .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; transition: all 0.3s; cursor: pointer; }
+  .card:hover { background: rgba(255,255,255,0.1); border-color: #60a5fa; transform: translateY(-2px); }
+  .card .icon { font-size: 32px; margin-bottom: 12px; }
+  .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: #94a3b8; line-height: 1.5; }
+  .card .tag { display: inline-block; background: rgba(96,165,250,0.2); color: #60a5fa; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-top: 8px; }
+  .btn-cowork { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; margin: 20px auto; }
+  .btn-cowork:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(37,99,235,0.4); }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+  .kpi { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; text-align: center; }
+  .kpi .value { font-size: 28px; font-weight: 700; color: #60a5fa; }
+  .kpi .label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .footer { text-align: center; padding: 20px; color: #64748b; font-size: 12px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <svg width="32" height="32" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#29B5E8"/><path d="M20 8l3 6h6l-5 4 2 6-6-4-6 4 2-6-5-4h6z" fill="white"/></svg>
+  <h1>CredibanCo Intelligence Portal</h1>
+  <span class="badge">SPCS</span>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <h2>Centro de Inteligencia Transaccional</h2>
+    <p>Accede a agentes de IA, dashboards y análisis en tiempo real del ecosistema de pagos de CredibanCo</p>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="value">200K+</div><div class="label">Autorizaciones</div></div>
+    <div class="kpi"><div class="value">6,888</div><div class="label">Comercios</div></div>
+    <div class="kpi"><div class="value">3</div><div class="label">Agentes IA</div></div>
+    <div class="kpi"><div class="value">5</div><div class="label">Ciudades</div></div>
+  </div>
+
+  <div style="text-align:center; margin-bottom: 40px;">
+    <a class="btn-cowork" href="https://ai.snowflake.com" target="_blank">
+      <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+      Abrir Snowflake CoWork — Conversar con Agentes
+    </a>
+  </div>
+
+  <div class="cards">
+    <div class="card" onclick="window.open('https://ai.snowflake.com','_blank')">
+      <div class="icon">🤖</div>
+      <h3>Agente de Riesgo</h3>
+      <p>Analiza riesgo transaccional combinando datos con documentos SARLAFT. Responde en español.</p>
+      <span class="tag">Cortex Agent + RAG</span>
+    </div>
+    <div class="card" onclick="window.open('https://ai.snowflake.com','_blank')">
+      <div class="icon">📊</div>
+      <h3>Agente Transacciones</h3>
+      <p>Consulta transacciones en lenguaje natural: montos, canales, ciudades, tendencias.</p>
+      <span class="tag">NL-to-SQL</span>
+    </div>
+    <div class="card" onclick="window.open('https://ai.snowflake.com','_blank')">
+      <div class="icon">🛡️</div>
+      <h3>Agente SARLAFT</h3>
+      <p>Consulta documentos regulatorios de prevención de lavado de activos.</p>
+      <span class="tag">Cortex Search RAG</span>
+    </div>
+    <div class="card">
+      <div class="icon">📈</div>
+      <h3>Dashboard BI</h3>
+      <p>KPIs de autorizaciones, tendencias por canal y ciudad, filtros interactivos.</p>
+      <span class="tag">Streamlit</span>
+    </div>
+    <div class="card">
+      <div class="icon">🔬</div>
+      <h3>Dashboard MLOps</h3>
+      <p>Modelos registrados, versiones champion/challenger, métricas de inferencia.</p>
+      <span class="tag">Model Registry</span>
+    </div>
+    <div class="card">
+      <div class="icon">💰</div>
+      <h3>Dashboard FinOps</h3>
+      <p>Consumo por warehouse, alertas de anomalías, resource monitors.</p>
+      <span class="tag">Cost Intelligence</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  CredibanCo HOL V4 — RFP 10010806 — Portal SPCS — Septiembre 2026
+</div>
+</body>
+</html>
