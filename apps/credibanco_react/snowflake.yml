@@ -1,0 +1,23 @@
+definition_version: "2"
+
+entities:
+  credibanco_portal:
+    type: snowflake-app
+    identifier:
+      name: CREDIBANCO_PORTAL
+      database: USER$USER
+      schema: PUBLIC
+    artifacts:
+      - src: ./*
+        dest: ./
+        ignore:
+          - node_modules
+          - .env*
+          - __pycache__
+          - "*.pyc"
+          - .next
+          - .git
+          - snowflake.log
+
+    query_warehouse: CREDIBANCO_HOL_WH
+    code_workspace: USER$USER.PUBLIC.SNOWFLAKE_APPS

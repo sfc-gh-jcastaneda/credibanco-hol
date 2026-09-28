@@ -28,7 +28,11 @@
       "producerNotes": "P0/P1/P2 basado en hallazgos de secciones 2 y 4." },
     { "id": "addendum-sql", "title": "7. Addendum — verificación SQL",
       "dataSources": [{ "type": "query", "sql": "SHOW RESOURCE MONITORS; SHOW GIT REPOSITORIES IN SCHEMA CREDIBANCO_HOL.PLATAFORMA; SHOW DBT PROJECTS IN DATABASE CREDIBANCO_HOL; SHOW SEMANTIC VIEWS IN SCHEMA CREDIBANCO_HOL.PAGOS; SHOW AGENTS IN ACCOUNT; SHOW ALERTS IN ACCOUNT;" }],
-      "producerNotes": "Ejecutado post-sesión vía snow sql -c credibanco-hol para cerrar tareas no verificadas en browser y diagnosticar el bug de Resource Monitors." }
+      "producerNotes": "Ejecutado post-sesión vía snow sql -c credibanco-hol para cerrar tareas no verificadas en browser y diagnosticar el bug de Resource Monitors." },
+    { "id": "cierre-final", "title": "8. Cierre final del re-test — cobertura 31/31 (conteo corregido en sección 9)",
+      "producerNotes": "Rondas 2-4 (mismo día), 100% por navegador/UI real jugando el rol de Maria (usuaria de negocio no técnica), sin ejecutar ningún script SQL como parte del test. Fuente: CHECKPOINT_retest_v4.md, secciones RONDA 2/3/4." },
+    { "id": "ronda7", "title": "9. RONDA 7 — Re-test completo de las 27 pruebas aplicables",
+      "producerNotes": "Re-test 100% por navegador (sin SQL) de las 27 tareas aplicables del deck (H01-H20, H24-H30), a solicitud explícita: 'vuelve a ejecutar el role play testing de TODO'. Corrige el conteo erróneo de 31 usado en secciones y rondas anteriores (el deck solo tiene 27 H-badges). Fuente: CHECKPOINT_retest_v4.md, sección RONDA 7." }
   ]
 }
 </script>
@@ -139,6 +143,8 @@
     <li><a href="#recomendaciones">Recomendaciones priorizadas</a></li>
     <li><a href="#conclusion">Conclusión</a></li>
     <li><a href="#addendum-sql">Addendum — verificación SQL</a></li>
+    <li><a href="#cierre-final">Cierre final del re-test (cobertura 31/31)</a></li>
+    <li><a href="#ronda7">RONDA 7 — Re-test completo de las 27 pruebas aplicables (conteo corregido)</a></li>
   </ol>
 </div>
 
@@ -356,8 +362,118 @@
   <li><strong>Deja abiertos dos puntos finos</strong> para una próxima pasada corta en browser: el flag de schema evolution en <code>KAFKA_EVENTOS_STREAMING</code> (H11) y los tags <code>SNOWML_FEATURE_*</code> visibles en el Access tab de <code>FEATURES_RIESGO_COMERCIO</code> (H16).</li>
 </ul>
 
+<h2 id="cierre-final">8. Cierre final del re-test (rondas 2‑4) — cobertura 31/31 tareas aplicables</h2>
+
+<div class="callout yellow">
+  <strong class="tag">⚠️ Corrección de conteo (ver sección 9)</strong>
+  <p>Una relectura completa del deck en la RONDA 7 confirmó que <code>credibanco_overview_deck.html</code> tiene exactamente <strong>27 H-badges únicos</strong> (H01–H20, H24–H30) — no 31. Los números "31/31" de esta sección 8 (y de <code>plan_correccion_credibanco_hol_v4.html</code>) quedan corregidos a <strong>27/27</strong> en la sección 9 a continuación.</p>
+</div>
+
+<div class="callout blue">
+  <p>En una sesión posterior a las secciones 0‑7 anteriores, se completó el re-test restante siguiendo una instrucción explícita del usuario: <em>"ejecuta tú como si fueras un usuario de UX, ese usuario no va a ejecutar el script"</em>. Esto significó descartar por completo el uso del script de validación SQL pre-existente (<code>sql/validate_readiness.sql</code>, con <code>CHECK_ID</code>s como <code>T7_ALERTS</code>, <code>T7_RESOURCE_MONITORS</code>, etc.) como método de test — ese script queda documentado solo como referencia interna del equipo Snowflake. Todo lo que sigue se confirmó <strong>100% haciendo clic en la UI real de Snowsight</strong>, tal como lo haría Maria.</p>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card metric-pass"><div class="num">23 / 31</div><div class="lbl">PASS confirmado sin matices</div></div>
+  <div class="metric-card metric-cond"><div class="num">3 / 31</div><div class="lbl">PASS con matiz / hallazgo de UX</div></div>
+  <div class="metric-card metric-fail"><div class="num">1 / 31</div><div class="lbl">Posible FAIL, no 100% confirmado</div></div>
+  <div class="metric-card metric-block"><div class="num">1</div><div class="lbl">FAIL ya conocido (Fix 3 — DMF)</div></div>
+</div>
+
+<h3>8.1 Resumen ejecutivo por tarea</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Categoría</th><th>Tareas</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-pass">PASS confirmado</span></td><td>H01, H02, H03, H04, H06, H07, H08, H09, H12, H13, H14, H15, H17, H18, H19, H20, H24, H25, H26, H27, H28, H29, H30 <strong>(23 tareas)</strong></td></tr>
+<tr><td><span class="badge badge-cond">PASS con matiz</span></td><td>H10 (ruta UI de "Data sharing" cambió a Internal Marketplace), H11 (Iceberg funciona; flag "Schema Evolution" no visible en UI), H29 (funciona vía menú "..." → Edit; el clic directo en la fila da 404)</td></tr>
+<tr><td><span class="badge badge-fail">Posible FAIL, no confirmado</span></td><td>H16 — tags <code>SNOWML_FEATURE_*</code> no vistos en el Access tab de <code>FEATURES_RIESGO_COMERCIO</code>; falta un último screenshot con scroll completo para descartarlo del todo</td></tr>
+<tr><td><span class="badge badge-fail">FAIL ya conocido</span></td><td>Fix 3 — Data Metric Function, "0/1 association passing" sigue sin resolver</td></tr>
+<tr><td><span class="badge badge-pass">Resuelto por el usuario</span></td><td>H05 (rol por defecto), re-confirmado PASS</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>8.2 Highlights de la ronda final (H14/H15/H20, H17/H18, H24, H26, H29, H30)</h3>
+<ul>
+  <li><strong>H26 — <code>DASHBOARD_BI_CREDIBANCO</code>:</strong> tras la reautenticación OAuth (ver 8.3), el dashboard carga perfecto: 200,001 transacciones, 127,124 aprobadas (63%), 6,888 comercios activos, 72,433 rechazadas, 10 ciudades, gráficos y filtros Ciudad/Canal/Categoría funcionando.</li>
+  <li><strong>H17/H18 — <code>DASHBOARD_MLOPS</code>:</strong> "CredibanCo — Observabilidad MLOps" con 20 experimentos, 2 champions, mejor AUC 0.9600, 3 algoritmos probados, tabla detalle EXP_0...EXP_19.</li>
+  <li><strong>H14/H15/H20 — chat "Frosty" en Home:</strong> a la pregunta en español "¿Cuántas alertas SARLAFT activas hay en CredibanCo?", el agente exploró de forma autónoma ("Ran 2 commands → Found relevant tables → Ran 3 queries") y respondió "Hay 5 alertas SARLAFT activas", desglosadas por tipo, con una aclaración proactiva sobre la tabla genérica <code>ALERTAS</code> (500 registros no específicos). No fue necesario seleccionar manualmente el agente <code>AGENTE_SARLAFT</code>.</li>
+  <li><strong>H24 — Universal Search "autorizaciones":</strong> resultados ricos y bien categorizados — 5 tablas, 1 stream (<code>STREAM_AUTORIZACIONES</code>), 1 vista semántica (<code>SV_AUTORIZACIONES</code>) con descripción de negocio.</li>
+  <li><strong>H30 — Alerts:</strong> 3 filas, todas "Active" (con la nota de posible duplicado, ver Fix 11 en el plan de corrección).</li>
+</ul>
+
+<h3>8.3 Hallazgos de UX nuevos en esta ronda (recomendaciones, no bloqueantes)</h3>
+<ol>
+  <li><strong>Reautenticación OAuth al abrir apps Streamlit</strong> desde "Apps": interrumpe con una pantalla completa de login; puede confundir a una usuaria no técnica pensando que su sesión se cerró. → Fix 8 en el plan de corrección.</li>
+  <li><strong>Ruta rota en clic directo de fila de Resource Monitor</strong>: navega a un "Page not found" incluso tras refrescar; el único camino funcional es el menú "..." → Edit. → Fix 9.</li>
+  <li><strong>"Data sharing" en el sidebar ahora apunta a Internal Marketplace/Listings</strong>, no a la vista clásica de "External sharing" que describe el deck. → Fix 10.</li>
+  <li><strong>Posible alerta duplicada</strong> en el listado de Alerts (nombre truncado idéntico en 2 filas) — probablemente 2 alertas legítimas distintas, a confirmar. → Fix 11.</li>
+  <li><strong>Hallazgo positivo:</strong> el chat de Home resuelve preguntas de negocio de forma autónoma sin necesidad de seleccionar manualmente el agente especializado en Agent Studio.</li>
+</ol>
+
+<p>Detalle completo de evidencia y pasos de reproducción para cada hallazgo: ver <code>plan_correccion_credibanco_hol_v4.html</code> (Fix 8‑11) y <code>CHECKPOINT_retest_v4.md</code>.</p>
+
+<h2 id="ronda7">9. RONDA 7 — Re-test completo de las 27 pruebas aplicables</h2>
+
+<div class="callout blue">
+  <p>A solicitud explícita del usuario (<em>"vuelve a ejecutar el role play testing de TODO"</em>), se repitió el re-test completo de las tareas aplicables, 100% por navegador como Maria, sin ejecutar ningún script SQL. Una relectura íntegra del deck confirmó que existen exactamente <strong>27 H-badges únicos</strong> (H01–H20, H24–H30) — <strong>no 31</strong> como se afirmó en la sección 8 y en <code>plan_correccion_credibanco_hol_v4.html</code>. T5 (H21‑H23) y T8 (H31‑H34) no existen como tabs en el deck.</p>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card metric-pass"><div class="num">20 / 27</div><div class="lbl">PASS confirmado sin matiz</div></div>
+  <div class="metric-card metric-cond"><div class="num">4 / 27</div><div class="lbl">PASS con matiz</div></div>
+  <div class="metric-card metric-fail"><div class="num">2 / 27</div><div class="lbl">FAIL confirmado (Fix 3, H16)</div></div>
+  <div class="metric-card metric-block"><div class="num">1 + 1</div><div class="lbl">Hallazgo nuevo (H11) + no verificable (H24)</div></div>
+</div>
+
+<h3>9.1 Resultado final consolidado (27/27 pruebas aplicables cubiertas)</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>#</th><th>Tarea</th><th>Resultado</th></tr></thead>
+<tbody>
+<tr><td>H01</td><td>Navegar flujo end-to-end (18 schemas)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H02</td><td>Arquitectura fundacional (3 Views ARQUITECTURA)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H03</td><td>Políticas como código (6 masking + 2 RAP)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H04</td><td>Gobernar datos sensibles E2E (TARJETAHABIENTES Access)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H05</td><td>Linaje y calidad (grafo Lineage AUTORIZACIONES)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H06</td><td>Gobernanza federada (Iceberg + shares)</td><td><span class="badge badge-cond">✅ PASS con matiz</span> — evidencia de shares vía UI cambió de ruta (ver Fix 10)</td></tr>
+<tr><td>H07</td><td>Pipeline representativo (5 DTs, Tasks DAG)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H08</td><td>Diagnosticar fallas (Run history 71 succeeded/5 failed)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H09</td><td>Promover cambios (HOL_REPO + dbt CREDIBANCO_ANALYTICS)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H10</td><td>Crear/publicar producto de datos</td><td><span class="badge badge-cond">⚠️ PARCIAL</span> — Semantic Views confirmadas; "2 shares outbound" no visibles vía Provider Studio Listings (0 listings) ni Internal Sharing (ruta cambiada, ver Fix 10)</td></tr>
+<tr><td>H11</td><td>Gestionar cambio de contrato (SCHEMA_EVOLUTION)</td><td><span class="badge badge-fail">❌ NO CONFIRMADO</span> — el DDL de <code>KAFKA_EVENTOS_STREAMING</code> ("View SQL") no muestra <code>ENABLE_SCHEMA_EVOLUTION=TRUE</code>. Ver Fix 12.</td></tr>
+<tr><td>H12</td><td>Interoperabilidad (Iceberg)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H13</td><td>Construir/desplegar modelo (2 modelos)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H14</td><td>Gobernar ciclo de vida AI (V1/V2)</td><td><span class="badge badge-cond">✅ PASS con matiz</span> — la UI usa la etiqueta "Default", no "champion" literal</td></tr>
+<tr><td>H15</td><td>Operar agente/RAG (3 agentes en Agent Studio)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H16</td><td>Gobernar datos/features AI (tags SNOWML_FEATURE_*)</td><td><span class="badge badge-fail">❌ FAIL</span> — columna Tags vacía en <code>FEATURES_RIESGO_COMERCIO</code> (confirmado en rondas 6 y 7)</td></tr>
+<tr><td>H17</td><td>Pipeline MLOps (DASHBOARD_MLOPS)</td><td><span class="badge badge-pass">✅ PASS</span> — confirmado por historial de queries (streamlit ejecutado)</td></tr>
+<tr><td>H18</td><td>Monitoreo modelo en producción</td><td><span class="badge badge-pass">✅ PASS</span> (mismo dashboard)</td></tr>
+<tr><td>H19</td><td>Gestionar GenAI/agentes (3 agentes)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H20</td><td>Validar AI responsable (masking previene training)</td><td><span class="badge badge-pass">✅ PASS</span> — evidencia ya confirmada vía Access tab</td></tr>
+<tr><td>H24</td><td>Descubrir/solicitar acceso (buscar "autorizaciones")</td><td><span class="badge badge-block">⚠️ NO VERIFICABLE ESTA RONDA</span> — Universal Search UI no renderizó resultados; evidencia indirecta (tabla existente) sigue siendo positiva</td></tr>
+<tr><td>H25</td><td>Auto-provisionar capacidad (Resource Monitors)</td><td><span class="badge badge-pass">✅ PASS</span> — esta ronda NO mostró el bug "Page not found"; <code>RM_HOL_CREDIBANCO</code> con quota 100, thresholds 75/90/100</td></tr>
+<tr><td>H26</td><td>Query/reporteo self-service (DASHBOARD_BI)</td><td><span class="badge badge-pass">✅ PASS</span> — confirmado por historial de queries</td></tr>
+<tr><td>H27</td><td>Salud integral (Account Overview KPIs)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H28</td><td>Optimization insights</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H29</td><td>Control FinOps (thresholds 75/90/100)</td><td><span class="badge badge-pass">✅ PASS</span></td></tr>
+<tr><td>H30</td><td>Mejora continua (Alerts)</td><td><span class="badge badge-cond">⚠️ PASS con matiz</span> — <code>ALERTA_CONSUMO_ANOMALO</code> sigue duplicada en la lista (Fix 11 persiste)</td></tr>
+<tr><td>Fix 3</td><td>DMF re-test</td><td><span class="badge badge-fail">❌ FAIL</span> — sigue "No checks" / "0/1 association passing"</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>9.2 Hallazgo nuevo — H11 (SCHEMA_EVOLUTION)</h3>
+<div class="callout red">
+  <strong class="tag">🔴 Hallazgo nuevo — no documentado en Fix 7‑11</strong>
+  <p>La tarjeta H11 promete: <em>"Tabla con SCHEMA_EVOLUTION habilitado — acepta nuevas columnas sin romper consumidores downstream."</em> Al abrir <code>Catalog &gt; Explorer &gt; STREAMING_DEMO &gt; KAFKA_EVENTOS_STREAMING &gt; Overview</code> y usar el botón <strong>"View SQL"</strong> (100% UI, sin ejecutar nada), el DDL mostrado (<code>CREATE OR REPLACE TABLE</code> con sus 15 columnas) <strong>no incluye la cláusula <code>ENABLE_SCHEMA_EVOLUTION=TRUE</code></strong> en ninguna parte. Detalle completo y recomendación de fix: ver Fix 12 en <code>plan_correccion_credibanco_hol_v4.html</code>.</p>
+</div>
+
+<p>Detalle completo de evidencia por cada punto (incluyendo las rutas exactas de Snowsight que fallaron y sus workarounds): ver <code>CHECKPOINT_retest_v4.md</code>, sección RONDA 7.</p>
+
 <footer>
-  Generado por Cortex Code · Fuente: sesión en vivo en Snowsight + verificación SQL sobre <code>credibanco-hol</code> (cuenta LEDZYD) · 2026-09-26
+  Generado por Cortex Code · Fuente: sesión en vivo en Snowsight + verificación SQL sobre <code>credibanco-hol</code> (cuenta LEDZYD) · Última actualización: 2026-09-26 (RONDA 7 — re-test completo, cobertura 27/27 tareas aplicables, conteo corregido)
 </footer>
 
 <script src="/libs/chart.js@4.4.4/chart.umd.js"></script>
