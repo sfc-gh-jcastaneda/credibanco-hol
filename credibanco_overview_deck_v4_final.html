@@ -959,12 +959,10 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
   </div>
 
   <div class="card card-blue">
-    <h4><span class="h-badge">H25</span> Auto-provisionar capacidad</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors</span></p>
-    <p><span class="label-res">Resultado esperado:</span> RM_HOL_CREDIBANCO con umbrales en 75%/90%/100%</p>
-    <p><span class="label-tambien">También:</span> <span class="path">Compute &gt; Warehouses &gt; CREDIBANCO_HOL_WH</span> → AUTO_SUSPEND=60s, AUTO_RESUME=TRUE</p>
-  
-    <p><span class="label-tambien">También:</span> <span class="path">Compute &gt; Warehouses &gt; CREDIBANCO_HOL_WH_MULTI</span> — warehouse multicluster (1-3 nodos) con auto-scaling automático bajo demanda</p>
+    <h4><span class="h-badge">H25</span> Warehouse Multicluster</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Compute &gt; Warehouses &gt; CREDIBANCO_HOL_WH_MULTI</span></p>
+    <p><span class="label-res">Resultado esperado:</span> Warehouse multicluster (1-3 nodos) con auto-scaling automático bajo demanda — escala horizontalmente según concurrencia</p>
+    <p><span class="label-tambien">También:</span> <span class="path">Admin &gt; Cost Management &gt; Resource Monitors &gt; RM_HOL_CREDIBANCO</span> → umbrales en 75%/90%/100%</p>
   </div>
 
   <div class="card card-blue">
