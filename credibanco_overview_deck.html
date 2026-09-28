@@ -1152,35 +1152,89 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
     </pre>
   </div>
 
-  <!-- Section C -->
-  <div class="section-title"><span class="icon">📋</span> Pruebas del Excel</div>
+  <!-- Section C: Ejercicios Interactivos con CoCo -->
+  <div class="section-title"><span class="icon">🧪</span> Ejercicios Interactivos (CoCo Chat)</div>
 
   <div class="card card-blue">
-    <h4><span class="h-badge">H31</span> Ejecutar assessment sobre muestra</h4>
-    <p><span class="label-ir">Ir a:</span> Abrir <code>migration_assessment_credibanco.html</code></p>
-    <p><span class="label-res">Resultado esperado:</span> Reporte con KPIs (6/6 scripts, 75% auto, ~9 min), barras de conversión por script, distribución donut de EWIs, tabla de issues bloqueados con alternativas Snowflake</p>
+    <h4><span class="h-badge">H31</span> Ejercicio 1 — Explicar Data Cargada</h4>
+    <p><span class="label-ir">Contexto:</span> Se cargaron 5 tablas de muestra real de CredibanCo en <code>CREDIBANCO_HOL.MIGRACION</code></p>
+    <p><b>Pedir a CoCo:</b></p>
+    <ul>
+      <li><i>"Explícame qué hay en CREDIBANCO_HOL.MIGRACION — ¿qué tablas hay, cuántas filas y columnas tiene cada una?"</i></li>
+      <li><i>"Muéstrame las primeras 5 filas de CAFCNBTP y dime qué representan"</i></li>
+      <li><i>"¿Qué relación hay entre VWCOMERCIOS y SIC_BONOS_VIRTUALES?"</i></li>
+    </ul>
+    <p><span class="label-res">Resultado esperado:</span> CoCo describe 5 tablas (CAFCNBTP 100×64, SIC_BONOS_VIRTUALES 100×34, SIC_PRODUCTOS_ADICIONALES_SPK 100×28, VWCOMERCIOS 1×42, VWGEOGRAFIA_MUNICIPIO 5×15), sus columnas y relaciones</p>
   </div>
 
   <div class="card card-blue">
-    <h4><span class="h-badge">H32</span> Migrar/refactorizar muestra</h4>
-    <p><span class="label-ir">Ir a:</span> Revisar los scripts convertidos en <code>spark-migration/output-full/</code></p>
-    <p><span class="label-res">Resultado esperado:</span> Código PySpark original → Snowpark Connect. Cambios documentados con códigos EWI (SPRKCNTPY0001-0021). Trazabilidad completa en git con tags phase-0-source → phase-2-fixes → phase-4-reports</p>
-    <p><span class="label-tambien">También:</span> <code>Reports/Issues.csv</code> e <code>InputFilesInventory.csv</code> con inventario completo</p>
+    <h4><span class="h-badge">H32</span> Ejercicio 2 — Conversión Spark con /spark-migration</h4>
+    <p><span class="label-ir">Contexto:</span> Los archivos <code>.py</code> en la carpeta <code>spark-migration/</code> son pipelines PySpark de Cloudera</p>
+    <p><b>Pedir a CoCo:</b></p>
+    <ul>
+      <li><i>"Usa /spark-migration para convertir los .py de la carpeta spark-migration a Snowpark"</i></li>
+      <li><i>"Muéstrame las diferencias entre el código PySpark original y el convertido"</i></li>
+    </ul>
+    <p><span class="label-res">Resultado esperado:</span> CoCo invoca el skill de migración Spark, convierte 6 scripts PySpark → Snowpark Connect (SCOS), genera códigos EWI para cada cambio y un inventario de issues</p>
+    <p><span class="label-tambien">También:</span> 979 LOC fuente → 1,144 LOC convertido, 75% de issues resueltos automáticamente</p>
   </div>
 
   <div class="card card-blue">
-    <h4><span class="h-badge">H33</span> Diseñar circuito y olas</h4>
-    <p><span class="label-ir">Ir a:</span> Revisar configuración <code>credibanco_full_migration.json</code></p>
-    <p><span class="label-res">Resultado esperado:</span> Configuración de migración en olas: Ola 1 = tablas críticas (bonos_virtuales, productos_adicionales), Ola 2 = pipelines batch (carga_cafcnbtp, marca_privada), Ola 3 = streaming (scheduled_reports — requiere rediseño Kafka→Tasks)</p>
+    <h4><span class="h-badge">H33</span> Ejercicio 3 — Reporte HTML de Assessment</h4>
+    <p><span class="label-ir">Contexto:</span> CoCo puede generar reportes HTML profesionales a partir del assessment</p>
+    <p><b>Pedir a CoCo:</b></p>
+    <ul>
+      <li><i>"Hazme un reporte HTML con un diagnóstico general de la migración, KPIs y tiempos"</i></li>
+      <li><i>"Incluye gráficas de conversión por script, distribución de EWIs y tabla de issues bloqueados"</i></li>
+    </ul>
+    <p><span class="label-res">Resultado esperado:</span> Archivo HTML profesional con KPIs (6/6 scripts, 75% auto, ~9 min), barras de progreso, donut chart de EWIs, tabla de issues bloqueados con alternativas Snowflake</p>
   </div>
 
   <div class="card card-blue">
-    <h4><span class="h-badge">H34</span> Evidenciar transferencia en el hacer</h4>
-    <p><span class="label-ir">Ir a:</span> Los artefactos de migración demuestran transferencia:</p>
-    <p>• <b>Git versionado</b> con tags por fase (source → fixes → reports)</p>
-    <p>• <b>Issues.csv</b> como backlog de trabajo pendiente para el equipo de CredibanCo</p>
-    <p>• <b>Códigos EWI</b> estándar que documentan cada decisión de conversión</p>
-    <p>• <b>Scripts convertidos</b> listos para ejecución en Snowflake con data de prueba</p>
+    <h4><span class="h-badge">H34</span> Ejercicio 4 — Ejecutar Outputs sobre Data Real</h4>
+    <p><span class="label-ir">Contexto:</span> Las 5 tablas en <code>CREDIBANCO_HOL.MIGRACION</code> contienen data de producción anonimizada</p>
+    <p><b>Pedir a CoCo:</b></p>
+    <ul>
+      <li><i>"Ejecuta los scripts de migración convertidos sobre las tablas CAFCNBTP, SIC_BONOS_VIRTUALES, SIC_PRODUCTOS_ADICIONALES_SPK, VWCOMERCIOS y VWGEOGRAFIA_MUNICIPIO"</i></li>
+      <li><i>"Muéstrame los resultados comparando la ejecución Spark vs Snowpark"</i></li>
+    </ul>
+    <p><span class="label-res">Resultado esperado:</span> Scripts convertidos procesan la data real de CredibanCo en Snowflake. Validación E2E con conteos y checksums</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H35</span> Ejercicio 5 — Validar Conexión Cloudera</h4>
+    <p><span class="label-ir">Contexto:</span> Snowflake puede conectarse directamente al Cloudera de CredibanCo vía External Access Integration</p>
+    <p><b>Ejecutar en SQL worksheet:</b></p>
+    <p><code class="path-block">USE SCHEMA CREDIBANCO_HOL.CLOUDERA_ASSESSMENT;<br>USE WAREHOUSE CLOUDERA_ASSESSMENT_WH;<br>CALL TEST_CLOUDERA_CONNECTION();</code></p>
+    <p><span class="label-res">Resultado esperado:</span> <code>{"status": "ok", "databases": ["default", "information_schema", "matviews", "staging", "sys"]}</code></p>
+    <p style="margin-top:8px;"><b>Pedir a CoCo:</b></p>
+    <ul>
+      <li><i>"¿Qué bases de datos hay en el Cloudera?"</i></li>
+      <li><i>"Lista las tablas de la base default en Cloudera"</i></li>
+      <li><i>"Dame 10 filas de muestra de staging.cafcnbtp en Cloudera"</i></li>
+      <li><i>"Genérame un reporte HTML del assessment de Cloudera"</i></li>
+    </ul>
+    <p><span class="label-res">Resultado esperado:</span> CoCo usa los stored procedures (CLOUDERA_LIST_TABLES, CLOUDERA_DESCRIBE_TABLE, CLOUDERA_SAMPLE_ROWS) para explorar el ambiente Cloudera en lenguaje natural y genera un reporte completo</p>
+  </div>
+
+  <!-- Section D: Artefactos -->
+  <div class="section-title"><span class="icon">📋</span> Artefactos de Migración</div>
+
+  <div class="card card-green">
+    <h4>Data Cargada en MIGRACION</h4>
+    <p>5 tablas de producción anonimizadas: CAFCNBTP (100×64), SIC_BONOS_VIRTUALES (100×34), SIC_PRODUCTOS_ADICIONALES_SPK (100×28), VWCOMERCIOS (1×42), VWGEOGRAFIA_MUNICIPIO (5×15)</p>
+  </div>
+  <div class="card card-green">
+    <h4>Conectividad Cloudera Validada</h4>
+    <p>External Access Integration → Hive Server2 (CDP) · 4 stored procedures de assessment · 5 bases de datos y 16 tablas descubiertas</p>
+  </div>
+  <div class="card card-green">
+    <h4>6/6 Scripts Convertidos</h4>
+    <p>Pipeline Productos Adicionales: PySpark → Snowpark Connect (SCOS) · 979 LOC → 1,144 LOC · ~9 min total · 75% issues automáticos</p>
+  </div>
+  <div class="card card-green">
+    <h4>Assessment HTML Completo</h4>
+    <p><code>migration_assessment_credibanco.html</code> — reporte con KPIs, tiempos, issues y recomendaciones</p>
   </div>
 
   <!-- Section D -->
