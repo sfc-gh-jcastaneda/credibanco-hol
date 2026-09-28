@@ -921,12 +921,14 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
       <p>VQs configurados en SV_AUTORIZACIONES y SV_RIESGO_COMERCIOS para mejorar precisión de Cortex Analyst</p>
     </div>
     <div class="card card-green">
-      <h4>ML Experiment</h4>
-      <p>EXP_CLASIFICACION_RIESGO — experimento de clasificación de riesgo por comercio con tracking de métricas</p>
+      <h4>3 ML Experiments</h4>
+      <p>EXP_CLASIFICACION_RIESGO · EXP_DETECCION_ANOMALIAS · EXP_FORECAST_VOLUMEN</p>
+      <p style="font-size:0.8rem;color:var(--gray-400);">Navegar: <span class="path">AI &amp; ML &gt; Experiments</span></p>
     </div>
     <div class="card card-green">
-      <h4>Model Monitor</h4>
-      <p>MODELO_ANOMALIAS_TRANSACCIONES — detección de anomalías en montos transaccionales con alertas automáticas</p>
+      <h4>Model Monitor + Anomaly Detection</h4>
+      <p>MODELO_ANOMALIAS_TRANSACCIONES — detección de anomalías en montos transaccionales</p>
+      <p style="font-size:0.8rem;color:var(--gray-400);">Navegar: <span class="path">AI &amp; ML &gt; Models</span></p>
     </div>
   </div>
 
@@ -945,7 +947,18 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
     <br>
     <span class="branch">Sidebar</span> &gt; <span class="branch">Data sharing</span><br>
     &nbsp;&nbsp;├── External sharing &gt; Shared by you <span class="note">(2 shares)</span><br>
-    &nbsp;&nbsp;└── Internal Marketplace <span class="note">(Catalog &gt; Internal Marketplace)</span>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">AI &amp; ML</span> &gt; <span class="branch">Experiments</span><br>
+    &nbsp;&nbsp;├── EXP_CLASIFICACION_RIESGO <span class="note">→ clasificación de riesgo por comercio</span><br>
+    &nbsp;&nbsp;├── EXP_DETECCION_ANOMALIAS <span class="note">→ anomalías en montos transaccionales</span><br>
+    &nbsp;&nbsp;└── EXP_FORECAST_VOLUMEN <span class="note">→ forecast de volumen mensual</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">AI &amp; ML</span> &gt; <span class="branch">Models</span><br>
+    &nbsp;&nbsp;└── MODELO_ANOMALIAS_TRANSACCIONES <span class="note">→ anomaly detection + monitor</span><br>
+    <br>
+    <span class="branch">Sidebar</span> &gt; <span class="branch">AI &amp; ML</span> &gt; <span class="branch">Cortex Analyst</span><br>
+    &nbsp;&nbsp;├── SV_AUTORIZACIONES <span class="note">→ 5 Verified Queries</span><br>
+    &nbsp;&nbsp;└── SV_RIESGO_COMERCIOS <span class="note">→ 4 Verified Queries</span>
   </div>
 
   <!-- Section C -->
@@ -980,14 +993,16 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
 
   <div class="card card-blue">
     <h4><span class="h-badge">H28b</span> Revisar ML Experiments</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">AI & ML > Experiments</span> → seleccionar EXP_CLASIFICACION_RIESGO</p>
-    <p><span class="label-res">Resultado esperado:</span> Experimento creado con tracking de runs, métricas y parámetros para comparar modelos</p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">AI &amp; ML &gt; Experiments</span></p>
+    <p><span class="label-res">Resultado esperado:</span> 3 experimentos visibles: EXP_CLASIFICACION_RIESGO, EXP_DETECCION_ANOMALIAS, EXP_FORECAST_VOLUMEN — cada uno con tracking de runs, métricas y parámetros para comparar modelos</p>
+    <p><span class="label-tambien">También:</span> Click en cualquier experimento → ver Runs, Metrics, Parameters. Crear nuevos runs desde Notebooks con <code>snowflake.ml.experiment</code></p>
   </div>
 
   <div class="card card-blue">
     <h4><span class="h-badge">H28c</span> Verificar Model Monitor</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">AI & ML > Models</span> → seleccionar MODELO_ANOMALIAS_TRANSACCIONES</p>
-    <p><span class="label-res">Resultado esperado:</span> Modelo de anomaly detection entrenado con datos transaccionales, listo para inferencia</p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">AI &amp; ML &gt; Models</span> → seleccionar MODELO_ANOMALIAS_TRANSACCIONES</p>
+    <p><span class="label-res">Resultado esperado:</span> Modelo de anomaly detection entrenado con datos transaccionales. Tab Monitor muestra drift, performance y volumen de predicciones</p>
+    <p><span class="label-tambien">También:</span> Ejecutar inferencia: <code>CALL CREDIBANCO_HOL.ANALITICA.MODELO_ANOMALIAS_TRANSACCIONES!DETECT_ANOMALIES(...)</code></p>
   </div>
 
   <!-- Section D -->
