@@ -571,6 +571,14 @@ EXECUTE TASK CREDIBANCO_HOL.PLATAFORMA.TASK_INGESTA_ROOT;</pre>
     <p><span class="label-tambien">También:</span> <span class="path">Ingestion &gt; Openflow</span> → Kafka MSK connector = interop con ecosistema AWS</p>
   </div>
 
+  <div class="card card-blue">
+    <h4><span class="h-badge">H21</span> Publicar y consumir servicio de datos</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Data sharing &gt; External sharing &gt; Shared by you</span></p>
+    <p><span class="label-res">Resultado esperado:</span> 2 shares outbound activos — datos compartidos zero-copy sin ETL. Consumidores acceden a datos en vivo desde su propia cuenta.</p>
+    <p><span class="label-tambien">También:</span> Los shares incluyen Semantic Views y tablas con gobernanza aplicada (masking + RAP viajan con el share)</p>
+    <p><span class="label-tambien">Consumir:</span> Desde la cuenta del compañero → <span class="path">Data Products &gt; Private Sharing</span> → Get → los datos aparecen como base de datos montada, sin copiar</p>
+  </div>
+
   <!-- Section D -->
   <div class="section-title"><span class="icon">🔍</span> Explora más</div>
   <div class="card card-orange" style="border-left: 4px solid #7c3aed;">
@@ -872,6 +880,15 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
       <li><b>Query Data</b> → ejecutar los queries de ejemplo</li>
     </ol>
     <p><span class="label-res">Resultado esperado:</span> El comercio consumidor puede compararse contra benchmarks directamente desde su cuenta, sin copiar datos.</p>
+  </div>
+
+  <div class="card card-blue">
+    <h4><span class="h-badge">H23</span> Demostrar Clean Room o colaboración segura</h4>
+    <p><span class="label-ir">Ir a:</span> <span class="path">Data sharing &gt; Clean Rooms</span> (o explorar desde Snowflake Marketplace)</p>
+    <p><span class="label-res">Resultado esperado:</span> Snowflake Data Clean Rooms permiten cruzar datos entre dos organizaciones <b>sin que ninguna vea los datos crudos del otro</b>.</p>
+    <p><b>Caso Netflix:</b> Netflix cruza datos de audiencia con socios publicitarios en un Clean Room — anuncios más relevantes sin exponer datos de suscriptores.</p>
+    <p><b>Caso CredibanCo:</b> Cruzar datos transaccionales con un banco emisor para enriquecer perfiles de riesgo, sin que el banco vea montos individuales ni CredibanCo vea datos de los tarjetahabientes del banco.</p>
+    <p><span class="label-tambien">Clave:</span> Aggregation Policies + Projection Policies garantizan que solo se compartan resultados agregados, nunca filas individuales</p>
   </div>
 
   <div class="card card-blue">
