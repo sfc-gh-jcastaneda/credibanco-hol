@@ -724,6 +724,9 @@ SELECT AI_COMPLETE('mistral-7b',
 )::VARCHAR AS analisis_ia
 FROM CREDIBANCO_HOL.CLIENTES.TARJETAHABIENTES LIMIT 1;</div>
     <p><span class="label-res">Resultado esperado:</span> ACCOUNTADMIN → la IA analiza datos reales. CRB_NEGOCIO → la IA recibe datos enmascarados. Snowflake aplica masking <b>antes</b> de enviar al LLM — los modelos NUNCA ven datos sin autorización.</p>
+    <p style="margin-top:10px;"><b>Verified Queries — precisión gobernada:</b></p>
+    <p><span class="label-ir">Ir a:</span> <span class="path">AI &amp; ML &gt; Cortex Analyst</span> → seleccionar SV_AUTORIZACIONES → panel Verified Queries</p>
+    <p><span class="label-res">Resultado esperado:</span> 5 VQs pre-configurados (monto por ciudad, rechazadas, top comercios, por canal, tasa de rechazo) — garantizan que Cortex Analyst genere SQL preciso y auditado para preguntas frecuentes</p>
   </div>
 
   <!-- Section D -->
@@ -1014,12 +1017,6 @@ SELECT * FROM TABLE(ANALYTICS.FN_COMPARAR_COMERCIO('Cali', 'Farmacias', 30000000
     <p><span class="label-ir">Ir a:</span> Abrir <b>CoCo Desktop</b> → usar este prompt especializado:</p>
     <div style="background:#1a1a2e;color:#e0e0e0;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:0.82rem;margin:8px 0;white-space:pre-wrap;">Genera un dashboard React con las siguientes métricas de CREDIBANCO_HOL.PAGOS.DT_GOLD_KPI_COMERCIOS: (1) Top 10 comercios por monto total, (2) Tasa de aprobación por ciudad, (3) Ticket promedio por canal. Incluye filtros por ciudad y canal. Usa gráficos de barras y líneas.</div>
     <p><span class="label-res">Resultado esperado:</span> CoCo genera y despliega una app React con KPIs interactivos sobre datos reales de CredibanCo</p>
-  </div>
-
-  <div class="card card-blue">
-    <h4><span class="h-badge">H27</span> Explorar Verified Queries</h4>
-    <p><span class="label-ir">Ir a:</span> <span class="path">AI & ML > Cortex Analyst</span> → seleccionar SV_AUTORIZACIONES → ver Verified Queries panel</p>
-    <p><span class="label-res">Resultado esperado:</span> VQs con preguntas frecuentes pre-configuradas que mejoran la precisión del SQL generado</p>
   </div>
 
   <div class="card card-blue">
