@@ -381,6 +381,29 @@
     <p><span class="label-tambien">También:</span> <span class="path">Data sharing &gt; External sharing &gt; Shared by you</span> → 2 shares con gobernanza aplicada</p>
   </div>
 
+  <div class="card card-blue">
+    <h4><span class="h-badge">H06b</span> Gobierno de IA por roles — IA segura con AI_COMPLETE</h4>
+    <p>La IA respeta las políticas de masking. El mismo prompt con AI_COMPLETE devuelve datos diferentes según el rol:</p>
+    <p><b>Ejecutar en SQL Worksheet:</b></p>
+    <div style="background:#1a1a2e;color:#e0e0e0;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:0.82rem;margin:8px 0;white-space:pre-wrap;">-- 1. Como ACCOUNTADMIN (ve todo):
+USE ROLE ACCOUNTADMIN;
+SELECT AI_COMPLETE('mistral-7b',
+  'Analiza este registro de tarjetahabiente y dame un resumen: ' ||
+  OBJECT_CONSTRUCT('nombre', NOMBRE, 'cedula', CEDULA, 'pan', PAN_SINTETICO, 'celular', CELULAR)::VARCHAR
+)::VARCHAR AS analisis_ia
+FROM CREDIBANCO_HOL.CLIENTES.TARJETAHABIENTES LIMIT 1;
+
+-- 2. Como CRB_NEGOCIO (datos enmascarados):
+USE ROLE CRB_NEGOCIO;
+SELECT AI_COMPLETE('mistral-7b',
+  'Analiza este registro de tarjetahabiente y dame un resumen: ' ||
+  OBJECT_CONSTRUCT('nombre', NOMBRE, 'cedula', CEDULA, 'pan', PAN_SINTETICO, 'celular', CELULAR)::VARCHAR
+)::VARCHAR AS analisis_ia
+FROM CREDIBANCO_HOL.CLIENTES.TARJETAHABIENTES LIMIT 1;</div>
+    <p><span class="label-res">Resultado esperado:</span> ACCOUNTADMIN → la IA analiza datos reales (nombre, cédula, PAN completo). CRB_NEGOCIO → la IA recibe datos enmascarados (TOKEN-xxx, ****xxxx) y su análisis refleja que no tiene acceso a datos sensibles.</p>
+    <p><span class="label-tambien">Clave:</span> Snowflake aplica masking <b>antes</b> de enviar datos a funciones de IA — los modelos LLM NUNCA ven datos que el rol no puede ver. Gobierno de IA nativo sin código adicional.</p>
+  </div>
+
   <!-- Section D -->
   <div class="section-title"><span class="icon">🔍</span> Explora más</div>
   <div class="card card-orange">
