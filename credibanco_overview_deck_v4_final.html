@@ -339,7 +339,6 @@
     &nbsp;&nbsp;├── Data protection policies &gt; Row access policies <span class="note">(2 políticas)</span><br>
     &nbsp;&nbsp;├── Tags <span class="note">(11 tags en todas las tablas)</span><br>
     &nbsp;&nbsp;├── Network policies <span class="note">(1 política)</span><br>
-    &nbsp;&nbsp;└── Authentication policies <span class="note">(1 política)</span><br>
     <br>
     <span class="branch">Sidebar</span> &gt; <span class="branch">Catalog</span> &gt; <span class="branch">Explorer</span> &gt; cualquier tabla &gt; <b>Access</b> tab (tags se ven arriba del nombre)<br>
     &nbsp;&nbsp;└── Muestra masking policies y RAPs. Tags aparecen arriba del nombre de la tabla.
@@ -721,10 +720,25 @@ EXECUTE TASK CREDIBANCO_HOL.PLATAFORMA.TASK_INGESTA_ROOT;</pre>
   <div class="card card-blue">
     <h4><span class="h-badge">H20</span> Validar AI responsable</h4>
     <p><span class="label-ir">Ir a:</span> <span class="path">CoWork &gt; AGENTE_SARLAFT</span> → agente alineado a compliance</p>
-    <p><span class="label-tambien">También:</span> <span class="path">Catalog &gt; Explorer &gt; CLIENTES &gt; TARJETAHABIENTES &gt; Access tab</span> → masking PII previene entrenar sobre datos sensibles</p>
-  
     <p><span class="label-tambien">También:</span> Gobierno por roles: cambiar a CRB_NEGOCIO y preguntar al agente — los datos se enmascaran automáticamente</p>
     <p><span class="label-tambien">También:</span> <span class="path">GOBIERNO.REGISTRO_USO_IA</span> registra cada interacción con modelo, tokens y aprobación</p>
+    <p><b>Ejemplo — AI_COMPLETE gobernada por roles:</b></p>
+    <div style="background:#1a1a2e;color:#e0e0e0;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:0.82rem;margin:8px 0;white-space:pre-wrap;">-- Como ACCOUNTADMIN (ve datos reales):
+USE ROLE ACCOUNTADMIN;
+SELECT AI_COMPLETE('mistral-7b',
+  'Analiza este tarjetahabiente: ' ||
+  OBJECT_CONSTRUCT('nombre', NOMBRE, 'cedula', CEDULA, 'pan', PAN_SINTETICO)::VARCHAR
+)::VARCHAR AS analisis_ia
+FROM CREDIBANCO_HOL.CLIENTES.TARJETAHABIENTES LIMIT 1;
+
+-- Como CRB_NEGOCIO (datos enmascarados → IA segura):
+USE ROLE CRB_NEGOCIO;
+SELECT AI_COMPLETE('mistral-7b',
+  'Analiza este tarjetahabiente: ' ||
+  OBJECT_CONSTRUCT('nombre', NOMBRE, 'cedula', CEDULA, 'pan', PAN_SINTETICO)::VARCHAR
+)::VARCHAR AS analisis_ia
+FROM CREDIBANCO_HOL.CLIENTES.TARJETAHABIENTES LIMIT 1;</div>
+    <p><span class="label-res">Resultado esperado:</span> ACCOUNTADMIN → la IA analiza datos reales. CRB_NEGOCIO → la IA recibe datos enmascarados. Snowflake aplica masking <b>antes</b> de enviar al LLM — los modelos NUNCA ven datos sin autorización.</p>
   </div>
 
   <!-- Section D -->
